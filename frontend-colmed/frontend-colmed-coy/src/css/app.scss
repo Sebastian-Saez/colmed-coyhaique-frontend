@@ -1,0 +1,84 @@
+// app global css in SCSS form
+// Aquí se colocan los estilos globales y personalizados que se aplican en toda la aplicación.
+
+// Colores de fondo
+.bg-primary {
+  background-color: $primary !important;
+}
+
+.bg-secondary {
+  background-color: $secondary !important;
+}
+
+.bg-dark {
+  background-color: $dark !important;
+}
+
+.custom-header {
+  background-color: #13344e;
+}
+
+// Márgenes y Padding
+.m-0 {
+  margin: 0 !important;
+}
+.m-1 {
+  margin: 4px !important;
+}
+.m-2 {
+  margin: 8px !important;
+}
+.m-3 {
+  margin: 16px !important;
+}
+
+.p-0 {
+  padding: 0 !important;
+}
+.p-1 {
+  padding: 4px !important;
+}
+.p-2 {
+  padding: 8px !important;
+}
+.p-3 {
+  padding: 16px !important;
+}
+
+// Tipografía
+.text-primary {
+  color: $primary !important;
+}
+
+.text-secondary {
+  color: $secondary !important;
+}
+
+// .font-sm {
+//   font-size: $font-size-sm !important;
+// }
+
+.font-lg {
+  font-size: $font-size-lg !important;
+}
+
+// Botones
+.btn-primary {
+  background-color: $primary;
+  color: #fff;
+  border-radius: $border-radius-base;
+  box-shadow: $box-shadow-base;
+  &:hover {
+    background-color: darken($primary, 10%);
+  }
+}
+
+.btn-secondary {
+  background-color: $secondary;
+  color: #fff;
+  border-radius: $border-radius-base;
+  box-shadow: $box-shadow-base;
+  &:hover {
+    background-color: darken($secondary, 10%);
+  }
+}
