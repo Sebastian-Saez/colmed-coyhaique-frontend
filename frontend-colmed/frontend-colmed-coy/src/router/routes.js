@@ -8,7 +8,7 @@ const routes = [
   // },
   {
     path: "/",
-    component: () => import("layouts/Home.vue"),
+    component: () => import("layouts/HomeLayout.vue"),
   },
 
   // Always leave this as last one,

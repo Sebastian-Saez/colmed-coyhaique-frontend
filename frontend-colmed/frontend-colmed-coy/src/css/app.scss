@@ -1,5 +1,4 @@
-// app global css in SCSS form
-// Aquí se colocan los estilos globales y personalizados que se aplican en toda la aplicación.
+// app.scss
 
 // Colores de fondo
 .bg-primary {
@@ -15,10 +14,43 @@
 }
 
 .custom-header {
-  background-color: #13344e;
+  background-color: $terciary; // Color personalizado para headers
 }
 
-// Márgenes y Padding
+.bg-footer-main {
+  background-color: $primary; // Última sección del footer
+}
+
+.bg-footer-secondary {
+  background-color: $secondary; // Penúltima sección del footer
+}
+
+.bg-page {
+  background-color: $page-background !important; // Fondo de la página
+}
+
+// Tipografía
+.text-primary {
+  color: $primary !important;
+}
+
+.text-secondary {
+  color: $secondary !important;
+}
+
+.text-bold {
+  font-weight: $font-weight-bold !important;
+}
+
+.text-semibold {
+  font-weight: $font-weight-semibold !important;
+}
+
+.text-description {
+  color: #000 !important; // Color negro para descripciones
+}
+
+// Márgenes y Padding uniformes
 .m-0 {
   margin: 0 !important;
 }
@@ -45,24 +77,7 @@
   padding: 16px !important;
 }
 
-// Tipografía
-.text-primary {
-  color: $primary !important;
-}
-
-.text-secondary {
-  color: $secondary !important;
-}
-
-// .font-sm {
-//   font-size: $font-size-sm !important;
-// }
-
-.font-lg {
-  font-size: $font-size-lg !important;
-}
-
-// Botones
+// Botones personalizados
 .btn-primary {
   background-color: $primary;
   color: #fff;
