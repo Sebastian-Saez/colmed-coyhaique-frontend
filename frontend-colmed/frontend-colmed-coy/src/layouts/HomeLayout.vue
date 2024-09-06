@@ -7,9 +7,9 @@
           <q-toolbar>
             <q-toolbar-title>
               <img
-                src="https://placehold.co/50x50"
+                src="~assets/LogoCOLMEDAYSEN_blanco.png"
                 alt="Colegio Médico Logo"
-                class="mr-4"
+                style="width: 204px; height: 82px"
               />
             </q-toolbar-title>
             <q-btn flat label="Quiénes Somos" />
@@ -17,7 +17,13 @@
             <q-btn flat label="Informaciones" />
             <q-btn flat label="Contacto" />
             <q-btn flat label="Otra opción" />
-            <q-btn flat label="Mi gestión" color="grey-6" outline />
+            <q-btn
+              flat
+              label="Mi gestión"
+              color="grey-6"
+              outline
+              @click="irALogin"
+            />
             <q-btn label="Mi Colmed" color="red" />
           </q-toolbar>
         </q-card>
@@ -36,7 +42,7 @@
               transition-next="slide-left"
               padding
               height="300px"
-              class="bg-grey-2 shadow-2 rounded-borders"
+              class="rounded-borders"
               @mouseenter="autoplay = false"
               @mouseleave="autoplay = true"
             >
@@ -77,8 +83,12 @@
               class="col-12 col-md-4"
             >
               <q-img :src="noticia.img" alt="Noticia" class="rounded-md" />
-              <h3 class="text-red-500 mt-4 text-semibold">Actualidad</h3>
-              <p class="font-semibold text-description">{{ noticia.title }}</p>
+              <h4 class="text-red-500 mt-4 text-semibold">
+                {{ noticia.title }}
+              </h4>
+              <p class="font-semibold text-description">
+                {{ noticia.description }}
+              </p>
               <q-btn
                 flat
                 label="Leer >"
@@ -104,8 +114,12 @@
               class="col-12 col-md-4"
             >
               <q-img :src="evento.img" alt="Evento" class="rounded-md" />
-              <h3 class="text-red-500 mt-4 text-semibold">Evento</h3>
-              <p class="font-semibold text-description">{{ evento.title }}</p>
+              <h4 class="text-red-500 mt-4 text-semibold">
+                {{ evento.title }}
+              </h4>
+              <p class="font-semibold text-description">
+                {{ evento.description }}
+              </p>
               <q-btn
                 flat
                 label="Leer >"
@@ -157,7 +171,6 @@
                 class="text-white"
               />
             </li>
-            <li><q-btn flat label="Pide tu recetario" class="text-white" /></li>
           </ul>
         </div>
         <div class="col">
@@ -190,7 +203,7 @@
       >
         <div>
           <p class="text-xs">
-            ©2023 Colegio Médico Aysén - Colegio Médico de Chile
+            ©2024 Colegio Médico Aysén - Colegio Médico de Chile
           </p>
         </div>
         <div class="flex space-x-2">
@@ -215,18 +228,18 @@ const autoplay = ref(true);
 
 const lista_principales_noticias = [
   {
-    title: "Noticia 1",
-    description: "Descripción de la noticia 1.",
+    title: "Noticia destacada 1",
+    description: "Descripción de la noticia destacada 1.",
     img: "https://cdn.quasar.dev/img/mountains.jpg",
   },
   {
-    title: "Noticia 2",
-    description: "Descripción de la noticia 2.",
+    title: "Noticia destacada 2",
+    description: "Descripción de la noticia destacada 2.",
     img: "https://cdn.quasar.dev/img/parallax1.jpg",
   },
   {
-    title: "Noticia 3",
-    description: "Descripción de la noticia 3.",
+    title: "Noticia destacada 3",
+    description: "Descripción de la noticia destacada 3.",
     img: "https://cdn.quasar.dev/img/parallax2.jpg",
   },
 ];
@@ -239,13 +252,13 @@ const lista_noticias = [
     img: "https://placehold.co/300x200",
   },
   {
-    title: "Notición 1",
+    title: "Noticia 3",
     description:
       "Body text for whatever you'd like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.",
     img: "https://placehold.co/300x200",
   },
   {
-    title: "Noticia 2",
+    title: "Noticia 3",
     description:
       "Body text for whatever you'd like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.",
     img: "https://placehold.co/300x200",
@@ -274,6 +287,10 @@ const router = useRouter();
 
 const irAEventos = () => {
   router.push("/eventos");
+};
+
+const irALogin = () => {
+  router.push("/login"); // Redirección a la página de login
 };
 </script>
 

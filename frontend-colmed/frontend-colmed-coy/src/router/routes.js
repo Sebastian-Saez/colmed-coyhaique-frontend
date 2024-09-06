@@ -7,8 +7,20 @@ const routes = [
   //   ]
   // },
   {
-    path: "/",
+    path: "/home",
     component: () => import("layouts/HomeLayout.vue"),
+  },
+  {
+    path: "/login",
+    component: () => import("src/pages/LoginPage.vue"),
+  },
+  {
+    path: "/",
+    component: () => import("src/pages/LoginPage.vue"),
+  },
+  {
+    path: "/medicos",
+    component: () => import("src/pages/MedicosPage.vue"),
   },
 
   // Always leave this as last one,

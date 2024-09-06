@@ -1,24 +1,73 @@
-import { boot } from 'quasar/wrappers'
-import axios from 'axios'
+import { boot } from "quasar/wrappers";
+import axios from "axios";
+import { useRouter } from "vue-router";
 
-// Be careful when using SSR for cross-request state pollution
-// due to creating a Singleton instance here;
-// If any client changes this (global) instance, it might be a
-// good idea to move this instance creation inside of the
-// "export default () => {}" function below (which runs individually
-// for each client)
-const api = axios.create({ baseURL: 'https://api.example.com' })
+// Crear una instancia de Axios con la URL base desde las variables de entorno
+const api = axios.create({
+  baseURL: process.env.VITE_APP_BACKEND_URL, // Usar la variable de entorno para la base URL
+});
+
+// Interceptor para incluir el token en cada solicitud si está presente
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("authToken"); // Recuperar el token de acceso del localStorage
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Interceptor para manejar la expiración de tokens y el refresco automático
+api.interceptors.response.use(
+  (response) => response, // Retornar la respuesta si es exitosa
+  async (error) => {
+    const originalRequest = error.config; // Guardar la solicitud original
+    const router = useRouter(); // Obtener el router para redirigir en caso necesario
+
+    // Si el error es 401 y el token no es válido, intentar refrescar el token
+    if (
+      error.response.status === 401 &&
+      error.response.data.code === "token_not_valid"
+    ) {
+      const refreshToken = localStorage.getItem("refreshToken"); // Recuperar el refresh token
+
+      // Si hay un refresh token guardado, intentar refrescar el token de acceso
+      if (refreshToken) {
+        try {
+          // Hacer una solicitud para refrescar el token de acceso
+          const response = await api.post("/api/colmed/token/refresh/", {
+            refresh: refreshToken,
+          });
+
+          // Guardar el nuevo token de acceso en el localStorage
+          const newAccessToken = response.data.access;
+          localStorage.setItem("authToken", newAccessToken);
+
+          // Actualizar el token en la cabecera de la solicitud original
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
+          // Reintentar la solicitud original con el nuevo token
+          return api(originalRequest);
+        } catch (err) {
+          console.error("Error al refrescar el token:", err);
+          // Si falla el refresco, eliminar los tokens y redirigir a login
+          localStorage.removeItem("authToken");
+          localStorage.removeItem("refreshToken");
+          router.push("/login");
+        }
+      } else {
+        // Si no hay refresh token, redirigir a la página de login
+        router.push("/login");
+      }
+    }
+    // Rechazar la promesa si no se puede refrescar el token o si hay otro tipo de error
+    return Promise.reject(error);
+  }
+);
 
 export default boot(({ app }) => {
-  // for use inside Vue files (Options API) through this.$axios and this.$api
+  // Hacer que Axios y la instancia configurada estén disponibles globalmente
+  app.config.globalProperties.$axios = axios; // Si se requiere acceder a la instancia de Axios sin configuración
+  app.config.globalProperties.$api = api; // Acceder a la instancia configurada con $api en componentes Vue
+});
 
-  app.config.globalProperties.$axios = axios
-  // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
-  //       so you won't necessarily have to import axios in each vue file
-
-  app.config.globalProperties.$api = api
-  // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
-  //       so you can easily perform requests against your app's API
-})
-
-export { api }
+export { api };

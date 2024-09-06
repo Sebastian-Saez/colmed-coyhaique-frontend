@@ -11,6 +11,9 @@
 const { configure } = require("quasar/wrappers");
 const path = require("path");
 
+// Cargar las variables de entorno desde el archivo .env
+// Accessing terminal variables
+
 module.exports = configure(function (/* ctx */) {
   return {
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
@@ -54,7 +57,9 @@ module.exports = configure(function (/* ctx */) {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {},
+      env: {
+        VITE_APP_BACKEND_URL: process.env.VITE_APP_BACKEND_URL,
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
