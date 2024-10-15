@@ -12,7 +12,7 @@
 #       - NODE_ENV=development
 #     command: npm run dev
 
-version: "3.8"
+#version: "3.8"
 
 services:
   frontend:
