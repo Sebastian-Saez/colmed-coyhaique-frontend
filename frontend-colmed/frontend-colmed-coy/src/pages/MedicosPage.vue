@@ -47,27 +47,29 @@
               v-model="splitterModel"
               unit="px"
               style="height: calc(100vh - 56px)"
+              :limits="[280, 280]"
             >
               <template v-slot:before>
                 <div class="q-pa-md" :style="{ width: '280px' }">
                   <div class="row items-center justify-between q-mb">
                     <div class="text-h6">Filtros</div>
                   </div>
+                  <q-separator />
                   <!-- Filtro por Entidad -->
+                  <div class="q-pt-sm text-subtitle1">Entidad:</div>
                   <q-select
                     v-model="selectedEntidad"
                     :options="entidadOptions"
-                    label="Entidad"
                     outlined
                     dense
                     class="q-mb-md"
                   />
 
                   <!-- Filtro por Estado de Pago (multiple) -->
+                  <div class="text-subtitle1">Estado de pago:</div>
                   <q-select
                     v-model="selectedEstadosPago"
                     :options="estadoPagoOptions"
-                    label="Estados de Pago"
                     outlined
                     dense
                     use-chips
@@ -95,6 +97,197 @@
                     multiple
                     class="q-mb-md"
                   /> -->
+                  <div class="text-subtitle1">Fecha de nacimiento:</div>
+                  <div class="row q-gutter-md q-mb-md">
+                    <div class="col">
+                      <q-input
+                        dense
+                        label="Desde"
+                        v-model="startDateBirthdate"
+                        mask="##-##-####"
+                        @update:modelValue="onStartDateBirthChange"
+                        bottom-slots
+                        :error="!errorStartDateBirth.valor"
+                      >
+                        <template v-slot:error>
+                          {{ errorStartDateBirth.mensaje }}
+                        </template>
+                        <template v-slot:append>
+                          <q-icon name="event" class="cursor-pointer">
+                            <q-popup-proxy
+                              cover
+                              transition-show="scale"
+                              transition-hide="scale"
+                            >
+                              <q-date
+                                v-model="startDateBirthdate"
+                                mask="DD-MM-YYYY"
+                                @update:modelValue="onStartDateBirthChange"
+                              >
+                                <div class="row items-center justify-end">
+                                  <q-btn
+                                    v-close-popup
+                                    label="Ok"
+                                    color="primary"
+                                    flat
+                                    @click="filterData"
+                                  />
+                                </div>
+                              </q-date>
+                            </q-popup-proxy>
+                          </q-icon>
+                        </template>
+                      </q-input>
+                    </div>
+
+                    <div class="col">
+                      <q-input
+                        dense
+                        label="Hasta"
+                        v-model="endDateBirthdate"
+                        mask="##-##-####"
+                        @update:modelValue="onEndDateBirthChange"
+                        bottom-slots
+                        :error="!errorEndDateBirth.valor"
+                      >
+                        <template v-slot:error>
+                          {{ errorEndDateBirth.mensaje }}
+                        </template>
+                        <template v-slot:append>
+                          <q-icon name="event" class="cursor-pointer">
+                            <q-popup-proxy
+                              cover
+                              transition-show="scale"
+                              transition-hide="scale"
+                            >
+                              <q-date
+                                v-model="endDateBirthdate"
+                                @update:modelValue="onEndDateBirthChange"
+                                mask="DD-MM-YYYY"
+                              >
+                                <div class="row items-center justify-end">
+                                  <q-btn
+                                    v-close-popup
+                                    label="Ok"
+                                    color="primary"
+                                    flat
+                                    @click="filterData"
+                                  />
+                                </div>
+                              </q-date>
+                            </q-popup-proxy>
+                          </q-icon>
+                        </template>
+                      </q-input>
+                    </div>
+                  </div>
+                  <div class="text-subtitle1">Fecha de título:</div>
+                  <div class="row q-gutter-md q-mb-md">
+                    <div class="col">
+                      <q-input
+                        dense
+                        label="Desde"
+                        v-model="startDateTitle"
+                        mask="##-##-####"
+                        @update:modelValue="onStartDateTitleChange"
+                        bottom-slots
+                        :error="!errorStartDateTitle.valor"
+                      >
+                        <template v-slot:error>
+                          {{ errorStartDateTitle.mensaje }}
+                        </template>
+                        <template v-slot:append>
+                          <q-icon name="event" class="cursor-pointer">
+                            <q-popup-proxy
+                              cover
+                              transition-show="scale"
+                              transition-hide="scale"
+                            >
+                              <q-date
+                                v-model="startDateTitle"
+                                @update:modelValue="onStartDateTitleChange"
+                                mask="DD-MM-YYYY"
+                              >
+                                <div class="row items-center justify-end">
+                                  <q-btn
+                                    v-close-popup
+                                    label="Ok"
+                                    color="primary"
+                                    flat
+                                    @click="filterData"
+                                  />
+                                </div>
+                              </q-date>
+                            </q-popup-proxy>
+                          </q-icon>
+                        </template>
+                      </q-input>
+                    </div>
+
+                    <div class="col">
+                      <q-input
+                        dense
+                        label="Hasta"
+                        v-model="endDateTitle"
+                        mask="##-##-####"
+                        @update:modelValue="onEndDateTitleChange"
+                        bottom-slots
+                        :error="!errorEndDateTitle.valor"
+                      >
+                        <template v-slot:error>
+                          {{ errorEndDateTitle.mensaje }}
+                        </template>
+                        <template v-slot:append>
+                          <q-icon name="event" class="cursor-pointer">
+                            <q-popup-proxy
+                              cover
+                              transition-show="scale"
+                              transition-hide="scale"
+                            >
+                              <q-date
+                                v-model="endDateTitle"
+                                mask="DD-MM-YYYY"
+                                @update:modelValue="onEndDateTitleChange"
+                              >
+                                <div class="row items-center justify-end">
+                                  <q-btn
+                                    v-close-popup
+                                    label="Ok"
+                                    color="primary"
+                                    flat
+                                    @click="filterData"
+                                  />
+                                </div>
+                              </q-date>
+                            </q-popup-proxy>
+                          </q-icon>
+                        </template>
+                      </q-input>
+                    </div>
+                  </div>
+                  <div class="row justify-end">
+                    <!-- <q-btn
+                      color="primary "
+                      label="Filtrar"
+                      no-caps
+                      @click="filterData"
+                    /> -->
+                    <q-btn
+                      v-if="
+                        selectedEntidad ||
+                        selectedEstadosPago.length ||
+                        startDateBirthdate ||
+                        startDateTitle ||
+                        endDateBirthdate ||
+                        endDateTitle
+                      "
+                      class="q-ml-sm"
+                      color="warning"
+                      label="Limpiar filtros"
+                      no-caps
+                      @click="clearFilter"
+                    />
+                  </div>
                 </div>
               </template>
 
@@ -273,17 +466,23 @@
 <script setup>
 import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
 import { useUserStore } from "src/stores/authStore";
 import { useMedicoStore } from "src/stores/medicos";
 
 const router = useRouter();
 const userStore = useUserStore();
 const medicoStore = useMedicoStore();
+const splitterModel = ref(280);
 
 const medicos = computed(() => medicoStore.medicos);
 const afiliaciones = computed(() => medicoStore.afiliaciones);
 const filter = ref("");
 const loading = computed(() => medicoStore.loading);
+
+dayjs.extend(customParseFormat);
 
 const pagination = ref({
   page: 1,
@@ -334,11 +533,31 @@ const estadoAfiliacionOptions = [
   { label: "Reinscrito", value: "reinscrito" },
 ];
 
-// Variables reactivas para almacenar las selecciones
+// Variables reactivas para almacenar las selecciones y filtros
 const selectedEntidad = ref(null);
 const selectedEstadosPago = ref([]);
 const selectedEstadoAfiliacion = ref(null);
+const startDateBirthdate = ref(null);
+const endDateBirthdate = ref(null);
+const startDateTitle = ref(null);
+const endDateTitle = ref(null);
 
+const errorStartDateBirth = ref({
+  valor: true,
+  mensaje: "",
+});
+const errorEndDateBirth = ref({
+  valor: true,
+  mensaje: "",
+});
+const errorStartDateTitle = ref({
+  valor: true,
+  mensaje: "",
+});
+const errorEndDateTitle = ref({
+  valor: true,
+  mensaje: "",
+});
 // Recuperar el perfil del usuario
 const userProfile = ref(userStore.profile);
 
@@ -357,15 +576,37 @@ const formattedProfile = computed(() => {
   }
 });
 
+const filtros = {
+  fecha_nacimiento_inicio: startDateBirthdate.value,
+  fecha_nacimiento_fin: endDateBirthdate.value,
+  fecha_titulo_inicio: startDateTitle.value,
+  fecha_titulo_fin: endDateTitle.value,
+  afiliaciones: [],
+  estados: selectedEstadosPago.value,
+};
+
+const filterData = async () => {
+  filtros.fecha_nacimiento_inicio = startDateBirthdate.value;
+  filtros.fecha_nacimiento_fin = endDateBirthdate.value;
+
+  await medicoStore.filterDataMedicos(filtros);
+};
+
 watch(selectedEntidad, async (newValue) => {
   medicoStore.limpiarMedicos();
   if (newValue && newValue.value) {
     if (newValue.value === "Todos los médicos") {
-      await medicoStore.fetchMedicos();
+      //await medicoStore.fetchMedicos();
+      filtros.afiliaciones = null;
+      await filterData();
     } else if (newValue.value === "Colmed") {
-      await medicoStore.fetchMedicosConAfiliacion();
+      filtros.afiliaciones = "colmed";
+      //await medicoStore.fetchMedicosConAfiliacion();
+      await filterData();
     } else if (newValue.value === "No Colegiado") {
-      await medicoStore.fetchMedicosSinAfiliacion();
+      filtros.afiliaciones = "no_colegiado";
+      await filterData();
+      //await medicoStore.fetchMedicosSinAfiliacion();
     }
   }
 });
@@ -385,6 +626,113 @@ watch(selectedEntidad, async (newValue) => {
 //   }
 // });
 
+const clearFilter = async () => {
+  startDateBirthdate.value = null;
+  startDateTitle.value = null;
+  endDateBirthdate.value = null;
+  endDateTitle.value = null;
+  selectedEntidad.value = null;
+  selectedEstadosPago.value = [];
+  await medicoStore.fetchMedicos();
+};
+
+const onEndDateBirthChange = (newValue) => {
+  const fechaValida = validarFecha(newValue);
+  if (!fechaValida) {
+    errorEndDateBirth.value.valor = false;
+    errorEndDateBirth.value.mensaje = "Ingrese una fecha válida";
+    return; // Salimos de la función porque no tiene sentido seguir validando
+  }
+
+  // Luego, comparamos las fechas
+  if (newValue < startDateBirthdate.value) {
+    console.log("Corresponde error");
+    errorEndDateBirth.value.valor = false;
+    errorEndDateBirth.value.mensaje =
+      "Fecha 'Hasta' no puede ser menor a la fecha 'Desde'";
+    return; // Salimos de la función porque ya encontramos un error
+  }
+
+  // Si todas las validaciones pasan, no hay error
+  errorEndDateBirth.value.valor = true;
+  errorEndDateBirth.value.mensaje = "";
+  errorStartDateBirth.value.valor = true;
+  errorStartDateBirth.value.mensaje = "";
+  console.log("Fecha válida y mayor o igual a la fecha inicial");
+};
+
+const onStartDateBirthChange = (newValue) => {
+  const fechaValida = validarFecha(newValue);
+  if (!fechaValida) {
+    errorStartDateBirth.value.valor = false;
+    errorStartDateBirth.value.mensaje = "Ingrese una fecha válida";
+    return; // Salimos de la función porque no tiene sentido seguir validando
+  }
+
+  // Luego, comparamos las fechas
+  if (newValue > endDateBirthdate.value) {
+    errorStartDateBirth.value.valor = false;
+    errorStartDateBirth.value.mensaje =
+      "Fecha 'Desde' no puede ser mayor a la fecha 'Hasta'";
+    return; // Salimos de la función porque ya encontramos un error
+  }
+
+  // Si todas las validaciones pasan, no hay error
+  errorStartDateBirth.value.valor = true;
+  errorStartDateBirth.value.mensaje = "";
+  errorEndDateBirth.value.valor = true;
+  errorEndDateBirth.value.mensaje = "";
+  console.log("Fecha válida y menor o igual a la fecha final");
+};
+
+const onStartDateTitleChange = (newValue) => {
+  const fechaValida = validarFecha(newValue);
+  if (!fechaValida) {
+    errorStartDateTitle.value.valor = false;
+    errorStartDateTitle.value.mensaje = "Ingrese una fecha válida";
+    return; // Salimos de la función porque no tiene sentido seguir validando
+  }
+
+  // Luego, comparamos las fechas
+  if (newValue > endDateTitle.value) {
+    errorStartDateTitle.value.valor = false;
+    errorStartDateTitle.value.mensaje =
+      "Fecha 'Desde' no puede ser mayor a la fecha 'Hasta'";
+    return; // Salimos de la función porque ya encontramos un error
+  }
+
+  // Si todas las validaciones pasan, no hay error
+  errorStartDateTitle.value.valor = true;
+  errorStartDateTitle.value.mensaje = "";
+  errorEndDateTitle.value.valor = true;
+  errorEndDateTitle.value.mensaje = "";
+  console.log("Fecha válida y menor o igual a la fecha final");
+};
+
+const onEndDateTitleChange = (newValue) => {
+  const fechaValida = validarFecha(newValue);
+  if (!fechaValida) {
+    errorEndDateTitle.value.valor = false;
+    errorEndDateTitle.value.mensaje = "Ingrese una fecha válida";
+    return; // Salimos de la función porque no tiene sentido seguir validando
+  }
+
+  // Luego, comparamos las fechas
+  if (newValue < startDateTitle.value) {
+    errorEndDateTitle.value.valor = false;
+    errorEndDateTitle.value.mensaje =
+      "Fecha 'Desde' no puede ser mayor a la fecha 'Hasta'";
+    return; // Salimos de la función porque ya encontramos un error
+  }
+
+  // Si todas las validaciones pasan, no hay error
+  errorEndDateTitle.value.valor = true;
+  errorEndDateTitle.value.mensaje = "";
+  errorStartDateTitle.value.valor = true;
+  errorStartDateTitle.value.mensaje = "";
+  console.log("Fecha válida y mayor o igual a la fecha inicial");
+};
+
 const onEstadosPagoChange = async (newValues) => {
   const includesTodos = newValues.some((estado) => estado.value === "todos");
 
@@ -398,24 +746,33 @@ const onEstadosPagoChange = async (newValues) => {
     const estadosPagoValues = selectedEstadosPago.value.map(
       (estado) => estado.value
     );
-
+    filtros.estados = estadosPagoValues;
     // Llama a la acción del store con los estados de pago seleccionados
-    await medicoStore.fetchMedicosEstadosPago(estadosPagoValues);
+    //await medicoStore.fetchMedicosEstadosPago(estadosPagoValues);
+    await filterData();
   } else {
     // Actualiza 'selectedEstadosPago' con los nuevos valores seleccionados
     selectedEstadosPago.value = newValues;
 
     if (newValues.length === 0) {
       // Si no hay estados seleccionados, obtén todos los médicos con afiliación
-      await medicoStore.fetchMedicosConAfiliacion();
+      filtros.afiliaciones = "colmed";
+      await filterData();
+      // await medicoStore.fetchMedicosConAfiliacion();
     } else {
       // Extrae los valores de los estados de pago seleccionados
       const estadosPagoValues = newValues.map((estado) => estado.value);
-
+      filtros.estados = estadosPagoValues;
+      await filterData();
       // Llama a la acción del store con los estados de pago seleccionados
-      await medicoStore.fetchMedicosEstadosPago(estadosPagoValues);
+      //await medicoStore.fetchMedicosEstadosPago(estadosPagoValues);
     }
   }
+};
+
+const validarFecha = (val) => {
+  const formato = "DD-MM-YYYY";
+  return dayjs(val, formato, true).isValid();
 };
 
 // Columnas de la tabla (sin cambios)

@@ -23,6 +23,22 @@ export const useMedicoStore = defineStore("medico", {
         this.loading = true;
       }
     },
+    async filterDataMedicos(filtros) {
+      // Limpiar el token antes de iniciar sesión
+      this.loading = false;
+      try {
+        const response = await api.post(
+          "/api/medicos/medicos/filtro_data_medicos/",
+          filtros
+        );
+        // Guardar el token en el estado y en el localStorage
+        this.medicos = response.data;
+      } catch (error) {
+        console.error("Error al cargar los médicos:", error);
+      } finally {
+        this.loading = true;
+      }
+    },
     async fetchMedicosConAfiliacion() {
       // Limpiar el token antes de iniciar sesión
       this.loading = false;
@@ -52,13 +68,9 @@ export const useMedicoStore = defineStore("medico", {
       // Limpiar el token antes de iniciar sesión
       this.loading = false;
       try {
-        const queryString = estadosPago
-          .map((pago) => `pagos=${encodeURIComponent(pago)}`)
-          .join("&");
-
-        // Realizar la solicitud GET con la cadena de consulta manual
-        const response = await api.get(
-          `/api/medicos/medicos/por_estados_pago/?${queryString}`
+        const response = await api.post(
+          "/api/medicos/medicos/por_estados_pago/",
+          { estados: estadosPago }
         );
         // Guardar el token en el estado y en el localStorage
         this.medicos = response.data;
