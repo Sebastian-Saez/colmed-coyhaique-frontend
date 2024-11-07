@@ -28,7 +28,7 @@
                   spinner-color="primary"
                 />
               </template>
-              <template v-else-if="noticia.link.link">
+              <template v-else-if="noticia.link && noticia.link.link">
                 <div
                   class="q-mt-md"
                   style="
