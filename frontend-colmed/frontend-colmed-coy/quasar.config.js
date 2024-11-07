@@ -29,9 +29,9 @@ module.exports = configure(function (/* ctx */) {
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
-      // 'ionicons-v4',
+      "ionicons-v4",
       // 'mdi-v7',
-      // 'fontawesome-v6',
+      "fontawesome-v6",
       // 'eva-icons',
       // 'themify',
       // 'line-awesome',
@@ -123,7 +123,7 @@ module.exports = configure(function (/* ctx */) {
       config: {},
 
       // iconSet: 'material-icons', // Quasar icon set
-      // lang: 'en-US', // Quasar language pack
+      lang: "es", // Quasar language pack
 
       // For special cases outside of where the auto-import strategy can have an impact
       // (like functional components as one of the examples),

@@ -33,6 +33,23 @@
   background-color: $page-background !important; // Fondo de la página
 }
 
+.logo-img {
+  width: 204px;
+  height: 82px;
+
+  @media (max-width: 600px) {
+    width: 150px;
+    height: auto;
+  }
+}
+
+.custom-popup-style {
+  padding: 1px;
+  border: 0px solid #ddd;
+  box-shadow: 0 6px 12px rgba(0, 2, 0, 0.15);
+  width: 2px;
+}
+
 // Tipografía
 .text-primary {
   color: $primary !important;
