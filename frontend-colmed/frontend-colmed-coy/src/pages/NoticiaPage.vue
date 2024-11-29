@@ -50,11 +50,13 @@
         </div>
       </div>
     </div>
+    <FooterSection />
   </q-layout>
 </template>
 
 <script setup>
 import ToolbarSection from "components/ToolbarSection.vue";
+import FooterSection from "src/components/FooterSection.vue";
 import { useRouter, useRoute } from "vue-router";
 import { useInformacionesStore } from "src/stores/informaciones";
 import { computed, ref, onMounted } from "vue";

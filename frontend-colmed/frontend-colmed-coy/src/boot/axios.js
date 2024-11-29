@@ -24,41 +24,50 @@ api.interceptors.response.use(
     const router = useRouter(); // Obtener el router para redirigir en caso necesario
 
     // Si el error es 401 y el token no es válido, intentar refrescar el token
-    if (
-      error.response.status === 401 &&
-      error.response.data.code === "token_not_valid"
-    ) {
-      const refreshToken = localStorage.getItem("refreshToken"); // Recuperar el refresh token
+    if (error.response) {
+      if (
+        error.response.status === 401 &&
+        error.response.data.code === "token_not_valid"
+      ) {
+        const refreshToken = localStorage.getItem("refreshToken"); // Recuperar el refresh token
 
-      // Si hay un refresh token guardado, intentar refrescar el token de acceso
-      if (refreshToken) {
-        try {
-          // Hacer una solicitud para refrescar el token de acceso
-          const response = await api.post("/api/colmed/token/refresh/", {
-            refresh: refreshToken,
-          });
+        // Si hay un refresh token guardado, intentar refrescar el token de acceso
+        if (refreshToken) {
+          try {
+            // Hacer una solicitud para refrescar el token de acceso
+            const response = await api.post("/api/colmed/token/refresh/", {
+              refresh: refreshToken,
+            });
 
-          // Guardar el nuevo token de acceso en el localStorage
-          const newAccessToken = response.data.access;
-          localStorage.setItem("authToken", newAccessToken);
+            // Guardar el nuevo token de acceso en el localStorage
+            const newAccessToken = response.data.access;
+            localStorage.setItem("authToken", newAccessToken);
 
-          // Actualizar el token en la cabecera de la solicitud original
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+            // Actualizar el token en la cabecera de la solicitud original
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
-          // Reintentar la solicitud original con el nuevo token
-          return api(originalRequest);
-        } catch (err) {
-          console.error("Error al refrescar el token:", err);
-          // Si falla el refresco, eliminar los tokens y redirigir a login
-          localStorage.removeItem("authToken");
-          localStorage.removeItem("refreshToken");
+            // Reintentar la solicitud original con el nuevo token
+            return api(originalRequest);
+          } catch (err) {
+            console.error("Error al refrescar el token:", err);
+            // Si falla el refresco, eliminar los tokens y redirigir a login
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("refreshToken");
+            router.push("/login");
+          }
+        } else {
+          // Si no hay refresh token, redirigir a la página de login
           router.push("/login");
         }
-      } else {
-        // Si no hay refresh token, redirigir a la página de login
-        router.push("/login");
       }
+    } else if (error.request) {
+      // La solicitud fue hecha pero no hubo respuesta
+      console.error("No se recibió respuesta del servidor:", error.request);
+    } else {
+      // Algo ocurrió al configurar la solicitud
+      console.error("Error al configurar la solicitud:", error.message);
     }
+
     // Rechazar la promesa si no se puede refrescar el token o si hay otro tipo de error
     return Promise.reject(error);
   }

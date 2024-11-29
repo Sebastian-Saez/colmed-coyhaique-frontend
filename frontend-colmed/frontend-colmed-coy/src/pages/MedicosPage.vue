@@ -1,9 +1,68 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="bg-page">
     <!-- Header con logo y perfil de usuario -->
-    <q-header elevated class="bg-primary text-white">
+    <q-toolbar class="bg-primary text-white shadow-2">
+      <q-btn flat @click="goHome">
+        <img
+          src="~assets/LogoCOLMEDAYSEN_letras_blancas.png"
+          alt="Colegio Médico Logo"
+          style="width: 204px; height: 82px"
+          class="q-mr-sm"
+        />
+      </q-btn>
+      <q-separator dark vertical inset />
+      <q-space />
+
+      <q-card flat class="bg-primary">
+        <q-card-section class="bg-primary text-white">
+          <div class="text-subtitle1 text-weight-medium">
+            {{ userProfile.first_name + " " + userProfile.last_name }}
+          </div>
+          <div class="text-overline text-weight-medium">
+            Tipo perfil: {{ perfilActual }}
+          </div>
+        </q-card-section>
+      </q-card>
+      <q-separator dark vertical inset />
+      <q-btn-dropdown
+        no-caps
+        stretch
+        flat
+        icon="switch_account"
+        label="Cambiar perfil"
+      >
+        <q-list>
+          <q-item
+            v-for="val in perfiles"
+            :key="val.clave"
+            clickable
+            @click="changeProfile(val)"
+          >
+            <q-item-section>
+              <div class="text-overline">
+                {{ val.tipo_perfil }}
+              </div></q-item-section
+            >
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
+      <q-separator dark vertical />
+      <q-btn stretch flat no-caps @click="logout" icon="logout">
+        <q-tooltip> Cerrar sesión </q-tooltip>
+      </q-btn>
+      <!-- <q-separator dark vertical inset />
+      <q-btn
+        no-caps
+        stretch
+        flat
+        @click="logout"
+        icon="logout"
+        label="Cerrar sesión"
+      /> -->
+    </q-toolbar>
+    <!-- <q-header elevated class="bg-primary text-white">
       <q-toolbar>
-        <!-- Logo a la izquierda -->
+        
         <q-btn flat @click="goHome">
           <img
             src="~assets/LogoCOLMEDAYSEN_letras_blancas.png"
@@ -11,38 +70,50 @@
             style="width: 204px; height: 82px"
           />
         </q-btn>
-        <!-- Datos del usuario a la derecha -->
+        
         <div class="q-mr-md q-ml-auto row items-center">
           Usuario:
-          <span class="q-ml-xs text-bold">{{ userProfile?.email }}</span>
+          <span class="q-ml-xs text-bold">{{
+            userProfile.first_name + " " + userProfile.last_name
+          }}</span>
 
-          <!-- Separator vertical -->
+          
           <q-separator vertical inset class="q-mx-md" />
 
           Tipo perfil:
-          <span class="q-ml-xs text-bold" v-if="formattedProfile">
+          <span class="q-ml-xs text-bold">
             {{ formattedProfile }}
           </span>
         </div>
-
-        <!-- Botón para cerrar sesión -->
-        <q-btn flat @click="logout" icon="logout" label="Cerrar sesión" />
+        <q-btn no-caps flat icon="switch_account" label="Cambiar perfil" />
+        
+        <q-btn
+          no-caps
+          flat
+          @click="logout"
+          icon="logout"
+          label="Cerrar sesión"
+        />
       </q-toolbar>
-    </q-header>
+    </q-header> -->
 
     <!-- Page Container -->
     <q-page-container>
       <!-- Contenido Principal -->
       <q-page class="q-pa-md">
         <!-- Spinner de carga -->
-        <div v-if="!loading" class="text-center q-my-lg">
+        <!-- <div v-if="!loading" class="text-center q-my-lg">
           <q-spinner-dots size="50px" color="primary" />
           <p class="q-mt-md">Cargando datos...</p>
-        </div>
+        </div> -->
+        <q-inner-loading :showing="!loading">
+          <div class="text-overline">Cargando datos...</div>
+          <q-spinner-dots color="primary" size="2em"
+        /></q-inner-loading>
 
         <!-- Tabla de Médicos -->
-        <div v-else>
-          <q-card flat class="q-pa-sm bg-white">
+        <div v-if="loading">
+          <q-card flat class="q-pa-sm bg-grey-2">
             <q-splitter
               v-model="splitterModel"
               unit="px"
@@ -321,7 +392,12 @@
                       <div
                         class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-4 grid-style-transition"
                       >
-                        <q-card bordered flat>
+                        <q-card
+                          bordered
+                          flat
+                          style="border-radius: 5%"
+                          class="bg-grey-3"
+                        >
                           <q-list dense>
                             <q-item
                               v-for="col in props.cols.filter(
@@ -366,14 +442,14 @@
           </q-card>
         </div>
         <q-dialog v-model="detailsDialog" persistent>
-          <q-card style="min-width: 800px">
+          <q-card style="min-width: 800px; border-radius: 20px">
             <q-card-section>
               <div class="text-h4">Detalles del Médico</div>
             </q-card-section>
 
             <q-separator />
 
-            <q-card-section>
+            <q-card-section class="text-primary bg-grey-2">
               <div>
                 <p>
                   <strong>Nombre:</strong> {{ selectedMedico.user.first_name }}
@@ -407,7 +483,7 @@
                     group="somegroup"
                     :label="afiliacion.entidad.nombre_entidad"
                     :default-opened="afiliacion.entidad.sigla === 'COLMED'"
-                    header-class="text-primary"
+                    header-class="bg-light-blue-10 text-white"
                   >
                     <q-card>
                       <q-card-section>
@@ -468,19 +544,40 @@ import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-
 import { useUserStore } from "src/stores/authStore";
 import { useMedicoStore } from "src/stores/medicos";
+import { useInformacionesStore } from "src/stores/informaciones";
 
 const router = useRouter();
 const userStore = useUserStore();
 const medicoStore = useMedicoStore();
+const informacionStore = useInformacionesStore();
 const splitterModel = ref(280);
 
 const medicos = computed(() => medicoStore.medicos);
 const afiliaciones = computed(() => medicoStore.afiliaciones);
 const filter = ref("");
 const loading = computed(() => medicoStore.loading);
+
+// Recuperar el perfil del usuario
+const userProfile = computed(() => userStore.user);
+const perfiles = computed(() => userStore.profiles);
+const perfilActual = computed(() => userStore.opcion_profile);
+
+// Función para formatear el perfil a mostrar (sin cambios)
+const formattedProfile = computed(() => {
+  const perfil = perfiles.value[0].tipo_perfil;
+  switch (perfil) {
+    case "admin_colmed":
+      return "Administrador Colmed";
+    case "admin_noticias":
+      return "Administrador Noticias";
+    case "admin_tic":
+      return "Gestor Informático";
+    default:
+      return null; // No mostrar nada para el perfil "visitante"
+  }
+});
 
 dayjs.extend(customParseFormat);
 
@@ -558,23 +655,6 @@ const errorEndDateTitle = ref({
   valor: true,
   mensaje: "",
 });
-// Recuperar el perfil del usuario
-const userProfile = ref(userStore.profile);
-
-// Función para formatear el perfil a mostrar (sin cambios)
-const formattedProfile = computed(() => {
-  const perfil = userStore.profile?.perfil;
-  switch (perfil) {
-    case "admin_colmed":
-      return "Administrador Colmed";
-    case "admin_noticias":
-      return "Administrador Noticias";
-    case "admin_tic":
-      return "Gestor Informático";
-    default:
-      return null; // No mostrar nada para el perfil "visitante"
-  }
-});
 
 const filtros = {
   fecha_nacimiento_inicio: startDateBirthdate.value,
@@ -646,7 +726,6 @@ const onEndDateBirthChange = (newValue) => {
 
   // Luego, comparamos las fechas
   if (newValue < startDateBirthdate.value) {
-    console.log("Corresponde error");
     errorEndDateBirth.value.valor = false;
     errorEndDateBirth.value.mensaje =
       "Fecha 'Hasta' no puede ser menor a la fecha 'Desde'";
@@ -658,7 +737,6 @@ const onEndDateBirthChange = (newValue) => {
   errorEndDateBirth.value.mensaje = "";
   errorStartDateBirth.value.valor = true;
   errorStartDateBirth.value.mensaje = "";
-  console.log("Fecha válida y mayor o igual a la fecha inicial");
 };
 
 const onStartDateBirthChange = (newValue) => {
@@ -847,6 +925,26 @@ const logout = () => {
 // Redirigir a home
 const goHome = () => {
   router.push("/home");
+};
+
+const changeProfile = async (val) => {
+  userStore.changeProfile(val.tipo_perfil);
+
+  switch (val.tipo_perfil) {
+    case "admin_colmed":
+      await medicoStore.fetchMedicos();
+      router.push("/medicos");
+      break;
+    case "admin_noticias":
+      await informacionStore.fetchTodasNoticias();
+      router.push("/admin-noticias");
+      break;
+    case "admin_tic":
+      router.push("/admin-tic");
+      break;
+    default:
+      return null; // No mostrar nada para el perfil "visitante"
+  }
 };
 
 //Método para abrir el diálogo y asignar el médico seleccionado

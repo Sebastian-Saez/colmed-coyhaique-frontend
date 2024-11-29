@@ -30,18 +30,26 @@
 }
 
 .bg-page {
+  //background-color: $page-background !important; // Fondo de la página
+  background: linear-gradient(-180deg, $terciary 55%, $secondary 80%);
+  //background: linear-gradient(-225deg, $terciary 0%, $light-blue-10 100%);
+  // background: linear-gradient(-225deg, $terciary 0%, $terciary 80%, $light-blue-10 100%);
+}
+
+.bg-destacado {
   background-color: $page-background !important; // Fondo de la página
+  //background: linear-gradient(-225deg, $terciary 75%, $light-blue-10 100%);
 }
 
-.logo-img {
-  width: 204px;
-  height: 82px;
+// .logo-img {
+//   width: 204px;
+//   height: 82px;
 
-  @media (max-width: 600px) {
-    width: 150px;
-    height: auto;
-  }
-}
+//   @media (max-width: 600px) {
+//     width: 150px;
+//     height: auto;
+//   }
+// }
 
 .custom-popup-style {
   padding: 1px;
@@ -117,4 +125,17 @@
   &:hover {
     background-color: darken($secondary, 10%);
   }
+}
+
+.custom-table .q-table__title {
+  background-color: #204664;
+  color: white; /* Color de texto blanco para el título */
+}
+
+.custom-table .q-table__head {
+  background-color: #204664;
+}
+
+.custom-table .q-table__head th {
+  color: white; /* Color de texto blanco para la cabecera */
 }

@@ -1,15 +1,49 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="bg-page">
-    <div class="q-pa-md flex justify-center">
-      <div class="q-mx-xl q-px-xl" style="max-width: 1600px; width: 90%">
-        <ToolbarSection />
-        <q-card class="q-mx-xl q-pa-md bg-white">
-          <div class="text-h3 text-bold text-primary">Servicios</div>
-          <q-splitter v-model="splitterModel" style="height: 550px">
+    <div class="q-pa-md">
+      <div
+        class="q-mt-xs justify-center"
+        :class="isLargeScreen ? 'q-mx-xl q-px-xl' : ''"
+      >
+        <ToolbarSection :isLargeScreen="isLargeScreen" />
+        <q-card
+          class="q-pa-md bg-grey-1"
+          :class="isLargeScreen ? 'q-ml-lg q-mr-xl' : 'q-mx-lg'"
+          style="border-radius: 20px"
+        >
+          <div class="text-h4 text-bold text-primary">Servicios</div>
+          <q-separator spaced />
+          <q-splitter
+            v-model="splitterModel"
+            style="height: 400px"
+            :limits="computedLimits"
+          >
             <template v-slot:before>
-              <q-tabs v-model="tab" vertical class="text-teal">
-                <q-tab name="pagos" label="Información de pagos" />
-                <q-tab name="colegiarse" label="Colegiarse" />
+              <q-tabs
+                v-model="tab"
+                vertical
+                active-color="grey-2"
+                indicator-color="secondary"
+                active-bg-color="red-14"
+              >
+                <q-tab
+                  no-caps
+                  class="text-white bg-red-2 q-mb-xs q-mr-md tab-button"
+                  name="pagos"
+                  label="Información de pagos"
+                />
+                <q-tab
+                  no-caps
+                  class="text-white bg-red-2 q-mb-xs q-mr-md tab-button"
+                  name="colegiarse"
+                  label="Colegiarse"
+                />
+                <q-tab
+                  no-caps
+                  class="text-white bg-red-2 q-mb-xs q-mr-md tab-button"
+                  name="casa_medico"
+                  label="Casa del médico"
+                />
               </q-tabs>
             </template>
 
@@ -19,28 +53,115 @@
                 animated
                 swipeable
                 vertical
-                transition-prev="jump-up"
-                transition-next="jump-up"
+                transition-prev="slide-up"
+                transition-next="slide-up"
+                class="bg-grey-1"
               >
                 <q-tab-panel name="pagos">
-                  <div class="text-h4 text-primary q-mb-md">Pagos</div>
+                  <div class="text-h4 text-primary q-mb-md">
+                    Cuota del Colegio Médico de Chile
+                  </div>
                   <div class="text-h6 text-primary q-mb-md">
                     Conoce el pago de tus cuotas
                   </div>
                   <div
                     class="text-subtitle1 text-weight-light text-primary q-pb-md"
                   >
-                    Como Colegio Médico Santiago (esto es un ejemplo), queremos
-                    que el cobro de la cuota que pagas sea transparente y claro.
-                    Por ello a continuación entregamos un desglose según el
-                    tramo en el que te encuentras. Es importante señalar que la
-                    categoría “Becado” corresponde a un tipo de cuota que
-                    terminará en la medida que vayan finalizando su período de
-                    beca quienes alcanzaron a ingresar en este tramo. En el caso
-                    de la APS, este año se estableció el valor 2019, dejando en
-                    valor antiguo sólo a los que ingresaron hasta diciembre de
-                    2018.
+                    La cuota social del Colegio Médico de Chile se distribuye
+                    para el Consejo Nacional y los Consejos Regionales. El
+                    dinero recaudado se ocupa para la ejecución de toda la
+                    actividad gremial que desarrolla la Mesa Directiva Nacional,
+                    los nueve departamentos, las tres agrupaciones, los médicos
+                    mayores, las viudas de médicos y las cuatro comisiones.
+                    Además, del trabajo de los 20 Regionales, distribuidos a lo
+                    largo del país.
                   </div>
+                  <div
+                    class="text-subtitle1 text-weight-light text-primary q-pb-md"
+                  >
+                    A continuación entregamos un desglose según el tramo en el
+                    que te encuentras.
+                  </div>
+                  <q-card flat class="q-mb-xl">
+                    <div class="text-h5 text-primary">Tipos de cuotas</div>
+                    <q-list bordered>
+                      <q-item
+                        v-for="(item, index) in lista_cuotas"
+                        :key="index"
+                      >
+                        <q-card flat>
+                          <div class="text-h6 text-overline text-primary">
+                            {{ item.tipo_cuota }}
+                          </div>
+                          <div
+                            class="text-subtitle1 text-weight-light text-primary"
+                          >
+                            {{ item.descripcion }}
+                          </div>
+                        </q-card>
+                      </q-item>
+                      <q-item-section class="q-pl-md">
+                        <div class="text-h6 text-caption text-primary">
+                          (*) Para nuevos colegiados. Aprobadas en Asamblea
+                          General de Puerto Chacabuco, junio 2018.
+                        </div>
+                      </q-item-section>
+                    </q-list>
+                  </q-card>
+                  <q-card flat class="q-mt-xl q-mb-xl">
+                    <div class="text-h5 text-primary">Valores de cuotas</div>
+                    <q-separator />
+                    <q-table
+                      :rows="rows"
+                      :columns="columns"
+                      row-key="name"
+                      hide-bottom
+                      separator="cell"
+                      class="custom-table q-mt-md"
+                    />
+                  </q-card>
+                  <q-separator spaced />
+                  <q-card flat class="q-mt-xl">
+                    <div class="text-h5 text-primary">
+                      Detalle cuota Fondo Solidaridad Gremial
+                    </div>
+                    <q-separator />
+                    <q-table
+                      :rows="rows_fsg"
+                      :columns="columns_fsg"
+                      row-key="name"
+                      hide-bottom
+                      separator="cell"
+                      class="custom-table q-mt-md"
+                    />
+                  </q-card>
+                  <q-separator spaced />
+                  <q-card flat class="q-mt-xl">
+                    <div class="text-h5 text-primary">
+                      Detalles para reafiliación
+                    </div>
+                    <q-separator />
+                    <div class="text-subtitle1 text-weight-light text-primary">
+                      Quien hubiera sido desafiliado por renuncia podrá
+                      reincorporarse por una sola vez y ésta deberá aprobarse en
+                      el Consejo Regional correspondiente y en la Mesa Directiva
+                      Nacional por la mayoría de los miembros en ejercicio.
+                      Quien hubiera perdido su calidad de afiliado por no
+                      cancelar las cuotas sociales durante doce meses
+                      consecutivos, sólo podrá reafiliarse por dos veces. Si
+                      quisiera reincorporarse por tercera vez a la Orden, deberá
+                      ser autorizado por la Mesa Directiva Nacional, por la
+                      mayoría absoluta de sus miembros en ejercicio.
+                    </div>
+                    <q-table
+                      :rows="rows_reafiliacion"
+                      :columns="columns_reafiliacion"
+                      row-key="name"
+                      hide-bottom
+                      separator="cell"
+                      class="custom-table q-mt-md"
+                    />
+                  </q-card>
                 </q-tab-panel>
 
                 <q-tab-panel name="colegiarse">
@@ -70,7 +191,16 @@
                   </div>
                   <div class="text-subtitle1 text-weight-light text-primary">
                     El trámite de colegiatura se realiza de manera online,
-                    ingresando a https://inscripcioncolmed.colegiomedico.cl
+                    ingresando a
+                    <q-btn
+                      label="Inscripción Colegio Médico"
+                      no-caps
+                      href="https://inscripcioncolmed.colegiomedico.cl"
+                      target="_blank"
+                      outline
+                      rounded
+                      icon-right="arrow_forward"
+                    />
                   </div>
                   <div
                     class="text-h6 text-overline text-primary q-mb-md q-pt-md"
@@ -261,17 +391,66 @@
                     ello.
                   </div>
                 </q-tab-panel>
+                <q-tab-panel name="casa_medico">
+                  <div class="text-h4 text-primary q-mb-md">
+                    Nuestra Casa del Médico
+                  </div>
+                  <div class="text-subtitle1 text-weight-light text-primary">
+                    Nuestra sede regional cuenta con habitaciones para
+                    colegiados, ubicada en Manuel Montt #69, media cuadra de la
+                    Plaza de Armas, Coyhaique.
+                  </div>
+                  <q-separator spaced />
+                  <q-card flat>
+                    <q-card-section>
+                      <div class="text-h6 text-primary">Habitación 1</div>
+                      <div
+                        class="text-subtitle1 text-weight-light text-primary q-mb-xs"
+                      >
+                        Dos camas de plaza y media. Valor de $25.000 por
+                        persona.
+                      </div>
+                      <div class="text-h6 text-primary">Habitación 2</div>
+                      <div
+                        class="text-subtitle1 text-weight-light text-primary q-mb-xs"
+                      >
+                        Cama matrimonial. Valor de $35.000.
+                      </div>
+                      <div class="text-h6 text-primary">Habitación 3</div>
+                      <div
+                        class="text-subtitle1 text-weight-light text-primary"
+                      >
+                        Cama de plaza y media. Valor de $25.000.
+                      </div>
+                    </q-card-section>
+
+                    <q-separator />
+                    <q-card-section>
+                      <div class="text-h6 text-caption text-primary">
+                        - Cocina, living-comedor compartido
+                      </div>
+                      <div class="text-h6 text-caption text-primary">
+                        - Baño compartido
+                      </div>
+                      <div class="text-h6 text-caption text-primary">
+                        - No incluye desayuno
+                      </div>
+                    </q-card-section>
+                  </q-card>
+                </q-tab-panel>
               </q-tab-panels>
             </template>
           </q-splitter>
         </q-card>
       </div>
     </div>
+    <FooterSection :isLargeScreen="isLargeScreen" />
   </q-layout>
 </template>
 <script setup>
 import ToolbarSection from "components/ToolbarSection.vue";
-import { useRouter } from "vue-router";
+import FooterSection from "src/components/FooterSection.vue";
+import { useQuasar } from "quasar";
 import { useServicioStore } from "src/stores/servicios";
 import { computed, ref } from "vue";
 
@@ -279,10 +458,198 @@ defineOptions({
   name: "ServiciosPage",
 });
 
+const $q = useQuasar();
+const isLargeScreen = computed(() => {
+  return $q.screen.gt.md;
+});
 const servicioStore = useServicioStore();
 
 const categoriaServicio = computed(() => servicioStore.pagina_servicio);
-const tabServicio = ref(categoriaServicio.value);
-const tab = ref(categoriaServicio.value || "mision");
-const splitterModel = ref(20);
+// const tab = computed(() => categoriaServicio.value || "pagos");
+const tab = computed({
+  get() {
+    return servicioStore.pagina_servicio || "pagos";
+  },
+  set(value) {
+    servicioStore.pagina_servicio = value;
+  },
+});
+const computedLimits = computed(() => {
+  return isLargeScreen.value ? [15, 30] : [31, 31];
+});
+const splitterModel = ref(isLargeScreen.value ? 15 : 31);
+// const splitterModel = ref(20);
+const lista_cuotas = [
+  {
+    tipo_cuota: "CUOTA ENTERA",
+    descripcion:
+      "Médicos de más de 9 años, paga el 100% de los componentes de la cuota ordinaria, especial y regional.",
+  },
+  {
+    tipo_cuota: "CUOTA JOVEN",
+    descripcion:
+      "Médicos de entre 0 y 8, 11 meses y 29 días, paga el 50% de los componentes de la cuota ordinaria, especial y regional.",
+  },
+  {
+    tipo_cuota: "CUOTA APS",
+    descripcion:
+      "Médicos que cumplidos los 9 años, trabajen un mínimo de 33 horas en APS o equivalente, sin consideración al tipo de contrato, paga el 75% de los componentes de la cuota ordinaria, especial y regional.",
+  },
+];
+
+const columns = [
+  {
+    name: "name",
+    required: true,
+    label: "Tipo de Cuota",
+    align: "left",
+    field: (row) => row.name,
+    sortable: true,
+  },
+  {
+    name: "cuota",
+    align: "center",
+    label: "Cuota",
+    field: "cuota",
+    sortable: true,
+  },
+  { name: "fsg", label: "FSG", field: "fsg", sortable: true, align: "center" },
+  {
+    name: "cuota_fsg",
+    label: "Cuota + FSG",
+    field: "cuota_fsg",
+    align: "center",
+  },
+  { name: "falmed", label: "Falmed", field: "falmed", align: "center" },
+];
+
+const rows = [
+  {
+    name: "Cuota entera (+ 9 años)",
+    cuota: "$52.104",
+    fsg: "$24.148",
+    cuota_fsg: "$76.252",
+    falmed: "$30.320",
+  },
+  {
+    name: "Cuota entera (3 - 9 años)",
+    cuota: "$48.418",
+    fsg: "$19.711",
+    cuota_fsg: "$68.129",
+    falmed: "$30.320",
+  },
+  {
+    name: "Cuota Media Joven",
+    cuota: "$26.052",
+    fsg: "$12.074",
+    cuota_fsg: "$38.126",
+    falmed: "$15.160",
+  },
+  {
+    name: "Cuota APS",
+    cuota: "$39.078",
+    fsg: "$18.111",
+    cuota_fsg: "$57.189",
+    falmed: "$15.160",
+  },
+];
+
+const columns_fsg = [
+  {
+    name: "name",
+    required: true,
+    label: "Tipo de Cuota",
+    align: "left",
+    field: (row) => row.name,
+    sortable: true,
+  },
+  {
+    name: "cuota",
+    align: "center",
+    label: "Cuota",
+    field: "cuota",
+    sortable: true,
+  },
+];
+
+const rows_fsg = [
+  {
+    name: "Cuota Entera (+ 9 años)",
+    cuota: "$24.148",
+  },
+  {
+    name: "Cuota Entera (3 - 9 años)",
+    cuota: "$19.711",
+  },
+  {
+    name: "Cuota Media Joven",
+    cuota: "$12.074",
+  },
+  {
+    name: "Media por edad",
+    cuota: "$12.074",
+  },
+  {
+    name: "APS",
+    cuota: "$15.160",
+  },
+];
+
+const columns_reafiliacion = [
+  {
+    name: "name",
+    required: true,
+    label: "Años desafiliados",
+    align: "left",
+    field: (row) => row.name,
+  },
+  {
+    name: "cuota",
+    align: "center",
+    label: "Valor reafiliación",
+    field: "cuota",
+  },
+];
+
+const rows_reafiliacion = [
+  {
+    name: "1",
+    cuota: "$74.352",
+  },
+  {
+    name: "2",
+    cuota: "$89.222",
+  },
+  {
+    name: "3",
+    cuota: "$104.092",
+  },
+  {
+    name: "4",
+    cuota: "$118.963",
+  },
+  {
+    name: "5",
+    cuota: "$133.833",
+  },
+  {
+    name: "6 o más",
+    cuota: "$148.703",
+  },
+];
 </script>
+
+<style lang="sass">
+.custom-table
+  .q-table__top
+    background-color: #204664
+    color: white
+
+  thead tr:first-child th
+    background-color: #204664
+    color: white
+    font-size: 16px
+    font-display:bold
+.tab-button
+  border-radius: 50px 0px 0px 50px
+</style>

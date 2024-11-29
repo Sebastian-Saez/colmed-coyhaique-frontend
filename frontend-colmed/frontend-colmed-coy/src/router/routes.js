@@ -23,6 +23,10 @@ const routes = [
     component: () => import("src/pages/MedicosPage.vue"),
   },
   {
+    path: "/admin-noticias",
+    component: () => import("src/pages/AdminNoticiasPage.vue"),
+  },
+  {
     path: "/servicios",
     component: () => import("src/pages/ServiciosPage.vue"),
   },

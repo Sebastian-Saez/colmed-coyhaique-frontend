@@ -23,7 +23,6 @@ export const useServicioStore = defineStore("servicio", {
       }
     },
     async setCategoriaServicio(categoria) {
-      console.log("Categoria ", categoria);
       this.loading = false;
       this.pagina_servicio = categoria;
       this.loading = true;

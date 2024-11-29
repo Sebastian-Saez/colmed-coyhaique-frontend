@@ -1,13 +1,18 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="bg-page">
-    <div class="q-pa-md flex justify-center">
-      <div class="q-mx-xl q-px-xl" style="max-width: 1600px; width: 90%">
-        <ToolbarSection />
+    <div class="q-pa-md">
+      <div
+        class="q-mt-xs justify-center"
+        :class="isLargeScreen ? 'q-mx-xl q-px-xl' : ''"
+      >
+        <ToolbarSection :isLargeScreen="isLargeScreen" />
         <q-card
-          class="q-mx-xl q-pa-md bg-white"
+          class="q-pa-md bg-grey-1"
+          :class="isLargeScreen ? 'q-ml-lg q-mr-xl' : 'q-mx-lg'"
           v-if="tabInformacion == 'noticias'"
+          style="border-radius: 20px"
         >
-          <div class="text-h3 text-bold text-primary">Todas las noticias</div>
+          <div class="text-h4 text-bold text-primary">Todas las noticias</div>
           <div v-if="!loading" class="text-center q-my-lg">
             <q-spinner-dots size="50px" color="primary" />
             <p class="q-mt-md">Cargando datos...</p>
@@ -18,7 +23,79 @@
               :key="index"
               class="col-12 col-md-4"
             >
-              <template v-if="noticia.imagen">
+              <!-- style="linear-gradient(to right, #2B86C5 0%, #2B86C5 100%)" -->
+              <q-card flat class="bg-grey-2">
+                <q-img
+                  :ratio="isLargeScreen ? 4 / 3 : 2 / 1"
+                  :src="noticia.imagen"
+                  alt="Noticia"
+                  class="rounded-borders"
+                  loading="lazy"
+                  spinner-color="primary"
+                  v-if="noticia.imagen"
+                >
+                  <!-- <div class="absolute-bottom text-h6">
+                  Title
+                </div> -->
+                  <!-- <div class="absolute-bottom text-h5 text-bold text-primary q-mt-md">
+                  {{ noticia.titulo }}
+                </div> -->
+                  <div class="absolute-bottom text-h5 text-bold text-white">
+                    {{ noticia.titulo }}
+                  </div>
+                </q-img>
+                <div
+                  class="q-mt-md"
+                  style="
+                    position: relative;
+                    padding-bottom: 63%;
+                    height: 0;
+                    overflow: hidden;
+                  "
+                  v-else-if="noticia.link && noticia.link.link"
+                >
+                  <iframe
+                    :src="`https://www.facebook.com/plugins/video.php?href=${noticia.link.link}&show_text=0&width=560`"
+                    style="
+                      position: absolute;
+                      top: 0;
+                      left: 0;
+                      width: 100%;
+                      height: 100%;
+                      border: none;
+                      overflow: hidden;
+                    "
+                    frameborder="0"
+                    allow="autoplay; encrypted-media"
+                    allowfullscreen
+                  ></iframe>
+                </div>
+                <q-img
+                  v-else
+                  :ratio="isLargeScreen ? 4 / 3 : 2 / 1"
+                  src="https://placehold.co/500x500"
+                  alt="Noticia"
+                  class="rounded-md"
+                />
+                <q-card-section>
+                  <div class="text-body2 q-mt-xs text-weight-medium">
+                    {{ noticia.resumen_contenido }}
+                  </div>
+                </q-card-section>
+                <q-separator inset />
+                <q-card-actions>
+                  <q-btn
+                    flat
+                    no-caps
+                    label="Leer"
+                    icon-right="arrow_forward"
+                    class="text-primary q-mt-md"
+                    @click="goToNoticia(noticia)"
+                  />
+                </q-card-actions>
+              </q-card>
+              <q-separator class="q-mt-lg" v-if="!isLargeScreen" />
+              <!-- <template v-if="noticia.imagen">
                 <q-img
                   :ratio="4 / 3"
                   :src="noticia.imagen"
@@ -67,7 +144,7 @@
               <div class="text-h5 text-bold text-primary q-mt-md">
                 {{ noticia.titulo }}
               </div>
-              <div class="text-body1 q-mt-md">
+              <div class="text-subtitle1 q-mt-xs text-weight-light">
                 {{ noticia.resumen_contenido }}
               </div>
               <q-btn
@@ -77,7 +154,7 @@
                 icon-right="arrow_forward"
                 class="text-primary q-mt-md"
                 @click="goToNoticia(noticia)"
-              />
+              /> -->
             </div>
           </div>
           <!-- <div class="text-center">
@@ -94,6 +171,20 @@
           v-else-if="tabInformacion == 'eventos'"
         >
           <div class="text-h3 text-bold text-primary">Todos los eventos</div>
+          {{ eventos }} eventos?
+          <q-card>
+            <div class="calendar-container">
+              <iframe
+                src="https://calendar.google.com/calendar/embed?src=c_78d2b5bff047ec1a63adb88d03dc3129cad5e15379487fe9a2bb544dbf11ea20%40group.calendar.google.com&ctz=America%2FSantiago"
+                style="border: 0"
+                width="800"
+                height="600"
+                frameborder="0"
+                scrolling="no"
+                mode="MONTH"
+              ></iframe>
+            </div>
+          </q-card>
           <div class="row q-col-gutter-md">
             <div
               v-for="(evento, index) in lista_eventos"
@@ -127,19 +218,29 @@
         </q-card>
       </div>
     </div>
+    <FooterSection :isLargeScreen="isLargeScreen" />
   </q-layout>
 </template>
 <script setup>
 import ToolbarSection from "components/ToolbarSection.vue";
+import FooterSection from "src/components/FooterSection.vue";
 import { useRouter } from "vue-router";
+import { useQuasar } from "quasar";
 import { useInformacionesStore } from "src/stores/informaciones";
+import { useCalendarStore } from "src/stores/calendar";
 import { computed, ref, onMounted } from "vue";
 
 defineOptions({
   name: "InformacionesPage",
 });
 
+const $q = useQuasar();
+const isLargeScreen = computed(() => {
+  return $q.screen.gt.md;
+});
+
 const informacionStore = useInformacionesStore();
+const calendarStore = useCalendarStore();
 const router = useRouter();
 
 const categoriaInformacion = computed(
@@ -148,7 +249,7 @@ const categoriaInformacion = computed(
 const tabInformacion = ref(categoriaInformacion);
 const todas_noticias = computed(() => informacionStore.todas_noticias);
 const loading = computed(() => informacionStore.loading);
-
+const eventos = computed(() => calendarStore.events);
 onMounted(async () => {
   informacionStore.fetchTodasNoticias();
 });
@@ -178,3 +279,22 @@ const lista_eventos = [
   },
 ];
 </script>
+<style lang="scss">
+.gradient-background {
+  background: linear-gradient(-225deg, $light-blue-2 75%, $light-blue-10 100%);
+}
+.calendar-container {
+  position: relative;
+  padding-bottom: 75%; /* Adjust this value based on the aspect ratio */
+  height: 0;
+  overflow: hidden;
+}
+
+.calendar-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+</style>

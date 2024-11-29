@@ -1,270 +1,24 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="bg-page">
-    <div class="q-pa-md flex justify-center">
-      <div class="q-mx-xl q-px-xl" style="max-width: 1600px; width: 90%">
-        <!-- Toolbar -->
-        <ToolbarSection />
+    <!-- Toolbar Section para pantallas pequeñas -->
+    <!-- <ToolbarSection v-if="!isLargeScreen" :is-large-screen="isLargeScreen" /> -->
 
+    <div class="q-pa-md">
+      <div
+        class="q-mt-xs justify-center"
+        :class="isLargeScreen ? 'q-mx-xl q-px-xl' : ''"
+      >
+        <!-- Toolbar Section para pantallas grandes -->
+        <ToolbarSection :isLargeScreen="isLargeScreen" />
         <!-- Principales Noticias (Image Carousel) -->
-        <q-card class="q-mb-lg q-pa bg-page" flat>
-          <div class="q-pa-md">
-            <div v-if="!loading_destacadas" class="text-center q-my-lg">
-              <q-spinner-dots size="50px" color="primary" />
-              <p class="q-mt-md">Cargando datos...</p>
-            </div>
-
-            <q-carousel
-              v-else
-              animated
-              v-model="imageSlide"
-              navigation
-              infinite
-              :autoplay="autoplay"
-              arrows
-              control-color="primary"
-              control-type="flat"
-              transition-prev="jump-right"
-              transition-next="jump-left"
-              padding
-              height="400px"
-              @mouseenter="autoplay = false"
-              @mouseleave="autoplay = true"
-              transition-duration="400"
-            >
-              <q-carousel-slide
-                v-for="(noticia, index) in noticias_destacadas"
-                :key="index"
-                :name="index + 1"
-                class="column no-wrap bg-page"
-              >
-                <div
-                  class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
-                >
-                  <div class="col-6 q-pa-md">
-                    <div class="q-gutter-y-md column">
-                      <!-- style="max-width: 300px"-->
-                      <div class="text-h3 text-bold text-primary">
-                        {{ noticia.titulo }}
-                      </div>
-                      <div class="text-h6 text-primary">
-                        {{ noticia.resumen_contenido }}
-                      </div>
-                      <q-btn
-                        outline
-                        rounded
-                        color="primary"
-                        label="Más información"
-                        style="width: 50%"
-                        no-caps
-                      />
-                    </div>
-                  </div>
-
-                  <!-- <div class="col-6">
-                    <h3 class="text-lg text-bold text-primary">
-                      {{ noticia.title }}
-                    </h3>
-                    <p class="text-body1 text-description">
-                      {{ noticia.description }}
-                    </p>
-                    <q-btn
-                      outline
-                      rounded
-                      color="primary"
-                      label="Más información"
-                    />
-                  </div> -->
-                  <q-img
-                    v-if="noticia.imagen"
-                    class="rounded-borders col-6 full-height"
-                    :src="noticia.imagen"
-                  />
-                  <q-img
-                    v-else
-                    class="rounded-borders col-6 full-height"
-                    src="https://placehold.co/300x200"
-                    alt="Noticia"
-                  />
-                </div>
-              </q-carousel-slide>
-            </q-carousel>
-          </div>
-        </q-card>
-        <q-separator class="q-mx-xl q-mb-lg" color="primary" inset />
-        <!-- Noticias (News Carousel) flat-->
-
-        <!-- <q-card class="q-mx-xl q-pa-md bg-white">
-          <div class="text-h3 text-bold text-primary">Noticias</div>
-          <div v-if="!loading_base" class="text-center q-my-lg">
-            <q-spinner-dots size="50px" color="primary" />
-            <p class="q-mt-md">Cargando datos...</p>
-          </div>
-          <div v-else class="row q-col-gutter-md">
-            <div
-              v-for="(noticia, index) in lista_noticias"
-              :key="index"
-              class="col-12 col-md-4"
-            >
-              <q-img
-                :ratio="4 / 3"
-                :src="noticia.img"
-                alt="Noticia"
-                class="rounded-md q-mt-md"
-              />
-              <div class="text-h4 text-bold text-primary q-mt-md">
-                {{ noticia.title }}
-              </div>
-              <div class="text-subtitle1 q-mt-md">
-                {{ noticia.description }}
-              </div>
-              <q-btn
-                flat
-                no-caps
-                label="Leer"
-                icon-right="arrow_forward"
-                class="text-primary q-mt-md"
-              />
-            </div>
-          </div>
-          <div class="text-center">
-            <q-btn
-              label="Ver todas las noticias"
-              class="bg-primary text-white q-mt-md"
-              no-caps
-              rounded
-            />
-          </div>
-        </q-card> -->
-        <q-card class="q-mx-xl q-pa-md bg-white">
-          <div class="text-h3 text-bold text-primary">Noticias</div>
-          <div v-if="!loading_base" class="text-center q-my-lg">
-            <q-spinner-dots size="50px" color="primary" />
-            <p class="q-mt-md">Cargando datos...</p>
-          </div>
-          <div v-else class="row q-col-gutter-md">
-            <div
-              v-for="(noticia, index) in noticias_base.slice(0, 3)"
-              :key="index"
-              class="col-12 col-md-4"
-            >
-              <template v-if="noticia.imagen">
-                <q-img
-                  :ratio="4 / 3"
-                  :src="noticia.imagen"
-                  alt="Noticia"
-                  class="rounded-borders q-mt-md"
-                  loading="lazy"
-                  spinner-color="primary"
-                />
-              </template>
-              <template v-else-if="noticia.link.link">
-                <div
-                  class="q-mt-md"
-                  style="
-                    position: relative;
-                    padding-bottom: 75%;
-                    height: 0;
-                    overflow: hidden;
-                  "
-                >
-                  <iframe
-                    :src="`https://www.facebook.com/plugins/video.php?href=${noticia.link.link}&show_text=0&width=560`"
-                    style="
-                      position: absolute;
-                      top: 0;
-                      left: 0;
-                      width: 100%;
-                      height: 120%;
-                      border: none;
-                      overflow: hidden;
-                    "
-                    frameborder="0"
-                    allow="autoplay; encrypted-media"
-                    allowfullscreen
-                  ></iframe>
-                </div>
-              </template>
-              <template v-else>
-                <q-img
-                  :ratio="4 / 3"
-                  src="https://placehold.co/300x200"
-                  alt="Noticia"
-                  class="rounded-md q-mt-md"
-                />
-              </template>
-
-              <div class="text-h5 text-bold text-primary q-mt-md">
-                {{ noticia.titulo }}
-              </div>
-              <div class="text-body1 q-mt-md">
-                {{ noticia.resumen_contenido }}
-              </div>
-              <q-btn
-                flat
-                no-caps
-                label="Leer"
-                icon-right="arrow_forward"
-                class="text-primary q-mt-md"
-              />
-            </div>
-          </div>
-          <div class="text-center">
-            <q-btn
-              label="Ver todas las noticias"
-              class="bg-primary text-white q-mt-md"
-              no-caps
-              rounded
-              @click="irANoticias"
-            />
-          </div>
-        </q-card>
-
-        <q-separator class="q-mx-xl q-mb-lg q-mt-lg" color="primary" inset />
-        <!-- Próximos Eventos (Events Carousel) -->
-        <q-card class="q-mx-xl q-pa-md bg-white">
-          <div class="text-h3 text-bold text-primary">Próximos Eventos</div>
-          <div class="row q-col-gutter-md">
-            <div
-              v-for="(evento, index) in lista_eventos"
-              :key="index"
-              class="col-12 col-md-4"
-            >
-              <q-img
-                :ratio="4 / 3"
-                :src="evento.img"
-                alt="Evento"
-                class="rounded-md q-mt-md"
-              />
-              <div class="text-h4 text-bold text-primary q-mt-md">
-                {{ evento.title }}
-              </div>
-              <div class="text-subtitle1 q-mt-md">
-                {{ evento.description }}
-              </div>
-              <q-btn
-                flat
-                no-caps
-                label="Leer"
-                icon-right="arrow_forward"
-                class="text-primary q-mt-md"
-              />
-            </div>
-          </div>
-          <div class="mt-8 text-center">
-            <q-btn
-              label="Ir a Eventos"
-              class="bg-primary text-white q-mt-md"
-              @click="irAEventos"
-              rounded
-              no-caps
-            />
-          </div>
-        </q-card>
+        <FeaturedNews :isLargeScreen="isLargeScreen" />
+        <NewsSection :isLargeScreen="isLargeScreen" />
+        <EventsSection :isLargeScreen="isLargeScreen" />
       </div>
     </div>
 
     <!-- Footer -->
-    <q-card class="bg-footer-secondary text-white q-mt-lg q-pt-lg">
+    <!-- <q-card class="bg-footer-secondary text-white q-mt-lg q-pt-lg">
       <div class="q-pa-md flex justify-center">
         <div class="q-mx-xl q-px-xl" style="max-width: 1600px; width: 90%">
           <q-card class="q-mx-xl q-px-xs bg-footer-secondary" flat>
@@ -378,18 +132,31 @@
           ©2024 Colegio Médico Aysén - Colegio Médico de Chile
         </div>
       </div>
-    </q-card>
+    </q-card> -->
+    <FooterSection :isLargeScreen="isLargeScreen" />
   </q-layout>
 </template>
 
 <script setup>
 import ToolbarSection from "components/ToolbarSection.vue";
+import FooterSection from "components/FooterSection.vue";
+import FeaturedNews from "src/components/FeaturedNews.vue";
+import NewsSection from "src/components/NewsSection.vue";
+import EventsSection from "src/components/EventsSection.vue";
 import { ref, reactive, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useQuasar } from "quasar";
 import { useServicioStore } from "src/stores/servicios";
 import { useInformacionesStore } from "src/stores/informaciones";
 import { useSomosStore } from "src/stores/quienesSomos";
+import { useCalendarStore } from "src/stores/calendar";
 import { copyToClipboard } from "quasar";
+
+// Responsive tracking
+const $q = useQuasar();
+const isLargeScreen = computed(() => {
+  return $q.screen.gt.md;
+});
 
 const imageSlide = ref(1);
 const newsSlide = ref(1);
@@ -420,6 +187,7 @@ const router = useRouter();
 const servicioStore = useServicioStore();
 const informacionesStore = useInformacionesStore();
 const somosStore = useSomosStore();
+const calendarStore = useCalendarStore();
 
 const noticias_destacadas = computed(
   () => informacionesStore.noticias_destacadas
@@ -431,6 +199,8 @@ const loading_destacadas = computed(
 const loading_base = computed(() => informacionesStore.loading_base);
 
 onMounted(async () => {
+  console.log("Ingreso onmounted");
+  await calendarStore.fetchWeeklyEvents();
   informacionesStore.fetchNoticiasDestacadas();
   informacionesStore.fetchNoticiasBase();
 });
@@ -672,7 +442,6 @@ const irANoticias = () => {
   router.push("/informaciones");
 };
 const onItemClickContactos = (val) => {
-  console.log("Val.tooltipVisible2", val.tooltipVisible);
   dropdownVisible.value.contactos = false;
   switch (val.clave) {
     case "telefono":
@@ -702,11 +471,3 @@ const irALogin = () => {
   router.push("/login"); // Redirección a la página de login
 };
 </script>
-
-<style lang="sass" scoped>
-.custom-caption
-  text-align: center
-  padding: 12px
-  color: white
-  background-color: rgba(0, 0, 0, .3)
-</style>

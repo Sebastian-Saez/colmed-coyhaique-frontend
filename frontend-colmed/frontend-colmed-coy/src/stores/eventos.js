@@ -1,23 +1,19 @@
 import { defineStore } from "pinia";
 import { api } from "src/boot/axios";
 
-export const useInformacionesStore = defineStore("informacion", {
+export const useEventosStore = defineStore("evento", {
   state: () => ({
-    informaciones: [],
+    eventos: [],
     pagina_informaciones: null,
     loading: false,
     loading_base: false,
     loading_destacadas: false,
-    noticias_destacadas: null,
-    todas_noticias: null,
-    noticias_base: null,
+    eventos_destacadas: null,
+    todas_eventos: null,
+    eventos_base: null,
     error: null,
     error_base: null,
     error_destacadas: null,
-    //opciones para editar o crear noticia
-    editar_noticia: false,
-    crear_noticia: false,
-    noticia: null,
   }),
   actions: {
     async fetchInformaciones() {
@@ -79,39 +75,6 @@ export const useInformacionesStore = defineStore("informacion", {
       this.loading = false;
       this.pagina_informaciones = categoria;
       this.loading = true;
-    },
-    async setModificarNoticia(noticia) {
-      this.loading = false;
-      this.editar_noticia = true;
-      this.noticia = noticia;
-      this.loading = true;
-    },
-    async setCrearNoticia() {
-      this.loading = false;
-      this.crear_noticia = noticia;
-      this.loading = true;
-    },
-    limpiarNoticia() {
-      this.editar_noticia = false;
-      this.crear_noticia = false;
-      this.noticia = null;
-    },
-    async postNoticia(noticia) {
-      this.loading = false;
-      try {
-        const response = await api.post(
-          "/api/noticias/noticia-create-update/",
-          noticia
-        );
-        this.limpiarNoticia();
-        this.fetchTodasNoticias();
-      } catch (error) {
-        console.error("Error al cargar todas las noticias activas:");
-        this.error =
-          "No se pudo cargar las noticias. Por favor, intenta de nuevo más tarde.";
-      } finally {
-        this.loading = true;
-      }
     },
   },
 });
