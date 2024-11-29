@@ -22,8 +22,7 @@
       <div class="text-h6 text-weight-medium text-primary text-left">
         Título de la noticia
       </div>
-      {{ modelNoticia }} ?? <br />
-      {{ noticia }}
+
       <q-input
         filled
         square

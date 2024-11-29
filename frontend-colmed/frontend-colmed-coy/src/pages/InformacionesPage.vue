@@ -171,7 +171,7 @@
           v-else-if="tabInformacion == 'eventos'"
         >
           <div class="text-h3 text-bold text-primary">Todos los eventos</div>
-          {{ eventos }} eventos?
+
           <q-card>
             <div class="calendar-container">
               <iframe
