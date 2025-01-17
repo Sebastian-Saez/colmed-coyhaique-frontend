@@ -18,6 +18,7 @@ export const useInformacionesStore = defineStore("informacion", {
     editar_noticia: false,
     crear_noticia: false,
     noticia: null,
+    noticia_app: null,
   }),
   actions: {
     async fetchInformaciones() {
@@ -95,6 +96,9 @@ export const useInformacionesStore = defineStore("informacion", {
       this.editar_noticia = false;
       this.crear_noticia = false;
       this.noticia = null;
+    },
+    async noticiaApp(noticia) {
+      this.noticia_app = noticia;
     },
     async postNoticia(noticia) {
       this.loading = false;

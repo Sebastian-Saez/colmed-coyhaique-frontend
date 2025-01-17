@@ -5,7 +5,7 @@
         <img
           src="~assets/LogoCOLMEDAYSEN_letras_blancas.png"
           alt="Colegio Médico Logo"
-          style="width: 204px; height: 82px"
+          style="width: 190px; height: 78px"
           class="q-mr-sm"
         />
       </q-btn>
@@ -14,9 +14,19 @@
 
       <q-card flat class="bg-primary">
         <q-card-section class="bg-primary text-white">
-          <div class="text-subtitle1 text-weight-medium">
-            {{ userProfile.email + " " + userProfile.last_name }}
-          </div>
+          <!-- <div class="text-subtitle1 text-weight-medium">
+            {{ userProfile.first_name + " " + userProfile.last_name }}
+          </div> -->
+          <!-- <div class="text-subtitle2 text-weight-medium">
+            {{ userProfile.name_google }}
+          </div> -->
+
+          <q-chip>
+            <q-avatar>
+              <img :src="userProfile.picture" />
+            </q-avatar>
+            {{ userProfile.name_google }}
+          </q-chip>
           <div class="text-overline text-weight-medium">
             Tipo perfil: {{ perfilActual }}
           </div>
@@ -49,6 +59,15 @@
       <q-btn stretch flat no-caps @click="logout" icon="logout">
         <q-tooltip> Cerrar sesión </q-tooltip>
       </q-btn>
+      <!-- <q-separator dark vertical inset />
+      <q-btn
+        no-caps
+        stretch
+        flat
+        @click="logout"
+        icon="logout"
+        label="Cerrar sesión"
+      /> -->
     </q-toolbar>
 
     <q-page-container class="q-pt-md">

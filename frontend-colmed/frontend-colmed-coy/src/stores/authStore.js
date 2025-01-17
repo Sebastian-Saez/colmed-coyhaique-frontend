@@ -5,10 +5,10 @@ export const useUserStore = defineStore("user", {
   state: () => ({
     // profile: JSON.parse(localStorage.getItem("userProfile")) || null,
     profiles: JSON.parse(localStorage.getItem("userProfiles")) || [],
-    token: localStorage.getItem("authToken") || null, // Inicializar el token desde el localStorage
+    token: null, // Inicializar el token desde el localStorage
     opcion_profile: localStorage.getItem("optionProfile") || null, // Inicializar el token desde el localStorage
     user: JSON.parse(localStorage.getItem("user")) || null, // Inicializar el user desde el localStorage
-    refresh: localStorage.getItem("refreshToken") || null, // Inicializar el token desde el localStorage
+    refresh: null, // Inicializar el token desde el localStorage
     loading: false,
   }),
   actions: {
@@ -51,20 +51,68 @@ export const useUserStore = defineStore("user", {
         throw error;
       }
     },
-    async loginWithGoogle() {
-      window.location.href = `${process.env.VUE_APP_BACKEND_URL}/accounts/google/login/`;
-    },
-    logout() {
-      // Eliminar token y perfil
+    async loginWithGoogle(id_token) {
+      // Limpiar el token antes de iniciar sesión
+      this.loading = true;
       this.token = null;
-      this.user = null;
+      this.refresh = null;
       this.profiles = [];
+      this.user = null;
       this.opcion_profile = null;
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("user");
-      localStorage.removeItem("userProfiles");
-      localStorage.removeItem("optionProfile");
-      localStorage.removeItem("refreshToken");
+      try {
+        const response = await api.post("/api/auth/google/", {
+          id_token: id_token,
+        });
+
+        // Guardar el token en el estado y en el localStorage
+        // this.token = response.data.access;
+        // localStorage.setItem("authToken", this.token);
+
+        this.user = response.data.user;
+        localStorage.setItem("user", JSON.stringify(this.user));
+
+        // this.refresh = response.data.refresh;
+        // localStorage.setItem("refreshToken", this.refresh);
+
+        // Guardar los perfiles en el estado y en el localStorage
+        this.profiles = response.data.user.perfiles;
+        localStorage.setItem("userProfiles", JSON.stringify(this.profiles));
+
+        this.opcion_profile = this.profiles[0].tipo_perfil;
+        localStorage.setItem("optionProfile", this.opcion_profile);
+        this.loading = false;
+      } catch (error) {
+        console.error("Error en login con Google:", error);
+        this.loading = false;
+        throw error;
+      }
+    },
+    async logout() {
+      try {
+        const refreshToken = localStorage.getItem("refresh_token");
+
+        if (!refreshToken) return;
+
+        await api.post("/api/auth/logout/", { refresh_token: refreshToken });
+
+        // Limpiar almacenamiento local
+        this.token = null;
+        this.refresh = null;
+        this.user = null;
+        this.profiles = [];
+        this.opcion_profile = null;
+
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("user");
+        localStorage.removeItem("userProfiles");
+        localStorage.removeItem("optionProfile");
+
+        // Redirigir a login
+        this.router.push("/home");
+      } catch (error) {
+        console.error("Error en logout:", error);
+      }
     },
     changeProfile(profile) {
       this.loading = true;

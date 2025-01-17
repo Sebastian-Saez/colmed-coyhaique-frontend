@@ -649,7 +649,8 @@ const rows_reafiliacion = [
     background-color: #204664
     color: white
     font-size: 16px
-    font-display:bold
+
 .tab-button
   border-radius: 50px 0px 0px 50px
 </style>
+<!-- font-display:bold -->

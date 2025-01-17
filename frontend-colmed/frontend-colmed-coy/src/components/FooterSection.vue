@@ -92,7 +92,7 @@
                 <q-btn
                   flat
                   round
-                  icon="fab fa-twitter"
+                  icon="fab fa-x-twitter"
                   class="text-white"
                   :size="isLargeScreen ? 'md' : 'sm'"
                   @click="goX"
@@ -108,13 +108,23 @@
                 <q-btn
                   flat
                   round
-                  icon="mail"
+                  icon="forward_to_inbox"
                   class="text-white"
                   :size="isLargeScreen ? 'md' : 'sm'"
                   @click="goMailTo"
                 />
               </div>
             </div>
+            <div class="col-12 col-sm-6 col-md-3">
+              <q-btn
+              label="Mi gestión"
+              color="white"
+              class="text-weight-regular q-ml-md"
+              no-caps
+              outline
+              rounded
+              @click="irALogin"
+            /></div>
           </div>
         </q-card>
       </div>
@@ -279,5 +289,9 @@ const onItemClickInformaciones = (val) => {
     default:
       console.log("Error en valor : ", val);
   }
+};
+
+const irALogin = () => {
+  router.push("/login"); // Redirección a la página de login
 };
 </script>

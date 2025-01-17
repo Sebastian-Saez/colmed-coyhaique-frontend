@@ -9,7 +9,7 @@
       <q-toolbar-title>
         <q-btn align="left" flat padding="xs" @click="goHome">
           <q-img
-            src="~assets/LogoCOLMEDAYSEN_blanco.png"
+            src="~assets/CR-Region-de-Aysen_horizontal.png"
             class="logo-img q-ml-xs"
           />
         </q-btn>
@@ -182,9 +182,7 @@
               icon-right="arrow_drop_down"
               @mouseenter="dropdownVisible.quienesSomos = true"
               @mouseleave="startCloseTimer('quienesSomos')"
-              @click="
-                dropdownVisible.quienesSomos = !dropdownVisible.quienesSomos
-              "
+              @click="dropdownVisible.quienesSomos = !dropdownVisible.quienesSomos"
             ></q-btn>
             <q-popup-proxy
               ref="popupQuienesSomos"
@@ -201,23 +199,18 @@
             >
               <q-list dense>
                 <q-item
-                  v-for="val in lista_quienes_somos"
-                  :key="val.clave"
                   clickable
                   @click="onItemClickQuienesSomos(val)"
+                  v-for="val in lista_quienes_somos"
+                  :key="val.clave"
                 >
                   <q-item-section>
-                    <q-item-label caption class="text-bold"
-                      >{{ val.nombre }}
-                    </q-item-label>
+                    <q-item-label caption class="text-bold">{{
+                      val.nombre
+                    }}</q-item-label>
                   </q-item-section>
-                  <q-item-section v-if="val.clave == 'colmed'" avatar>
-                    <q-avatar
-                      icon="arrow_forward"
-                      flat
-                      size="md"
-                      text-color="red"
-                    />
+                  <q-item-section avatar v-if="val.clave == 'colmed'">
+                    <q-avatar icon="arrow_forward" flat size="md" text-color="red" />
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -274,9 +267,7 @@
               icon-right="arrow_drop_down"
               @mouseenter="dropdownVisible.informaciones = true"
               @mouseleave="startCloseTimer('informaciones')"
-              @click="
-                dropdownVisible.informaciones = !dropdownVisible.informaciones
-              "
+              @click="dropdownVisible.informaciones = !dropdownVisible.informaciones"
             ></q-btn>
             <q-popup-proxy
               ref="popupInformaciones"
@@ -306,6 +297,49 @@
                     <q-item-label caption class="text-bold">{{
                       val.nombre
                     }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-popup-proxy>
+          </div>
+          <!-- Sección Links-->
+          <div class="q-pl-xs">
+            <q-btn
+              flat
+              label="Links de interés"
+              no-caps
+              icon-right="arrow_drop_down"
+              @mouseenter="dropdownVisible.links = true"
+              @mouseleave="startCloseTimer('links')"
+              @click="dropdownVisible.links = !dropdownVisible.links"
+            ></q-btn>
+            <q-popup-proxy
+              ref="popupLinks"
+              v-model="dropdownVisible.links"
+              class="custom-popup-style"
+              transition-show="flip-down"
+              transition-hide="flip-up"
+              persistent
+              fit
+              anchor="bottom left"
+              self="top left"
+              @mouseenter="clearCloseTimer('links')"
+              @mouseleave="startCloseTimer('links')"
+            >
+              <q-list dense>
+                <q-item
+                  clickable
+                  @click="onItemLinksInteres(val)"
+                  v-for="val in links_interes"
+                  :key="val.clave"
+                >
+                  <q-item-section>
+                    <q-item-label caption class="text-bold">{{
+                      val.nombre
+                    }}</q-item-label>
+                  </q-item-section>
+                  <q-item-section avatar >
+                    <q-avatar icon="arrow_forward" flat size="md" text-color="red" />
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -344,12 +378,7 @@
                   @click="onItemClickContactos(val)"
                 >
                   <q-item-section avatar>
-                    <q-avatar
-                      :icon="val.icono"
-                      flat
-                      size="md"
-                      text-color="primary"
-                    />
+                    <q-avatar :icon="val.icono" flat size="md" text-color="primary" />
                   </q-item-section>
                   <q-item-section>
                     <q-item-label caption>{{ val.label }}</q-item-label>
@@ -377,7 +406,7 @@
           </div>
 
           <div class="q-gutter-sm">
-            <q-btn
+            <!-- <q-btn
               label="Mi gestión"
               color="primary"
               class="text-weight-regular"
@@ -385,7 +414,7 @@
               outline
               rounded
               @click="irALogin"
-            />
+            /> -->
             <q-btn
               label="Mi Colmed"
               class="text-weight-regular"
@@ -439,6 +468,7 @@ const dropdownVisible = ref({
   quienesSomos: false,
   servicios: false,
   informaciones: false,
+  links: false,
   contactos: false,
 });
 const closeTimers = {};
@@ -473,6 +503,29 @@ const startCloseTimer = (dropdownName) => {
   }, 150); // Adjust the delay as needed
 };
 
+const links_interes = ref([
+  {
+    clave: "colmed",
+    valor: "https://www.colegiomedico.cl/",
+    nombre: "Colegio Médico de Chile",
+  },
+  {
+    clave: "falmed",
+    valor: "https://www.falmed.cl/",
+    nombre: "Fundación de Asistencia Legal de Colegio Médico",
+  },
+  {
+    clave: "fsg",
+    valor: "https://www.colegiomedico.cl/fsg/",
+    nombre: "Fondo Solidaridad Gremial",
+  },
+  {
+    clave: "club",
+    valor: "https://www.clubmedico.cl/",
+    nombre: "Club Médico",
+  },
+]);
+
 const lista_quienes_somos = [
   {
     clave: "mision",
@@ -490,10 +543,14 @@ const lista_quienes_somos = [
   //   clave: "transparencia",
   //   nombre: "Transparencia",
   // },
-  {
-    clave: "colmed",
-    nombre: "Colegio Médico de Chile",
-  },
+  // {
+  //   clave: "colmed",
+  //   nombre: "Colegio Médico de Chile",
+  // },
+  // {
+  //   clave:"links",
+  //   nombre: "Links de interés"
+  // }
 ];
 
 const lista_servicios = [
@@ -550,11 +607,7 @@ const lista_contactos = reactive([
 ]);
 
 const goMiColmed = () => {
-  window.open(
-    "https://micolmed.colegiomedico.cl/",
-    "_blank",
-    "noopener,noreferrer"
-  );
+  window.open("https://micolmed.colegiomedico.cl/", "_blank", "noopener,noreferrer");
 };
 
 const onItemClickQuienesSomos = (val) => {
@@ -569,11 +622,23 @@ const onItemClickQuienesSomos = (val) => {
       router.push("/quienes-somos");
       break;
     case "colmed":
-      window.open(
-        "https://www.colegiomedico.cl/",
-        "_blank",
-        "noopener,noreferrer"
-      );
+      window.open("https://www.colegiomedico.cl/", "_blank", "noopener,noreferrer");
+      break;
+    default:
+      console.log("Error en valor : ", val);
+  }
+};
+
+const onItemLinksInteres = (val) => {
+  
+  menuVisible.value = false;
+  dropdownVisible.value.links = false;
+  switch (val.clave) {
+    case "colmed":
+    case "fsg":
+    case "falmed":
+    case "club":
+      window.open(val.valor, "_blank", "noopener,noreferrer");
       break;
     default:
       console.log("Error en valor : ", val);

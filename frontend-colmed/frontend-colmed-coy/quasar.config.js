@@ -22,7 +22,7 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ["i18n", "axios"],
+    boot: ["i18n", "axios", "googleLogin"],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ["app.scss"],
@@ -59,6 +59,7 @@ module.exports = configure(function (/* ctx */) {
       // analyze: true,
       env: {
         VITE_APP_BACKEND_URL: process.env.VITE_APP_BACKEND_URL,
+        VITE_APP_GOOGLE_CLIENT_ID: process.env.VITE_APP_GOOGLE_CLIENT_ID,
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
