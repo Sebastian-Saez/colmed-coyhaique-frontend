@@ -1,12 +1,12 @@
 <template>
-  <q-card class="bg-footer-secondary text-white q-mt-lg q-pt-lg">
+  <q-card class="bg-primary text-white q-mt-lg q-pt-lg">
     <div class="justify-center" :class="isLargeScreen ? 'q-pa-md flex' : ''">
       <div
         class=""
         :class="isLargeScreen ? 'q-mx-xl q-px-xl' : ''"
         style="max-width: 1600px; width: 90%"
       >
-        <q-card class="bg-footer-secondary" flat>
+        <q-card class="bg-primary" flat>
           <div class="row q-col-gutter-md">
             <div class="col-12 col-sm-6 col-md-3">
               <div class="text-subtitle1 text-weight-bolder text-white q-pl-lg">
@@ -117,14 +117,15 @@
             </div>
             <div class="col-12 col-sm-6 col-md-3">
               <q-btn
-              label="Mi gestión"
-              color="white"
-              class="text-weight-regular q-ml-md"
-              no-caps
-              outline
-              rounded
-              @click="irALogin"
-            /></div>
+                label="Mi gestión"
+                color="white"
+                class="text-weight-regular q-ml-md"
+                no-caps
+                outline
+                rounded
+                @click="irALogin"
+              />
+            </div>
           </div>
         </q-card>
       </div>

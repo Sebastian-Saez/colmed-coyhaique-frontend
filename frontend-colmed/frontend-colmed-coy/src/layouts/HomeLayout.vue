@@ -12,6 +12,7 @@
         <ToolbarSection :isLargeScreen="isLargeScreen" />
         <!-- Principales Noticias (Image Carousel) -->
         <FeaturedNews :isLargeScreen="isLargeScreen" />
+        <PublishSection :isLargeScreen="isLargeScreen" />
         <NewsSection :isLargeScreen="isLargeScreen" />
         <EventsSection :isLargeScreen="isLargeScreen" />
       </div>
@@ -141,6 +142,7 @@
 import ToolbarSection from "components/ToolbarSection.vue";
 import FooterSection from "components/FooterSection.vue";
 import FeaturedNews from "src/components/FeaturedNews.vue";
+import PublishSection from "src/components/PublishSection.vue";
 import NewsSection from "src/components/NewsSection.vue";
 import EventsSection from "src/components/EventsSection.vue";
 import { ref, reactive, computed, onMounted } from "vue";
@@ -199,10 +201,10 @@ const loading_destacadas = computed(
 const loading_base = computed(() => informacionesStore.loading_base);
 
 onMounted(async () => {
-  console.log("Ingreso onmounted");
-  await calendarStore.fetchWeeklyEvents();
+  // await calendarStore.fetchWeeklyEvents();
   informacionesStore.fetchNoticiasDestacadas();
   informacionesStore.fetchNoticiasBase();
+  informacionesStore.fetchEventosBase();
 });
 
 const lista_quienes_somos = [

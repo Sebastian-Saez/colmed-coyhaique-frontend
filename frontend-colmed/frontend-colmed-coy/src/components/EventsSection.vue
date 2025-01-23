@@ -1,12 +1,18 @@
 <template>
   <!-- Próximos Eventos (Events Carousel) -->
   <q-card
-    class="q-pa-md bg-white"
+    flat
+    class="q-pa-md bg-terciary"
     :class="isLargeScreen ? 'q-mx-xl q-pa-md' : 'q-pa-lg'"
     style="border-radius: 30px"
   >
-    <div class="text-h3 text-bold text-primary">Próximos Eventos</div>
-    <div v-if="!loading_base" class="text-center q-my-lg">
+    <q-card-section style="border-radius: 20px 20px 0px 0px" class="bg-primary"
+      ><div class="text-h3 text-bold text-white">
+        Próximos Eventos
+      </div></q-card-section
+    >
+
+    <div v-if="!loading_eventos_base" class="text-center q-my-lg">
       <q-spinner-dots size="50px" color="primary" />
       <p class="q-mt-md">Cargando datos...</p>
     </div>
@@ -15,16 +21,20 @@
     </q-banner>
     <div v-else class="row q-col-gutter-md">
       <div
-        v-for="(evento, index) in eventos_base"
+        v-for="(evento, index) in eventosBase.slice(0, 3)"
         :key="index"
         class="col-12 col-md-4"
       >
-        <q-img
-          :ratio="4 / 3"
-          :src="evento.img"
-          alt="Evento"
-          class="rounded-md q-mt-md"
-        />
+        <template v-if="evento.imagen">
+          <q-img
+            :ratio="4 / 3"
+            :src="evento.imagen"
+            alt="Evento"
+            class="rounded-borders q-mt-md"
+            loading="lazy"
+            spinner-color="primary"
+          />
+        </template>
         <div class="text-h4 text-bold text-primary q-mt-md">
           {{ evento.title }}
         </div>
@@ -76,6 +86,10 @@ const calendarioColmed = ref(
   '<iframe src="https://calendar.google.com/calendar/embed?src=c_78d2b5bff047ec1a63adb88d03dc3129cad5e15379487fe9a2bb544dbf11ea20%40group.calendar.google.com&ctz=America%2FSantiago" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>"'
 );
 
+const eventosBase = computed(() => informacionStore.eventos_base);
+const loading_eventos_base = computed(
+  () => informacionStore.loading_eventos_base
+);
 const error_base = computed(() => eventosStore.error_base);
 const router = useRouter();
 const eventos_base = [

@@ -1,11 +1,15 @@
 <template>
   <!-- Noticias (News Carousel) flat-->
   <q-card
-    class="q-pa-md bg-white"
+    flat
+    class="q-pa-md bg-terciary"
     :class="isLargeScreen ? 'q-mx-xl q-pa-md' : 'q-pa-lg'"
     style="border-radius: 30px"
   >
-    <div class="text-h3 text-bold text-primary">Noticias</div>
+    <q-card-section style="border-radius: 20px 20px 0px 0px" class="bg-primary"
+      ><div class="text-h3 text-bold text-white">Noticias</div>
+    </q-card-section>
+
     <div v-if="!loading_base" class="text-center q-my-lg">
       <q-spinner-dots size="50px" color="primary" />
       <p class="q-mt-md">Cargando datos...</p>

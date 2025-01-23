@@ -7,12 +7,16 @@ export const useInformacionesStore = defineStore("informacion", {
     pagina_informaciones: null,
     loading: false,
     loading_base: false,
+    loading_eventos_base: false,
     loading_destacadas: false,
     noticias_destacadas: null,
     todas_noticias: null,
     noticias_base: null,
+    eventos_base: null,
+    eventos_eventos_base: null,
     error: null,
     error_base: null,
+    error_eventos_base: null,
     error_destacadas: null,
     //opciones para editar o crear noticia
     editar_noticia: false,
@@ -59,6 +63,19 @@ export const useInformacionesStore = defineStore("informacion", {
           "No se pudo cargar las noticias. Por favor, intenta de nuevo más tarde.";
       } finally {
         this.loading_base = true;
+      }
+    },
+    async fetchEventosBase() {
+      this.loading_eventos_base = false;
+      try {
+        const response = await api.get("/api/colmed/eventos/eventos_base/");
+        this.eventos_base = response.data;
+      } catch (error) {
+        console.error("Error al cargar las eventos base:");
+        this.error_eventos_base =
+          "No se pudo cargar las eventos. Por favor, intenta de nuevo más tarde.";
+      } finally {
+        this.loading_eventos_base = true;
       }
     },
     async fetchTodasNoticias() {

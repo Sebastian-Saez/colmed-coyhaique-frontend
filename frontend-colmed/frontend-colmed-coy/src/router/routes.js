@@ -99,6 +99,10 @@ const routes = [
     component: () => import("src/pages/AdminNoticiasPage.vue"),
   },
   {
+    path: "/admin-eventos",
+    component: () => import("src/pages/AdminEventosPage.vue"),
+  },
+  {
     path: "/servicios",
     component: () => import("src/pages/ServiciosPage.vue"),
   },

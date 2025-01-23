@@ -26,7 +26,7 @@
         :height="carouselHeight"
         transition-duration="400"
         class="carousel-full-width"
-        style="height: 800px"
+        style="height: 700px"
       >
         <template
           v-if="!isLargeScreen"
