@@ -163,14 +163,14 @@
                 <q-btn
                   no-caps
                   color="primary"
-                  label="Ver noticia"
+                  label="Ver Noticia"
                   class="text-white"
                   @click="verNoticia(noticia)"
                 />
                 <q-btn
                   no-caps
                   color="red-14"
-                  label="Editar noticia"
+                  label="Editar Noticia"
                   class="text-white"
                   @click="editarNoticia(noticia)"
                 />
