@@ -35,6 +35,9 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
+# Instalar http-server globalmente
+RUN npm install -g http-server
+
 # Copy the rest of the application code
 COPY . .
 
