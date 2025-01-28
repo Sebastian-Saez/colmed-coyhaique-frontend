@@ -194,6 +194,7 @@ import { useRouter } from "vue-router";
 import { useUserStore } from "src/stores/authStore";
 import { useInformacionesStore } from "src/stores/informaciones";
 import { useMedicoStore } from "src/stores/medicos";
+import { useEventosStore } from "src/stores/eventos";
 import AdminNoticia from "src/components/AdminNoticia.vue";
 
 const router = useRouter();
@@ -205,6 +206,7 @@ const isLargeScreen = computed(() => {
 const accionNoticia = ref(false);
 const userStore = useUserStore();
 const medicoStore = useMedicoStore();
+const eventoStore = useEventosStore();
 const informacionStore = useInformacionesStore();
 const loading = computed(() => informacionStore.loading);
 const todas_noticias = computed(() => informacionStore.todas_noticias);
@@ -220,8 +222,10 @@ const logout = () => {
   router.push("/login");
 };
 
-const cancelar = () => {
+const cancelar = async () => {
   accionNoticia.value = false;
+  informacionStore.limpiarNoticia();
+  informacionStore.fetchTodasNoticias();
 };
 
 const verNoticia = (noticia) => {
@@ -230,8 +234,9 @@ const verNoticia = (noticia) => {
 };
 
 const editarNoticia = (noticia) => {
-  informacionStore.noticia = noticia;
-  informacionStore.editar_noticia = true;
+  // informacionStore.noticia = noticia;
+  // informacionStore.editar_noticia = true;
+  informacionStore.setModificarNoticia(noticia);
   accionNoticia.value = true;
 };
 
@@ -251,6 +256,10 @@ const changeProfile = async (val) => {
     case "admin_noticias":
       await informacionStore.fetchTodasNoticias();
       router.push("/admin-noticias");
+      break;
+    case "admin_eventos":
+      await eventoStore.fetchEventosBase();
+      router.push("/admin-eventos");
       break;
     case "admin_tic":
       router.push("/admin-tic");

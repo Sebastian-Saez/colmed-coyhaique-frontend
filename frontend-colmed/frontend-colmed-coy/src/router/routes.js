@@ -100,7 +100,7 @@ const routes = [
   },
   {
     path: "/admin-eventos",
-    component: () => import("src/pages/AdminEventosPage.vue"),
+    component: () => import("src/pages/AdminSitioPage.vue"),
   },
   {
     path: "/servicios",

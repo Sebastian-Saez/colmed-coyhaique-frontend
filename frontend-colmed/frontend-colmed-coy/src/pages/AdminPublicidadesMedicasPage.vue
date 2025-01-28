@@ -2,15 +2,17 @@
   <q-layout view="lHh Lpr lFf">
     <q-card class="q-pa-md bg-grey-1" style="border-radius: 20px">
       <div class="row items-center justify-between q-pb-md">
-        <div class="text-h4 text-bold text-primary">Todos los Eventos</div>
+        <div class="text-h4 text-bold text-primary">
+          Todos las Publicidades médicas
+        </div>
         <q-btn
           no-caps
           color="primary"
-          label="Agregar un nuevo Evento"
+          label="Agregar una nueva Publicidad médica"
           icon="add"
           class="text-white"
           rounded
-          @click="agregarEvento"
+          @click="agregarPublicidad"
         />
       </div>
 
@@ -18,61 +20,34 @@
       <q-inner-loading :showing="!loading">
         <q-spinner-dots color="primary" size="2em"
       /></q-inner-loading>
+
       <div v-if="loading" class="row q-col-gutter-md">
         <div
-          v-for="(evento, index) in eventos"
+          v-for="(publicidad_medica, index) in publicidades"
           :key="index"
           class="col-12 col-md-4"
         >
           <!-- style="linear-gradient(to right, #2B86C5 0%, #2B86C5 100%)" -->
-          <q-card flat class="bg-grey-3">
-            <q-img
-              :ratio="isLargeScreen ? 4 / 3 : 2 / 1"
-              :src="evento.imagen"
-              alt="Evento"
-              class="rounded-borders"
-              loading="lazy"
-              spinner-color="primary"
-              v-if="evento.imagen"
-            >
-              <!-- <div class="absolute-bottom text-h6">
-              Title
-            </div> -->
-              <!-- <div class="absolute-bottom text-h5 text-bold text-primary q-mt-md">
-              {{ noticia.titulo }}
-            </div> -->
-              <div class="absolute-bottom text-h5 text-bold text-white">
-                {{ evento.titulo }}
-              </div>
-            </q-img>
-
-            <q-img
-              v-else
-              :ratio="isLargeScreen ? 4 / 3 : 2 / 1"
-              src="https://placehold.co/500x500"
-              alt="Evento"
-              class="rounded-md"
-            />
-            <!-- <q-card-section>
-            <div class="text-body2 q-mt-xs text-weight-medium">
-              {{ evento.resumen_contenido }}
-            </div>
-          </q-card-section> -->
+          <q-card class="bg-grey-3" bordered>
+            <q-card-section class="bg-cyan-9 text-white">
+              <div class="text-h6">{{ publicidad_medica.titulo }}</div>
+              <div class="text-caption">{{ publicidad_medica.link }}</div>
+            </q-card-section>
             <q-separator inset />
             <q-card-actions align="around">
               <q-btn
                 no-caps
                 color="primary"
-                label="Ver Evento"
+                label="Ver Publicidad Médica"
                 class="text-white"
-                @click="verEvento(evento)"
+                @click="verPublicidad(publicidad_medica)"
               />
               <q-btn
                 no-caps
                 color="red-14"
-                label="Editar Evento"
+                label="Editar Publicidad Médica"
                 class="text-white"
-                @click="editarEvento(evento)"
+                @click="editarPublicidad(publicidad_medica)"
               />
             </q-card-actions>
           </q-card>
@@ -81,21 +56,22 @@
       </div>
     </q-card>
 
-    <q-dialog persistent v-model="accionEvento">
-      <AdminEvento @cancelarPopup="cancelar" />
+    <q-dialog persistent v-model="accionPublicidad">
+      <AdminPublicidadMedica @cancelarPopup="cancelar" />
     </q-dialog>
   </q-layout>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { event, useQuasar } from "quasar";
+import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 import { useUserStore } from "src/stores/authStore";
 import { useInformacionesStore } from "src/stores/informaciones";
+import { usePublicidadStore } from "src/stores/publicidadMedica";
 import { useMedicoStore } from "src/stores/medicos";
-import { useEventosStore } from "src/stores/eventos";
-import AdminEvento from "src/components/AdminEvento.vue";
+import AdminNoticia from "src/components/AdminNoticia.vue";
+import AdminPublicidadMedica from "src/components/AdminPublicidadMedica.vue";
 
 const router = useRouter();
 const $q = useQuasar();
@@ -103,12 +79,14 @@ const isLargeScreen = computed(() => {
   return $q.screen.gt.md;
 });
 
-const accionEvento = ref(false);
+const accionPublicidad = ref(false);
 const userStore = useUserStore();
 const medicoStore = useMedicoStore();
-const eventoStore = useEventosStore();
-const loading = computed(() => eventoStore.loading_base);
-const eventos = computed(() => eventoStore.eventos_base);
+const informacionStore = useInformacionesStore();
+const publicidadStore = usePublicidadStore();
+const loading = computed(() => publicidadStore.loading);
+const eventos = computed(() => informacionStore.eventos_base);
+const publicidades = computed(() => publicidadStore.publicidades);
 
 // Recuperar el perfil del usuario
 const userProfile = computed(() => userStore.user);
@@ -122,28 +100,28 @@ const logout = () => {
 };
 
 const cancelar = async () => {
-  accionEvento.value = false;
-  eventoStore.limpiarEvento();
-  eventoStore.fetchEventosBase();
+  accionPublicidad.value = false;
+  publicidadStore.limpiarPublicidad();
+  publicidadStore.fetchTodasPublicidades();
 };
 
-const verEvento = (evento) => {
-  // eventoStore.evento = evento;
-  eventoStore.setEvento(evento);
-  accionEvento.value = true;
+const verPublicidad = (publicidad_medica) => {
+  //   publicidadStore.publicidad_medica = publicidad_medica;
+  publicidadStore.setPublicidad(publicidad_medica);
+  accionPublicidad.value = true;
 };
 
-const editarEvento = (evento) => {
-  // eventoStore.setEvento(evento);
-  // eventoStore.evento = evento;
-  // eventoStore.editar_evento = true;
-  eventoStore.setModificarEvento(evento);
-  accionEvento.value = true;
+const editarPublicidad = (publicidad_medica) => {
+  //   publicidadStore.publicidad_medica = publicidad_medica;
+  //   publicidadStore.editar_noticia = true;
+  publicidadStore.setPublicidad(publicidad_medica);
+  publicidadStore.setModificarPublicidad(publicidad_medica);
+  accionPublicidad.value = true;
 };
 
-const agregarEvento = () => {
-  eventoStore.setCrearEvento();
-  accionEvento.value = true;
+const agregarPublicidad = () => {
+  publicidadStore.crear_publicidad = true;
+  accionPublicidad.value = true;
 };
 
 const changeProfile = async (val) => {
@@ -155,7 +133,7 @@ const changeProfile = async (val) => {
       router.push("/medicos");
       break;
     case "admin_noticias":
-      await eventoStore.fetchTodasNoticias();
+      await publicidadStore.fetchTodasNoticias();
       router.push("/admin-noticias");
       break;
     case "admin_tic":
@@ -172,6 +150,6 @@ const goHome = () => {
 };
 
 onMounted(async () => {
-  await eventoStore.fetchEventosBase();
+  await publicidadStore.fetchTodasPublicidades();
 });
 </script>

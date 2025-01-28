@@ -202,13 +202,14 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useUserStore } from "src/stores/authStore";
 import { useMedicoStore } from "src/stores/medicos";
 import { useInformacionesStore } from "src/stores/informaciones";
-
+import { useEventosStore } from "src/stores/eventos";
 import TablaMedicos from "src/components/TablaMedicos.vue";
 
 const router = useRouter();
 const userStore = useUserStore();
 const medicoStore = useMedicoStore();
 const informacionStore = useInformacionesStore();
+const eventoStore = useEventosStore();
 
 const tab = ref("detalle_medicos");
 
@@ -282,6 +283,10 @@ const changeProfile = async (val) => {
     case "admin_noticias":
       await informacionStore.fetchTodasNoticias();
       router.push("/admin-noticias");
+      break;
+    case "admin_eventos":
+      await eventoStore.fetchEventosBase();
+      router.push("/admin-eventos");
       break;
     case "admin_tic":
       router.push("/admin-tic");

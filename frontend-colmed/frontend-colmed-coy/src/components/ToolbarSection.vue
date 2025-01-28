@@ -174,7 +174,7 @@
       <!-- Menú para pantallas grandes -->
       <template v-else>
         <div class="q-gutter-xs q-px-xl row items-right">
-          <div class="q-pl-xs">
+          <!-- <div class="q-pl-xs">
             <q-btn
               flat
               label="Quiénes Somos"
@@ -182,7 +182,9 @@
               icon-right="arrow_drop_down"
               @mouseenter="dropdownVisible.quienesSomos = true"
               @mouseleave="startCloseTimer('quienesSomos')"
-              @click="dropdownVisible.quienesSomos = !dropdownVisible.quienesSomos"
+              @click="
+                dropdownVisible.quienesSomos = !dropdownVisible.quienesSomos
+              "
             ></q-btn>
             <q-popup-proxy
               ref="popupQuienesSomos"
@@ -210,15 +212,20 @@
                     }}</q-item-label>
                   </q-item-section>
                   <q-item-section avatar v-if="val.clave == 'colmed'">
-                    <q-avatar icon="arrow_forward" flat size="md" text-color="red" />
+                    <q-avatar
+                      icon="arrow_forward"
+                      flat
+                      size="md"
+                      text-color="red"
+                    />
                   </q-item-section>
                 </q-item>
               </q-list>
             </q-popup-proxy>
-          </div>
+          </div> -->
 
           <!--Sección de Servicios-->
-          <div class="q-pl-xs">
+          <!-- <div class="q-pl-xs">
             <q-btn
               flat
               label="Servicios"
@@ -256,10 +263,10 @@
                 </q-item>
               </q-list>
             </q-popup-proxy>
-          </div>
+          </div> -->
 
           <!-- Sección Informaciones-->
-          <div class="q-pl-xs">
+          <!-- <div class="q-pl-xs">
             <q-btn
               flat
               label="Informaciones"
@@ -267,7 +274,9 @@
               icon-right="arrow_drop_down"
               @mouseenter="dropdownVisible.informaciones = true"
               @mouseleave="startCloseTimer('informaciones')"
-              @click="dropdownVisible.informaciones = !dropdownVisible.informaciones"
+              @click="
+                dropdownVisible.informaciones = !dropdownVisible.informaciones
+              "
             ></q-btn>
             <q-popup-proxy
               ref="popupInformaciones"
@@ -301,9 +310,9 @@
                 </q-item>
               </q-list>
             </q-popup-proxy>
-          </div>
+          </div> -->
           <!-- Sección Links-->
-          <div class="q-pl-xs">
+          <!-- <div class="q-pl-xs">
             <q-btn
               flat
               label="Links de interés"
@@ -338,34 +347,252 @@
                       val.nombre
                     }}</q-item-label>
                   </q-item-section>
-                  <q-item-section avatar >
-                    <q-avatar icon="arrow_forward" flat size="md" text-color="red" />
+                  <q-item-section avatar>
+                    <q-avatar
+                      icon="arrow_forward"
+                      flat
+                      size="md"
+                      text-color="red"
+                    />
                   </q-item-section>
                 </q-item>
               </q-list>
             </q-popup-proxy>
-          </div>
-
-          <!-- Sección Contacto-->
+          </div> -->
           <div class="q-pl-xs">
             <q-btn
-              flat
-              label="Contacto"
+              outline
+              rounded
+              style="color: #4caf50"
               no-caps
+              icon-right="arrow_drop_down"
+              @mouseenter="dropdownVisible.quienesSomos = true"
+              @mouseleave="startCloseTimer('quienesSomos')"
+              @click="
+                dropdownVisible.quienesSomos = !dropdownVisible.quienesSomos
+              "
+            >
+              <div class="text-weight-medium text-primary text-subtitle1">
+                Quiénes Somos
+              </div>
+            </q-btn>
+            <!-- ref="menuQuienesSomos" -->
+            <!-- :anchor="menuQuienesSomos" -->
+            <q-menu
+              v-model="dropdownVisible.quienesSomos"
+              @mouseenter="clearCloseTimer('quienesSomos')"
+              @mouseleave="startCloseTimer('quienesSomos')"
+              transition-show="flip-down"
+              transition-hide="flip-up"
+              :offset="[-25, 10]"
+              style="border-radius: 20px"
+              class="bg-green-1"
+            >
+              <q-list dense>
+                <q-item
+                  clickable
+                  @click="onItemClickQuienesSomos(val)"
+                  v-for="val in lista_quienes_somos"
+                  :key="val.clave"
+                >
+                  <q-item-section>
+                    <q-item-label
+                      class="text-weight-medium text-primary text-caption q-mx-lg"
+                      >{{ val.nombre }}</q-item-label
+                    >
+                  </q-item-section>
+                  <!-- <q-item-section avatar>
+                    <q-avatar
+                      icon="arrow_forward"
+                      flat
+                      size="md"
+                      text-color="red"
+                    />
+                  </q-item-section> -->
+                </q-item>
+              </q-list>
+            </q-menu>
+          </div>
+          <div class="q-pl-xs">
+            <q-btn
+              outline
+              rounded
+              no-caps
+              style="color: #1a237e"
+              icon-right="arrow_drop_down"
+              @mouseenter="dropdownVisible.servicios = true"
+              @mouseleave="startCloseTimer('servicios')"
+              @click="dropdownVisible.servicios = !dropdownVisible.servicios"
+            >
+              <div class="text-weight-medium text-primary text-subtitle1">
+                Servicios
+              </div></q-btn
+            >
+            <!-- ref="menuServicios" -->
+            <!-- :anchor="menuServicios" -->
+            <q-menu
+              v-model="dropdownVisible.servicios"
+              @mouseenter="clearCloseTimer('servicios')"
+              @mouseleave="startCloseTimer('servicios')"
+              transition-show="flip-down"
+              transition-hide="flip-up"
+              :offset="[-25, 10]"
+              style="border-radius: 20px"
+              class="bg-blue-1"
+            >
+              <q-list dense>
+                <q-item
+                  clickable
+                  @click="onItemClickServicios(val)"
+                  v-for="val in lista_servicios"
+                  :key="val.clave"
+                >
+                  <q-item-section>
+                    <q-item-label
+                      class="text-weight-medium text-primary text-caption q-mx-lg"
+                      >{{ val.nombre }}</q-item-label
+                    >
+                  </q-item-section>
+                  <!-- <q-item-section avatar>
+                    <q-avatar
+                      icon="arrow_forward"
+                      flat
+                      size="md"
+                      text-color="red"
+                    />
+                  </q-item-section> -->
+                </q-item>
+              </q-list>
+            </q-menu>
+          </div>
+          <div class="q-pl-xs">
+            <q-btn
+              outline
+              rounded
+              no-caps
+              style="color: #c62828"
+              icon-right="arrow_drop_down"
+              @mouseenter="dropdownVisible.informaciones = true"
+              @mouseleave="startCloseTimer('informaciones')"
+              @click="
+                dropdownVisible.informaciones = !dropdownVisible.informaciones
+              "
+            >
+              <div class="text-weight-medium text-primary text-subtitle1">
+                Informaciones
+              </div>
+            </q-btn>
+            <!-- ref="menuInformaciones" -->
+            <!-- :anchor="menuInformaciones" -->
+            <q-menu
+              v-model="dropdownVisible.informaciones"
+              @mouseenter="clearCloseTimer('informaciones')"
+              @mouseleave="startCloseTimer('informaciones')"
+              transition-show="flip-down"
+              transition-hide="flip-up"
+              :offset="[-25, 10]"
+              style="border-radius: 20px"
+              class="bg-red-1"
+            >
+              <q-list dense>
+                <q-item
+                  clickable
+                  @click="onItemClickInformaciones(val)"
+                  v-for="val in lista_informaciones"
+                  :key="val.clave"
+                >
+                  <q-item-section>
+                    <q-item-label
+                      class="text-weight-medium text-primary text-caption q-mx-lg"
+                      >{{ val.nombre }}</q-item-label
+                    >
+                  </q-item-section>
+                  <!-- <q-item-section avatar>
+                    <q-avatar
+                      icon="arrow_forward"
+                      flat
+                      size="md"
+                      text-color="red"
+                    />
+                  </q-item-section> -->
+                </q-item>
+              </q-list>
+            </q-menu>
+          </div>
+          <div class="q-pl-xs">
+            <q-btn
+              outline
+              rounded
+              no-caps
+              style="color: #ff6f20"
+              icon-right="arrow_drop_down"
+              @mouseenter="dropdownVisible.links = true"
+              @mouseleave="startCloseTimer('links')"
+              @click="dropdownVisible.links = !dropdownVisible.links"
+            >
+              <div class="text-weight-medium text-primary text-subtitle1">
+                Links de interés
+              </div>
+            </q-btn>
+            <!-- ref="menuLinks" -->
+            <!-- :anchor="menuLinks" -->
+            <q-menu
+              v-model="dropdownVisible.links"
+              @mouseenter="clearCloseTimer('links')"
+              @mouseleave="startCloseTimer('links')"
+              transition-show="flip-down"
+              transition-hide="flip-up"
+              :offset="[-25, 10]"
+              style="border-radius: 20px"
+              class="bg-amber-1"
+            >
+              <q-list dense>
+                <q-item
+                  clickable
+                  @click="onItemLinksInteres(val)"
+                  v-for="val in links_interes"
+                  :key="val.clave"
+                >
+                  <q-item-section>
+                    <q-item-label
+                      class="text-weight-medium text-primary text-caption q-mx-xs"
+                      >{{ val.nombre }}</q-item-label
+                    >
+                  </q-item-section>
+                  <q-item-section avatar>
+                    <q-avatar
+                      icon="arrow_forward"
+                      flat
+                      size="md"
+                      text-color="red"
+                    />
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </div>
+          <!-- Sección Contacto-->
+          <div class="q-px-xs">
+            <q-btn
+              outline
+              rounded
+              no-caps
+              style="color: #00796b"
               icon-right="arrow_drop_down"
               @mouseenter="dropdownVisible.contactos = true"
               @mouseleave="startCloseTimer('contactos')"
               @click="dropdownVisible.contactos = !dropdownVisible.contactos"
-            ></q-btn>
-            <q-popup-proxy
-              ref="popupContactos"
+              ><div class="text-weight-medium text-primary text-subtitle1">
+                Contacto
+              </div></q-btn
+            >
+            <q-menu
               v-model="dropdownVisible.contactos"
               transition-show="flip-down"
               transition-hide="flip-up"
-              persistent
-              fit
-              anchor="bottom left"
-              self="top left"
+              :offset="[-25, 10]"
+              style="border-radius: 20px"
+              class="bg-teal-1"
               @mouseenter="clearCloseTimer('contactos')"
               @mouseleave="startCloseTimer('contactos')"
             >
@@ -378,18 +605,22 @@
                   @click="onItemClickContactos(val)"
                 >
                   <q-item-section avatar>
-                    <q-avatar :icon="val.icono" flat size="md" text-color="primary" />
+                    <q-avatar
+                      :icon="val.icono"
+                      flat
+                      size="md"
+                      text-color="primary"
+                    />
                   </q-item-section>
                   <q-item-section>
                     <q-item-label caption>{{ val.label }}</q-item-label>
-                    <q-item-label caption class="text-bold">{{
+                    <q-item-label class="text-primary text-caption">{{
                       val.nombre
                     }}</q-item-label>
                   </q-item-section>
-                  <!-- Tooltip -->
                 </q-item>
               </q-list>
-            </q-popup-proxy>
+            </q-menu>
 
             <q-popup-proxy
               v-if="isLargeScreen"
@@ -405,7 +636,7 @@
             </q-popup-proxy>
           </div>
 
-          <div class="q-gutter-sm">
+          <div class="">
             <!-- <q-btn
               label="Mi gestión"
               color="primary"
@@ -417,10 +648,9 @@
             /> -->
             <q-btn
               label="Mi Colmed"
-              class="text-weight-regular"
+              class="text-weight-medium"
               no-caps
               rounded
-              outline
               color="red"
               @click="goMiColmed"
             />
@@ -457,6 +687,10 @@ defineProps({
 const $q = useQuasar();
 // const isLargeScreen = computed(() => $q.screen.gt.md);
 const menuVisible = ref(false);
+const menuServicios = ref(null);
+const menuInformaciones = ref(null);
+const menuLinks = ref(null);
+const menuQuienesSomos = ref(null);
 
 const contacto_colmed_aysen = ref({
   numero_telefono: "67-2232833",
@@ -607,7 +841,11 @@ const lista_contactos = reactive([
 ]);
 
 const goMiColmed = () => {
-  window.open("https://micolmed.colegiomedico.cl/", "_blank", "noopener,noreferrer");
+  window.open(
+    "https://micolmed.colegiomedico.cl/",
+    "_blank",
+    "noopener,noreferrer"
+  );
 };
 
 const onItemClickQuienesSomos = (val) => {
@@ -622,7 +860,11 @@ const onItemClickQuienesSomos = (val) => {
       router.push("/quienes-somos");
       break;
     case "colmed":
-      window.open("https://www.colegiomedico.cl/", "_blank", "noopener,noreferrer");
+      window.open(
+        "https://www.colegiomedico.cl/",
+        "_blank",
+        "noopener,noreferrer"
+      );
       break;
     default:
       console.log("Error en valor : ", val);
@@ -630,7 +872,6 @@ const onItemClickQuienesSomos = (val) => {
 };
 
 const onItemLinksInteres = (val) => {
-  
   menuVisible.value = false;
   dropdownVisible.value.links = false;
   switch (val.clave) {

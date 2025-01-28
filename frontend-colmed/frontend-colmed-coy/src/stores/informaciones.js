@@ -65,19 +65,6 @@ export const useInformacionesStore = defineStore("informacion", {
         this.loading_base = true;
       }
     },
-    async fetchEventosBase() {
-      this.loading_eventos_base = false;
-      try {
-        const response = await api.get("/api/colmed/eventos/eventos_base/");
-        this.eventos_base = response.data;
-      } catch (error) {
-        console.error("Error al cargar las eventos base:");
-        this.error_eventos_base =
-          "No se pudo cargar las eventos. Por favor, intenta de nuevo más tarde.";
-      } finally {
-        this.loading_eventos_base = true;
-      }
-    },
     async fetchTodasNoticias() {
       this.loading = false;
       try {
@@ -110,9 +97,13 @@ export const useInformacionesStore = defineStore("informacion", {
       this.loading = true;
     },
     limpiarNoticia() {
-      this.editar_noticia = false;
-      this.crear_noticia = false;
-      this.noticia = null;
+      this.noticia ? null : this.noticia;
+      this.crear_noticia ? false : this.crear_noticia;
+      this.editar_noticia ? false : this.editar_noticia;
+
+      // this.editar_noticia = false;
+      // this.crear_noticia = false;
+      // this.noticia = null;
     },
     async noticiaApp(noticia) {
       this.noticia_app = noticia;
@@ -124,7 +115,7 @@ export const useInformacionesStore = defineStore("informacion", {
           "/api/noticias/noticia-create-update/",
           noticia
         );
-        this.limpiarNoticia();
+
         this.fetchTodasNoticias();
       } catch (error) {
         console.error("Error al cargar todas las noticias activas:");

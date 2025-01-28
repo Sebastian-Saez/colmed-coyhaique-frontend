@@ -5,6 +5,8 @@ import { useRouter } from "vue-router";
 // Crear una instancia de Axios con la URL base desde las variables de entorno
 const api = axios.create({
   baseURL: process.env.VITE_APP_BACKEND_URL, // Usar la variable de entorno para la base URL
+  //baseURL: "http://localhost:8001/",
+  withCredentials: true, // ¡importante!
 });
 
 // Interceptor para incluir el token en cada solicitud si está presente
@@ -25,38 +27,44 @@ api.interceptors.response.use(
 
     // Si el error es 401 y el token no es válido, intentar refrescar el token
     if (error.response) {
-      if (
-        error.response.status === 401 &&
-        error.response.data.code === "token_not_valid"
-      ) {
-        const refreshToken = localStorage.getItem("refreshToken"); // Recuperar el refresh token
+      if (error.response.status === 401) {
+        // const refreshToken = localStorage.getItem("refreshToken"); // Recuperar el refresh token
 
-        // Si hay un refresh token guardado, intentar refrescar el token de acceso
-        if (refreshToken) {
-          try {
-            // Hacer una solicitud para refrescar el token de acceso
-            const response = await api.post("/api/colmed/token/refresh/", {
-              refresh: refreshToken,
-            });
+        // // Si hay un refresh token guardado, intentar refrescar el token de acceso
+        // if (refreshToken) {
+        //   try {
+        //     // Hacer una solicitud para refrescar el token de acceso
+        //     const response = await api.post("/api/colmed/token/refresh/", {
+        //       refresh: refreshToken,
+        //     });
 
-            // Guardar el nuevo token de acceso en el localStorage
-            const newAccessToken = response.data.access;
-            localStorage.setItem("authToken", newAccessToken);
+        //     // Guardar el nuevo token de acceso en el localStorage
+        //     const newAccessToken = response.data.access;
+        //     localStorage.setItem("authToken", newAccessToken);
 
-            // Actualizar el token en la cabecera de la solicitud original
-            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        //     // Actualizar el token en la cabecera de la solicitud original
+        //     originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
-            // Reintentar la solicitud original con el nuevo token
-            return api(originalRequest);
-          } catch (err) {
-            console.error("Error al refrescar el token:", err);
-            // Si falla el refresco, eliminar los tokens y redirigir a login
-            localStorage.removeItem("authToken");
-            localStorage.removeItem("refreshToken");
-            router.push("/login");
-          }
-        } else {
-          // Si no hay refresh token, redirigir a la página de login
+        //     // Reintentar la solicitud original con el nuevo token
+        //     return api(originalRequest);
+        //   } catch (err) {
+        //     console.error("Error al refrescar el token:", err);
+        //     // Si falla el refresco, eliminar los tokens y redirigir a login
+        //     localStorage.removeItem("authToken");
+        //     localStorage.removeItem("refreshToken");
+        //     router.push("/login");
+        //   }
+        originalRequest._retry = true;
+        try {
+          // Llamada al endpoint de refresh (usa cookies, no parámetros)
+          await api.post("/api/token/refresh/");
+          // Si fue exitoso, el backend setea la nueva cookie access_token
+          // Reintentamos la petición original
+          return api(originalRequest);
+        } catch (err) {
+          console.error("Error al refrescar el token:", err);
+          // Si falla, redirigir a login o hacer logout
+          // router.push("/login");
           router.push("/login");
         }
       }

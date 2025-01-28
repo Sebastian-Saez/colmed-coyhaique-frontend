@@ -77,11 +77,11 @@
       <div class="column">
         <q-toggle
           :label="
-            modelNoticia.destacada ? 'No destacada' : ' Noticia destacada'
+            modelNoticia.destacada ? 'Noticia destacada' : ' No destacada'
           "
           color="red-14"
-          :false-value="true"
-          :true-value="false"
+          :false-value="false"
+          :true-value="true"
           v-model="modelNoticia.destacada"
           :disable="!editar_noticia && noticia ? true : false"
         />
@@ -257,6 +257,7 @@ const $q = useQuasar();
 const userStore = useUserStore();
 const informacionStore = useInformacionesStore();
 const userProfile = computed(() => userStore.profiles);
+const user = computed(() => userStore.user);
 const editar_noticia = computed(() => informacionStore.editar_noticia);
 const crear_noticia = computed(() => informacionStore.crear_noticia);
 const noticia = computed(() => informacionStore.noticia);
@@ -324,9 +325,9 @@ const guardarNoticia = async () => {
   }
 
   if (crear_noticia.value) {
-    formData.append("autor", userProfile.value[0].user);
+    formData.append("autor", user.value.id);
   } else {
-    formData.append("autor", noticia.value.autor.id);
+    formData.append("autor", noticia.value.autor);
   }
 
   try {
@@ -346,7 +347,7 @@ const guardarNoticia = async () => {
 
 const onConfirmOk = () => {
   // Limpiar los campos del formulario
-  informacionStore.limpiarNoticia();
+
   modelNoticia.titulo = "";
   modelNoticia.contenido = "";
   modelNoticia.resumen_contenido = "";
@@ -354,7 +355,7 @@ const onConfirmOk = () => {
   modelNoticia.autor = "";
   modelNoticia.imagen = null;
   modelNoticia.link = null;
-  modelNoticia.autor = true;
+  modelNoticia.activo = true;
 
   // Cerrar el diálogo de confirmación
   confirm.value = false;

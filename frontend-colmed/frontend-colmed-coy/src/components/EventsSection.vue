@@ -2,17 +2,16 @@
   <!-- Próximos Eventos (Events Carousel) -->
   <q-card
     flat
-    class="q-pa-md bg-terciary"
+    class="q-pa-md"
     :class="isLargeScreen ? 'q-mx-xl q-pa-md' : 'q-pa-lg'"
     style="border-radius: 30px"
   >
-    <q-card-section style="border-radius: 20px 20px 0px 0px" class="bg-primary"
-      ><div class="text-h3 text-bold text-white">
-        Próximos Eventos
-      </div></q-card-section
-    >
+    <q-card-section style="border-radius: 20px 20px 0px 0px"
+      ><div class="text-h3 text-bold text-primary">Próximos Eventos</div>
+    </q-card-section>
+    <q-separator inset />
 
-    <div v-if="!loading_eventos_base" class="text-center q-my-lg">
+    <div v-if="!loading_base" class="text-center q-my-lg">
       <q-spinner-dots size="50px" color="primary" />
       <p class="q-mt-md">Cargando datos...</p>
     </div>
@@ -25,41 +24,91 @@
         :key="index"
         class="col-12 col-md-4"
       >
-        <template v-if="evento.imagen">
+        <q-card
+          flat
+          class="bg-grey-1 q-my-sm full-width hover-border"
+          clickable
+          bordered
+          @click="verEvento(evento)"
+        >
+          <!-- Imagen del evento -->
           <q-img
-            :ratio="4 / 3"
+            v-if="evento.imagen"
+            :ratio="1"
             :src="evento.imagen"
             alt="Evento"
-            class="rounded-borders q-mt-md"
+            class="rounded-borders"
             loading="lazy"
+            fit="cover"
             spinner-color="primary"
           />
-        </template>
-        <div class="text-h4 text-bold text-primary q-mt-md">
-          {{ evento.title }}
-        </div>
-        <div class="text-subtitle1 q-mt-md">
-          {{ evento.description }}
-        </div>
-        <q-btn
-          flat
-          no-caps
-          label="Leer"
-          icon-right="arrow_forward"
-          class="text-primary q-mt-md"
-        />
+          <!-- Encabezado: título, descripción corta -->
+          <q-card-section>
+            <div class="text-h5 text-bold text-primary text-center">
+              {{ evento.titulo }}
+            </div>
+            <q-separator spaced />
+            <q-btn
+              no-caps
+              icon-right="arrow_forward"
+              class="q-mt-xs"
+              style="width: 100%"
+              color="teal-10"
+              outline
+            >
+              <div class="text-primary text-weight-medium text-subtitle1">
+                Ver evento
+              </div>
+            </q-btn>
+          </q-card-section>
+        </q-card>
       </div>
     </div>
     <div class="mt-8 text-center">
       <q-btn
-        label="Ir a Eventos"
         class="bg-primary text-white q-mt-md"
         @click="irAEventos"
         rounded
         no-caps
-      />
+        style="width: 30%"
+      >
+        <div class="text-white text-weight-medium text-body1">
+          Ver todos los eventos
+        </div>
+      </q-btn>
     </div>
   </q-card>
+  <q-dialog v-model="showEventoDialog">
+    <q-card
+      bordered
+      style="min-width: 550px; max-width: 90vw; border-radius: 20px"
+      class="bg-white"
+    >
+      <q-img
+        v-if="selectedEvento?.imagen"
+        :src="selectedEvento.imagen"
+        spinner-color="primary"
+        class="rounded-borders"
+      />
+
+      <!-- <q-card-section>
+        <div class="text-h4 text-bold text-primary">
+          {{ selectedEvento?.title }}
+        </div>
+        <div class="text-subtitle1 q-pt-sm">
+          {{ selectedEvento?.description }}
+        </div>
+      </q-card-section> -->
+      <q-btn
+        color="teal"
+        no-caps
+        style="width: 100%"
+        @click="showEventoDialog = false"
+      >
+        <div class="text-white text-weight-medium text-h6">Cerrar</div>
+      </q-btn>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup>
@@ -76,20 +125,22 @@ defineProps({
   },
 });
 
+// Estado local
+const showEventoDialog = ref(false);
+const selectedEvento = ref(null);
+
 const informacionStore = useInformacionesStore();
 const eventosStore = useEventosStore();
 const calendarStore = useCalendarStore();
 //const eventos_base = computed(() => eventosStore.eventos_base);
 //const loading_base = computed(() => eventosStore.loading_base);
-const loading_base = ref(true);
+
 const calendarioColmed = ref(
   '<iframe src="https://calendar.google.com/calendar/embed?src=c_78d2b5bff047ec1a63adb88d03dc3129cad5e15379487fe9a2bb544dbf11ea20%40group.calendar.google.com&ctz=America%2FSantiago" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>"'
 );
 
-const eventosBase = computed(() => informacionStore.eventos_base);
-const loading_eventos_base = computed(
-  () => informacionStore.loading_eventos_base
-);
+const eventosBase = computed(() => eventosStore.eventos_base);
+const loading_base = computed(() => eventosStore.loading_base);
 const error_base = computed(() => eventosStore.error_base);
 const router = useRouter();
 const eventos_base = [
@@ -109,6 +160,11 @@ const eventos_base = [
     img: "https://cdn.quasar.dev/img/parallax2.jpg",
   },
 ];
+
+const verEvento = (evento) => {
+  selectedEvento.value = evento;
+  showEventoDialog.value = true;
+};
 
 const irAEventos = async () => {
   await calendarStore.fetchWeeklyEvents();

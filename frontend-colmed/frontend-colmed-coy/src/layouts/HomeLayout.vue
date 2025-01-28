@@ -150,6 +150,8 @@ import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { useServicioStore } from "src/stores/servicios";
 import { useInformacionesStore } from "src/stores/informaciones";
+import { useEventosStore } from "src/stores/eventos";
+import { usePublicidadStore } from "src/stores/publicidadMedica";
 import { useSomosStore } from "src/stores/quienesSomos";
 import { useCalendarStore } from "src/stores/calendar";
 import { copyToClipboard } from "quasar";
@@ -188,6 +190,8 @@ const messagePopup = ref({
 const router = useRouter();
 const servicioStore = useServicioStore();
 const informacionesStore = useInformacionesStore();
+const eventoStore = useEventosStore();
+const publicidadStore = usePublicidadStore();
 const somosStore = useSomosStore();
 const calendarStore = useCalendarStore();
 
@@ -204,7 +208,8 @@ onMounted(async () => {
   // await calendarStore.fetchWeeklyEvents();
   informacionesStore.fetchNoticiasDestacadas();
   informacionesStore.fetchNoticiasBase();
-  informacionesStore.fetchEventosBase();
+  eventoStore.fetchEventosBase();
+  publicidadStore.fetchPublicidadesBase();
 });
 
 const lista_quienes_somos = [

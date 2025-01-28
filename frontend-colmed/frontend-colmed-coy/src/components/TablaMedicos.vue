@@ -948,6 +948,7 @@
                   class="q-mx-sm bg-blue-1"
                   style="border-radius: 5px"
                 >
+                  {{ afiliaciones }}
                   <q-expansion-item
                     v-for="afiliacion in afiliaciones"
                     :key="afiliacion.id"
