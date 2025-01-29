@@ -177,7 +177,7 @@ const modelPublicidadMedica = ref(
 const confirm = ref(false);
 
 const editarPublicidad = () => {
-  publicidadStore.setModificarPublicidad(publicidad_medica);
+  publicidadStore.setModificarPublicidad(publicidad_medica.value);
 };
 
 const guardarPublicidadMedica = async () => {

@@ -1,20 +1,34 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="bg-page">
-    <div class="q-pa-md flex justify-center">
-      <div class="q-mx-xl q-px-xl" style="max-width: 1600px; width: 90%">
-        <ToolbarSection />
-        <q-card flat bordered v-if="noticia">
+    <div class="q-pa-md">
+      <div
+        class="q-mt-xs justify-center"
+        :class="isLargeScreen ? 'q-mx-xl q-px-xl' : ''"
+      >
+        <ToolbarSection :isLargeScreen="isLargeScreen" />
+        <q-card
+          class="q-pa-md bg-grey-2"
+          flat
+          bordered
+          style="border-radius: 20px"
+          v-if="noticia"
+        >
           <q-card-section horizontal>
             <q-card-section class="q-pt-xs">
-              <div class="text-h5 text-primary q-mt-sm q-mb-xs">
+              <div
+                class="text-h5 text-primary text-weight-medium q-mt-sm q-mb-xs"
+              >
                 {{ noticia.titulo }}
               </div>
-              <div class="text-subtitle1 text-weight-light text-primary">
+              <q-separator spaced />
+              <div
+                class="text-subtitle1 text-weight-regular text-primary text-justify"
+              >
                 {{ noticia.contenido }}
               </div>
             </q-card-section>
 
-            <q-card-section class="col-5 flex flex-center">
+            <q-card-section class="col-5">
               <q-img
                 v-if="noticia.imagen"
                 class="rounded-borders"
@@ -50,7 +64,7 @@
         </div>
       </div>
     </div>
-    <FooterSection />
+    <FooterSection :isLargeScreen="isLargeScreen" />
   </q-layout>
 </template>
 
@@ -60,9 +74,15 @@ import FooterSection from "src/components/FooterSection.vue";
 import { useRouter, useRoute } from "vue-router";
 import { useInformacionesStore } from "src/stores/informaciones";
 import { computed, ref, onMounted } from "vue";
+import { useQuasar } from "quasar";
 
 defineOptions({
   name: "InformacionesPage",
+});
+
+const $q = useQuasar();
+const isLargeScreen = computed(() => {
+  return $q.screen.gt.md;
 });
 
 const informacionStore = useInformacionesStore();

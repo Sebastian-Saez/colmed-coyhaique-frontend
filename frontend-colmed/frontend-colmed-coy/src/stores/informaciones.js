@@ -80,6 +80,11 @@ export const useInformacionesStore = defineStore("informacion", {
         this.loading = true;
       }
     },
+    async setNoticia(noticia) {
+      this.loading = false;
+      this.noticia = noticia ?? null;
+      this.loading = true;
+    },
     async setCategoriaInformacion(categoria) {
       this.loading = false;
       this.pagina_informaciones = categoria;
@@ -93,17 +98,13 @@ export const useInformacionesStore = defineStore("informacion", {
     },
     async setCrearNoticia() {
       this.loading = false;
-      this.crear_noticia = noticia;
+      this.crear_noticia = true;
       this.loading = true;
     },
     limpiarNoticia() {
-      this.noticia ? null : this.noticia;
-      this.crear_noticia ? false : this.crear_noticia;
-      this.editar_noticia ? false : this.editar_noticia;
-
-      // this.editar_noticia = false;
-      // this.crear_noticia = false;
-      // this.noticia = null;
+      this.editar_noticia = false;
+      this.crear_noticia = false;
+      this.noticia = null;
     },
     async noticiaApp(noticia) {
       this.noticia_app = noticia;
@@ -111,12 +112,9 @@ export const useInformacionesStore = defineStore("informacion", {
     async postNoticia(noticia) {
       this.loading = false;
       try {
-        const response = await api.post(
-          "/api/noticias/noticia-create-update/",
-          noticia
-        );
+        await api.post("/api/noticias/noticia-create-update/", noticia);
 
-        this.fetchTodasNoticias();
+        await this.fetchTodasNoticias();
       } catch (error) {
         console.error("Error al cargar todas las noticias activas:");
         this.error =

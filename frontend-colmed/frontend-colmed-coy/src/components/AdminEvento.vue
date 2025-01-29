@@ -57,6 +57,7 @@
         dense
         v-model="modelEvento.fecha_inicio"
         mask="date"
+        hint="Ingresar en formato AAAA/MM/DD, por ejemplo 2024/10/01"
         :rules="['date']"
         :disable="!editar_evento && evento ? true : false"
       >
@@ -191,7 +192,7 @@
         :disable="!editar_evento && noticia ? true : false"
       /> -->
     </q-card-section>
-    Editar {{ editar_evento }}?? crear {{ crear_evento }}
+
     <q-card-actions align="right">
       <q-btn
         no-caps
@@ -226,11 +227,17 @@
     <q-inner-loading :showing="loading_evento">
       <q-spinner-dots color="primary" size="2em"
     /></q-inner-loading>
-    <q-dialog v-model="confirm" persistent>
-      <q-card flat>
+    <q-dialog
+      v-model="confirm"
+      persistent
+      backdrop-filter="blur(4px) saturate(150%)"
+    >
+      <q-card flat class="bg-amber-1">
         <q-card-section class="row items-center">
-          <q-avatar icon="check" color="grey-1" text-color="primary" />
-          <span class="q-ml-sm">{{ mensaje }}</span>
+          <q-avatar icon="check" color="cyan-8" text-color="white" />
+          <span class="q-ml-sm text-weight-medium text-primary text-h6">{{
+            mensaje
+          }}</span>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -296,7 +303,7 @@ const formatDate = (dateString) => {
   return dayjs(dateString).format("DD-MM-YYYY");
 };
 
-const isValid = computed(() => modelEvento.value.titulo <= 250);
+const isValid = computed(() => modelEvento.value.titulo.length <= 250);
 
 const formatDateToBackend = (dateString) => {
   // Si está vacío o es "No informado", devuélvelo tal cual
@@ -307,7 +314,7 @@ const formatDateToBackend = (dateString) => {
 };
 
 const editarEvento = () => {
-  eventosStore.setModificarEvento(evento);
+  eventosStore.setModificarEvento(evento.value);
 };
 
 const guardarEvento = async () => {
@@ -449,12 +456,12 @@ const obtenerNombreArchivo = (ruta) => {
 const tituloEvento = computed(() => {
   if (evento.value) {
     if (editar_evento.value) {
-      return "Editar evento.";
+      return "Editar evento";
     } else {
-      return "Detalles del evento.";
+      return "Detalles del evento";
     }
   } else {
-    return "Crear evento.";
+    return "Crear evento";
   }
 });
 </script>

@@ -87,6 +87,7 @@
               style="width: 100%"
               color="cyan-10"
               outline
+              @click="goToNoticia(noticia)"
             >
               <div class="text-primary text-weight-medium text-subtitle1">
                 Ver noticia
@@ -166,11 +167,11 @@
     <div class="mt-8 text-center">
       <q-btn
         class="bg-primary text-white q-mt-md"
-        @click="irANoticias"
         rounded
         no-caps
         style="width: 30%"
       >
+        <!-- @click="irANoticias" -->
         <div class="text-white text-weight-medium text-body1">
           Ver todas las noticias
         </div>
@@ -207,6 +208,13 @@ const noticias_base = computed(() => informacionesStore.noticias_base);
 const loading_base = computed(() => informacionesStore.loading_base);
 
 const error_base = computed(() => informacionesStore.error_base);
+
+const goToNoticia = (noticia) => {
+  router.push({
+    path: `/informaciones/noticia/${noticia.id}`, // Asume que cada noticia tiene un 'id'
+    state: { noticia }, // Pasar la noticia completa como estado
+  });
+};
 
 const irANoticias = () => {
   informacionesStore.setCategoriaInformacion("noticias");

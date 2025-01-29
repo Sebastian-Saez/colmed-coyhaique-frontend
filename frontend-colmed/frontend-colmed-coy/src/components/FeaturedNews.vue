@@ -89,6 +89,7 @@
                   padding="md"
                   :style="{ width: isLargeScreen ? '50%' : '50%' }"
                 />
+                <!-- @click="goToNoticia(noticia)" -->
               </div>
             </div>
 
@@ -131,6 +132,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useInformacionesStore } from "src/stores/informaciones";
 import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
 
 defineProps({
   isLargeScreen: {
@@ -141,7 +143,7 @@ defineProps({
 
 const $q = useQuasar();
 // const isLargeScreen = computed(() => $q.screen.gt.md);
-
+const router = useRouter();
 const autoplay = ref(true);
 const informacionesStore = useInformacionesStore();
 const imageSlide = ref(1);
@@ -155,6 +157,13 @@ const loading_destacadas = computed(
   () => informacionesStore.loading_destacadas
 );
 const error_destacadas = computed(() => informacionesStore.error_destacadas);
+
+const goToNoticia = (noticia) => {
+  router.push({
+    path: `/informaciones/noticia/${noticia.id}`, // Asume que cada noticia tiene un 'id'
+    state: { noticia }, // Pasar la noticia completa como estado
+  });
+};
 </script>
 
 <style lang="scss">

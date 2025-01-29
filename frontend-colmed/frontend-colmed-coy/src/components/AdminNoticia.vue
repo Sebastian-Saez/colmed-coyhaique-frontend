@@ -231,11 +231,17 @@
     <q-inner-loading :showing="loading_noticia">
       <q-spinner-dots color="primary" size="2em"
     /></q-inner-loading>
-    <q-dialog v-model="confirm" persistent>
-      <q-card flat>
+    <q-dialog
+      v-model="confirm"
+      persistent
+      backdrop-filter="blur(4px) saturate(150%)"
+    >
+      <q-card flat class="bg-amber-1">
         <q-card-section class="row items-center">
-          <q-avatar icon="check" color="grey-1" text-color="primary" />
-          <span class="q-ml-sm">{{ mensaje }}</span>
+          <q-avatar icon="check" color="cyan-8" text-color="white" />
+          <span class="q-ml-sm text-weight-medium text-primary text-h6">{{
+            mensaje
+          }}</span>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -293,7 +299,7 @@ const imagenPrevia = ref(noticia.value ? noticia.value.imagen : null);
 const confirm = ref(false);
 
 const editarNoticia = () => {
-  informacionStore.setModificarNoticia(noticia);
+  informacionStore.setModificarNoticia(noticia.value);
 };
 
 const guardarNoticia = async () => {
@@ -317,7 +323,11 @@ const guardarNoticia = async () => {
 
   // Agregar la imagen solo si existe
   if (modelNoticia.value.imagen) {
-    formData.append("imagen", modelNoticia.value.imagen);
+    // formData.append("imagen", modelNoticia.value.imagen);
+    if (modelNoticia.value.imagen instanceof File) {
+      // El usuario subió un archivo nuevo
+      formData.append("imagen", modelNoticia.value.imagen);
+    }
   }
 
   if (modelNoticia.value.link) {
@@ -427,12 +437,12 @@ const obtenerNombreArchivo = (ruta) => {
 const tituloNoticia = computed(() => {
   if (noticia.value) {
     if (editar_noticia.value) {
-      return "Editar noticia.";
+      return "Editar noticia";
     } else {
-      return "Detalles de noticia.";
+      return "Detalles de noticia";
     }
   } else {
-    return "Crear noticia.";
+    return "Crear noticia";
   }
 });
 </script>

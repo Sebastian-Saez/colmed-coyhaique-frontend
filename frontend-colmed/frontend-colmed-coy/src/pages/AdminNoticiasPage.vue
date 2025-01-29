@@ -229,7 +229,8 @@ const cancelar = async () => {
 };
 
 const verNoticia = (noticia) => {
-  informacionStore.noticia = noticia;
+  // informacionStore.noticia = noticia;
+  informacionStore.setNoticia(noticia);
   accionNoticia.value = true;
 };
 
@@ -241,7 +242,8 @@ const editarNoticia = (noticia) => {
 };
 
 const agregarNoticia = () => {
-  informacionStore.crear_noticia = true;
+  // informacionStore.crear_noticia = true;
+  informacionStore.setCrearNoticia();
   accionNoticia.value = true;
 };
 

@@ -69,7 +69,7 @@ export const usePublicidadStore = defineStore("publicidadMedica", {
     },
     async setCrearPublicidadMedica() {
       this.loading = false;
-      this.crear_publicidad = publicidad_medica;
+      this.crear_publicidad = true;
       this.loading = true;
     },
     async postPublicidadMedica(publicidad_medica) {
