@@ -2,15 +2,28 @@
   <q-layout view="lHh Lpr lFf">
     <q-card class="q-pa-md bg-grey-1" style="border-radius: 20px">
       <div class="row items-center justify-between q-pb-md">
-        <div class="text-h4 text-bold text-primary">Todos los Eventos</div>
+        <div class="text-h4 text-bold text-primary col">Todos los Eventos</div>
         <q-btn
           no-caps
           color="primary"
           label="Agregar un nuevo Evento"
           icon="add"
-          class="text-white"
+          class="text-white q-px-sm"
           rounded
+          dense
           @click="agregarEvento"
+        />
+        <q-btn
+          color="red-9"
+          icon-right="help_center"
+          label="Ayuda"
+          no-caps
+          class="q-ml-md q-px-md"
+          dense
+          rounded
+          flat
+          href="https://drive.google.com/drive/u/1/folders/1lc3p3m5kUF9AOIAbDx8vOaQ3s9oksmJY"
+          target="_blank"
         />
       </div>
 

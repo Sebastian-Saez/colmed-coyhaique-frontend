@@ -16,7 +16,7 @@
         swipeable
         navigation
         infinite
-        :autoplay="autoplay"
+        :autoplay="6500"
         arrows
         control-color="secondary"
         control-type="flat"
@@ -24,10 +24,10 @@
         transition-next="jump-left"
         :padding="isLargeScreen ? true : false"
         :height="carouselHeight"
-        transition-duration="400"
         class="carousel-full-width"
         style="height: 650px"
       >
+        <!-- transition-duration="400" -->
         <template
           v-if="!isLargeScreen"
           v-slot:navigation-icon="{ active, btnProps, onClick }"
@@ -88,8 +88,9 @@
                   no-caps
                   padding="md"
                   :style="{ width: isLargeScreen ? '50%' : '50%' }"
+                  @click="goToNoticia(noticia)"
                 />
-                <!-- @click="goToNoticia(noticia)" -->
+                <!--  -->
               </div>
             </div>
 
@@ -161,7 +162,6 @@ const error_destacadas = computed(() => informacionesStore.error_destacadas);
 const goToNoticia = (noticia) => {
   router.push({
     path: `/informaciones/noticia/${noticia.id}`, // Asume que cada noticia tiene un 'id'
-    state: { noticia }, // Pasar la noticia completa como estado
   });
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <q-card class="q-mb-lg bg-destacado" flat>
+  <q-card v-if="hasPublicidades" class="q-mb-lg bg-destacado" flat>
     <div :class="{ 'q-pl-xs q-pr-xs': !isLargeScreen }">
       <!-- Spinner de carga -->
       <div v-if="!loading_publicidades" class="text-center q-my-lg">
@@ -22,19 +22,20 @@
         control-color="primary"
         arrows
         infinite
-        :autoplay="autoplay"
-        transition-prev="slide-right"
-        transition-next="slide-left"
+        padding
+        :autoplay="7000"
+        transition-prev="fade"
+        transition-next="fade"
         height="100px"
-        transition-duration="600"
-        class="bg-terciary rounded-borders"
+        class="custom-header2 rounded-borders q-mx-xl"
+        style="border-radius: 20px"
       >
         <!-- Acá iteramos con la función getChunks(array,2) -->
         <q-carousel-slide
           v-for="(chunk, index) in chunkedPublicidades"
           :key="index"
           :name="index + 1"
-          class="column no-wrap"
+          class="column no-wrap q-pt-xs q-pb-xs"
         >
           <!-- <div>{{ chunk }} ????</div> -->
           <div class="row fit no-wrap justify-center items-center">
@@ -48,42 +49,36 @@
               target="_blank"
               style="width: 350px; max-width: 90%; border-radius: 15px"
             >
-              <q-card-section class="bg-cyan-9 text-white">
-                <div class="text-h6 text-center">
+              <q-card-section
+                class="bg-teal-5 text-white q-pt-sm q-pb-sm"
+                style="border-radius: 15px"
+              >
+                <div class="text-h6 text-center text-weight-bolder">
                   {{ pub.titulo }} <q-icon class="q-pl-xs" name="open_in_new" />
+                </div>
+                <div class="text-body2 text-center text-weight-medium">
+                  {{ pub.descripcion }}
                 </div>
               </q-card-section>
             </q-card>
           </div>
-
-          <!-- <div class="row fit no-wrap justify-center items-center">
-            <q-card
-              v-for="(pub, pubIndex) in chunk"
-              :key="pubIndex"
-              class="q-mx-auto"
-              clickable
-              tag="a"
-              :href="pub.link"
-              target="_blank"
-              style="width: 300px; max-width: 90%; border-radius: 15px"
-            >
-              <q-card-section class="bg-cyan-9 text-white">
-                <div class="text-h6">{{ pub.titulo }}</div>
-              </q-card-section>
-            </q-card>
-          </div> -->
         </q-carousel-slide>
       </q-carousel>
     </div>
   </q-card>
-  <q-separator class="q-mx-xl q-mb-lg" color="primary" inset />
+  <q-separator
+    v-if="hasPublicidades"
+    class="q-mx-xl q-mb-lg"
+    color="primary"
+    inset
+  />
 </template>
 
 <script setup>
 import { computed, ref } from "vue";
 import { usePublicidadStore } from "src/stores/publicidadMedica";
 
-defineProps({
+const props = defineProps({
   isLargeScreen: {
     type: Boolean,
     required: true,
@@ -101,6 +96,11 @@ const loading_publicidades = computed(() => publicidadStore.loading_base);
 const error_base = computed(() => publicidadStore.error_base);
 const publicidadesMedicas = computed(() => publicidadStore.publicidades_base);
 
+// Verificar si hay publicidades para mostrar
+const hasPublicidades = computed(
+  () => publicidadesMedicas.value && publicidadesMedicas.value.length > 0
+);
+
 // Función para dividir la lista en chunks de 2 elementos, con manejo especial para impar
 function getChunks(array, size) {
   const chunks = [];
@@ -112,8 +112,12 @@ function getChunks(array, size) {
 }
 
 // chunkedPublicidades de 2 en 2
+// const chunkedPublicidades = computed(() => {
+//   return getChunks(publicidadesMedicas.value, 2);
+// });
 const chunkedPublicidades = computed(() => {
-  return getChunks(publicidadesMedicas.value, 2);
+  const itemsPerSlide = computed(() => (props.isLargeScreen ? 2 : 1)).value;
+  return getChunks(publicidadesMedicas.value || [], itemsPerSlide);
 });
 </script>
 

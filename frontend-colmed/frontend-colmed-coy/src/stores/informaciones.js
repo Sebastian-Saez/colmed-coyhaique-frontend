@@ -4,7 +4,8 @@ import { api } from "src/boot/axios";
 export const useInformacionesStore = defineStore("informacion", {
   state: () => ({
     informaciones: [],
-    pagina_informaciones: null,
+    pagina_informaciones:
+      localStorage.getItem("pagina_informaciones") || "noticias",
     loading: false,
     loading_base: false,
     loading_eventos_base: false,
@@ -86,8 +87,12 @@ export const useInformacionesStore = defineStore("informacion", {
       this.loading = true;
     },
     async setCategoriaInformacion(categoria) {
+      // this.loading = false;
+      // this.pagina_informaciones = categoria;
+      // this.loading = true;
       this.loading = false;
       this.pagina_informaciones = categoria;
+      localStorage.setItem("pagina_informaciones", categoria); // Guardar en localStorage
       this.loading = true;
     },
     async setModificarNoticia(noticia) {

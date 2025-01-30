@@ -1,11 +1,15 @@
 <template>
-  <q-card flat class="q-mb-md q-pt-xs custom-header text-primary">
+  <q-card
+    flat
+    class="q-mb-md q-pt-xs custom-header text-primary q-mr-xl"
+    style="border-radius: 20px"
+  >
     <q-separator
       color="primary"
       class=""
-      :class="isLargeScreen ? 'q-mr-lg' : 'q-mr-xs'"
+      :class="isLargeScreen ? '' : 'q-mr-xs'"
     />
-    <q-toolbar>
+    <q-toolbar class="custom-header2">
       <q-toolbar-title>
         <q-btn align="left" flat padding="xs" @click="goHome">
           <q-img
@@ -173,7 +177,7 @@
       </template>
       <!-- Menú para pantallas grandes -->
       <template v-else>
-        <div class="q-gutter-xs q-px-xl row items-right">
+        <div class="q-gutter-xs q-pl-xl row items-right">
           <!-- <div class="q-pl-xs">
             <q-btn
               flat
@@ -360,7 +364,7 @@
             </q-popup-proxy>
           </div> -->
           <div class="q-pl-xs">
-            <q-btn
+            <!-- <q-btn
               outline
               rounded
               style="color: #4caf50"
@@ -371,8 +375,21 @@
               @click="
                 dropdownVisible.quienesSomos = !dropdownVisible.quienesSomos
               "
+            > -->
+            <q-btn
+              rounded
+              color="blue-13
+"
+              text-color="white"
+              no-caps
+              icon-right="arrow_drop_down"
+              @mouseenter="dropdownVisible.quienesSomos = true"
+              @mouseleave="startCloseTimer('quienesSomos')"
+              @click="
+                dropdownVisible.quienesSomos = !dropdownVisible.quienesSomos
+              "
             >
-              <div class="text-weight-medium text-primary text-subtitle1">
+              <div class="text-weight-medium text-white text-subtitle1">
                 Quiénes Somos
               </div>
             </q-btn>
@@ -386,7 +403,7 @@
               transition-hide="flip-up"
               :offset="[-25, 10]"
               style="border-radius: 20px"
-              class="bg-green-1"
+              class="bg-blue-1"
             >
               <q-list dense>
                 <q-item
@@ -414,7 +431,7 @@
             </q-menu>
           </div>
           <div class="q-pl-xs">
-            <q-btn
+            <!-- <q-btn
               outline
               rounded
               no-caps
@@ -423,8 +440,19 @@
               @mouseenter="dropdownVisible.servicios = true"
               @mouseleave="startCloseTimer('servicios')"
               @click="dropdownVisible.servicios = !dropdownVisible.servicios"
+            > -->
+            <q-btn
+              rounded
+              no-caps
+              color="light-green-14
+"
+              text-color="white"
+              icon-right="arrow_drop_down"
+              @mouseenter="dropdownVisible.servicios = true"
+              @mouseleave="startCloseTimer('servicios')"
+              @click="dropdownVisible.servicios = !dropdownVisible.servicios"
             >
-              <div class="text-weight-medium text-primary text-subtitle1">
+              <div class="text-weight-medium text-white text-subtitle1">
                 Servicios
               </div></q-btn
             >
@@ -438,7 +466,7 @@
               transition-hide="flip-up"
               :offset="[-25, 10]"
               style="border-radius: 20px"
-              class="bg-blue-1"
+              class="bg-light-green-1"
             >
               <q-list dense>
                 <q-item
@@ -466,7 +494,7 @@
             </q-menu>
           </div>
           <div class="q-pl-xs">
-            <q-btn
+            <!-- <q-btn
               outline
               rounded
               no-caps
@@ -477,8 +505,21 @@
               @click="
                 dropdownVisible.informaciones = !dropdownVisible.informaciones
               "
+            > -->
+            <q-btn
+              rounded
+              no-caps
+              color="deep-orange-13
+"
+              text-color="white"
+              icon-right="arrow_drop_down"
+              @mouseenter="dropdownVisible.informaciones = true"
+              @mouseleave="startCloseTimer('informaciones')"
+              @click="
+                dropdownVisible.informaciones = !dropdownVisible.informaciones
+              "
             >
-              <div class="text-weight-medium text-primary text-subtitle1">
+              <div class="text-weight-medium text-white text-subtitle1">
                 Informaciones
               </div>
             </q-btn>
@@ -492,7 +533,7 @@
               transition-hide="flip-up"
               :offset="[-25, 10]"
               style="border-radius: 20px"
-              class="bg-red-1"
+              class="bg-deep-orange-1"
             >
               <q-list dense>
                 <q-item
@@ -520,7 +561,7 @@
             </q-menu>
           </div>
           <div class="q-pl-xs">
-            <q-btn
+            <!-- <q-btn
               outline
               rounded
               no-caps
@@ -529,8 +570,18 @@
               @mouseenter="dropdownVisible.links = true"
               @mouseleave="startCloseTimer('links')"
               @click="dropdownVisible.links = !dropdownVisible.links"
+            > -->
+            <q-btn
+              rounded
+              no-caps
+              color="orange-14"
+              text-color="white"
+              icon-right="arrow_drop_down"
+              @mouseenter="dropdownVisible.links = true"
+              @mouseleave="startCloseTimer('links')"
+              @click="dropdownVisible.links = !dropdownVisible.links"
             >
-              <div class="text-weight-medium text-primary text-subtitle1">
+              <div class="text-weight-medium text-white text-subtitle1">
                 Links de interés
               </div>
             </q-btn>
@@ -544,7 +595,7 @@
               transition-hide="flip-up"
               :offset="[-25, 10]"
               style="border-radius: 20px"
-              class="bg-amber-1"
+              class="bg-orange-1"
             >
               <q-list dense>
                 <q-item
@@ -573,7 +624,7 @@
           </div>
           <!-- Sección Contacto-->
           <div class="q-px-xs">
-            <q-btn
+            <!-- <q-btn
               outline
               rounded
               no-caps
@@ -582,7 +633,18 @@
               @mouseenter="dropdownVisible.contactos = true"
               @mouseleave="startCloseTimer('contactos')"
               @click="dropdownVisible.contactos = !dropdownVisible.contactos"
-              ><div class="text-weight-medium text-primary text-subtitle1">
+              > -->
+            <q-btn
+              rounded
+              no-caps
+              color="yellow-9"
+              text-color="white"
+              icon-right="arrow_drop_down"
+              @mouseenter="dropdownVisible.contactos = true"
+              @mouseleave="startCloseTimer('contactos')"
+              @click="dropdownVisible.contactos = !dropdownVisible.contactos"
+            >
+              <div class="text-weight-medium text-white text-subtitle1">
                 Contacto
               </div></q-btn
             >
@@ -592,7 +654,7 @@
               transition-hide="flip-up"
               :offset="[-25, 10]"
               style="border-radius: 20px"
-              class="bg-teal-1"
+              class="bg-yellow-1"
               @mouseenter="clearCloseTimer('contactos')"
               @mouseleave="startCloseTimer('contactos')"
             >
@@ -647,8 +709,9 @@
               @click="irALogin"
             /> -->
             <q-btn
+              outline
               label="Mi Colmed"
-              class="text-weight-medium"
+              class="text-weight-bold"
               no-caps
               rounded
               color="red"

@@ -3,7 +3,7 @@
     <q-toolbar class="bg-primary text-white shadow-2">
       <q-btn flat @click="goHome">
         <img
-          src="~assets/LogoCOLMEDAYSEN_letras_blancas.png"
+          src="~assets/CR-Region-de-Aysen_horizontal_white.png"
           alt="Colegio Médico Logo"
           style="width: 190px; height: 78px"
           class="q-mr-sm"
@@ -21,7 +21,7 @@
             {{ userProfile.name_google }}
           </div> -->
 
-          <q-chip>
+          <q-chip v-if="userProfile">
             <q-avatar>
               <img :src="userProfile.picture" />
             </q-avatar>
@@ -77,15 +77,31 @@
         style="border-radius: 20px"
       >
         <div class="row items-center justify-between q-pb-md">
-          <div class="text-h4 text-bold text-primary">Todas las noticias</div>
+          <div class="text-h4 text-bold text-primary col">
+            Todas las noticias
+          </div>
+
           <q-btn
             no-caps
             color="primary"
             label="Agregar una noticia"
             icon="add"
-            class="text-white"
+            class="text-white q-px-sm"
             rounded
+            dense
             @click="agregarNoticia"
+          />
+          <q-btn
+            color="red-9"
+            icon-right="help_center"
+            label="Ayuda"
+            no-caps
+            class="q-ml-md q-px-md"
+            dense
+            rounded
+            flat
+            href="https://drive.google.com/drive/u/1/folders/1_DnZ_REn76VJZyDGQfuWFG3dRPlODAkE"
+            target="_blank"
           />
         </div>
 
@@ -277,6 +293,10 @@ const goHome = () => {
 };
 
 onMounted(async () => {
+  if (!userProfile.value) {
+    console.error("Usuario no autenticado. Redirigiendo a login...");
+    router.push("/login");
+  }
   await informacionStore.fetchTodasNoticias();
 });
 </script>

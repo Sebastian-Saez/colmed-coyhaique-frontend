@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { api } from "src/boot/axios";
+import { useRouter } from "vue-router";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
@@ -53,6 +54,7 @@ export const useUserStore = defineStore("user", {
     },
     async loginWithGoogle(id_token) {
       // Limpiar el token antes de iniciar sesión
+      const router = useRouter();
       this.loading = true;
       this.token = null;
       this.refresh = null;
@@ -82,7 +84,12 @@ export const useUserStore = defineStore("user", {
         localStorage.setItem("optionProfile", this.opcion_profile);
         this.loading = false;
       } catch (error) {
-        console.error("Error en login con Google:", error);
+        if (error === "User not authorized or not registered in the system") {
+          console.error(error);
+        } else {
+          console.error("Error en login con Google:", error);
+        }
+
         this.loading = false;
         throw error;
       }

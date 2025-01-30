@@ -10,7 +10,8 @@ export const useMedicoStore = defineStore("medico", {
     loading_registroSuper: false,
     error: null,
     afiliaciones: [],
-    registros_procesados: null,
+    registros_procesados_sr: null,
+    resultado_proceso_sr: false,
     certificado_medico_superintendencia: null,
   }),
   actions: {
@@ -28,7 +29,8 @@ export const useMedicoStore = defineStore("medico", {
       }
     },
     async procesar_registros_super(formData) {
-      this.registros_procesados = null;
+      this.registros_procesados_sr = null;
+      this.resultado_proceso_sr = false;
       try {
         const response = await api.post(
           "/api/medicos/procesar-registros-sr/",
@@ -40,12 +42,15 @@ export const useMedicoStore = defineStore("medico", {
           }
         );
 
-        this.registros_procesados = response.data.message;
+        this.registros_procesados_sr = response.data.message;
+        this.resultado_proceso_sr = true;
       } catch (error) {
         console.error(
           "Error al procesar registros Sistema de Recaudación:",
-          error
+          error.message
         );
+        this.registros_procesados_sr = error.response.data.error;
+        this.resultado_proceso_sr = true;
       } finally {
         console.log("fin de procesamiento registros sistema de recaudación");
       }
@@ -65,6 +70,10 @@ export const useMedicoStore = defineStore("medico", {
       } finally {
         this.loading = true;
       }
+    },
+    async okRegistrosSuper() {
+      this.registros_procesados_sr = null;
+      this.resultado_proceso_sr = false;
     },
     async fetchMedicosConAfiliacion() {
       // Limpiar el token antes de iniciar sesión

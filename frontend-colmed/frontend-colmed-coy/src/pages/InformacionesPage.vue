@@ -326,15 +326,26 @@ const todos_eventos = computed(() => eventosStore.eventos_base);
 const loading = computed(() => informacionStore.loading);
 const eventos = computed(() => calendarStore.events);
 onMounted(async () => {
+  const storedCategoria = localStorage.getItem("pagina_informaciones");
+  if (storedCategoria) {
+    informacionStore.setCategoriaInformacion(storedCategoria);
+  }
+
   await informacionStore.fetchTodasNoticias();
   await eventosStore.fetchEventosBase();
-  informacionStore.setCategoriaInformacion(categoriaInformacion);
+
+  await informacionStore.fetchTodasNoticias();
+  await eventosStore.fetchEventosBase();
+  // if (categoriaInformacion.value) {
+  //   console.log("Categoria ", categoriaInformacion.value);
+  //   informacionStore.setCategoriaInformacion(categoriaInformacion.value);
+  // }
 });
 
 const goToNoticia = (noticia) => {
   router.push({
     path: `/informaciones/noticia/${noticia.id}`, // Asume que cada noticia tiene un 'id'
-    state: { noticia }, // Pasar la noticia completa como estado
+    // state: { noticia }, // Pasar la noticia completa como estado
   });
 };
 

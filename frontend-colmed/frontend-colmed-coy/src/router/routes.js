@@ -25,7 +25,7 @@ const routes = [
     path: "/",
     component: isRunningOnCapacitor()
       ? () => import("layouts/LoginMobilePage.vue")
-      : () => import("src/pages/LoginPage.vue"),
+      : () => import("layouts/HomeLayout.vue"),
   },
   {
     path: "/home",

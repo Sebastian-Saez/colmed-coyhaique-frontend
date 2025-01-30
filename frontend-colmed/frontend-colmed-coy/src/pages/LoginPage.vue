@@ -5,14 +5,13 @@
       <q-toolbar>
         <q-btn flat @click="goHome">
           <img
-            src="~assets/LogoCOLMEDAYSEN_letras_blancas.png"
+            src="~assets/CR-Region-de-Aysen_horizontal_white.png"
             alt="Colegio Médico Logo"
             style="width: 204px; height: 82px"
           />
         </q-btn>
       </q-toolbar>
     </q-header>
-    
 
     <div class="q-pa-sm fixed-center">
       <q-card
@@ -206,11 +205,10 @@ const onSubmit = async () => {
 
 const updatePass = ref();
 const goHome = () => {
-  router.push("/");
+  router.push("/home");
 };
 
 const loginWithGoogle = () => {
-  
   userStore.loginWithGoogle();
 };
 </script>

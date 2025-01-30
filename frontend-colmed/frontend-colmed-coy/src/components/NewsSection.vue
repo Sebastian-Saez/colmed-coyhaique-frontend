@@ -170,8 +170,9 @@
         rounded
         no-caps
         style="width: 30%"
+        @click="irANoticias"
       >
-        <!-- @click="irANoticias" -->
+        <!--  -->
         <div class="text-white text-weight-medium text-body1">
           Ver todas las noticias
         </div>
@@ -212,7 +213,6 @@ const error_base = computed(() => informacionesStore.error_base);
 const goToNoticia = (noticia) => {
   router.push({
     path: `/informaciones/noticia/${noticia.id}`, // Asume que cada noticia tiene un 'id'
-    state: { noticia }, // Pasar la noticia completa como estado
   });
 };
 

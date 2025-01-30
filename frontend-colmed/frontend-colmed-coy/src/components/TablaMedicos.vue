@@ -739,7 +739,7 @@
                     <div class="text-primary text-caption">
                       Condición afiliación Colmed
                     </div>
-                    <div class="q-gutter-sm">
+                    <!-- <div class="q-gutter-sm">
                       <q-toggle
                         v-for="afiliacion in estadosAfiliaciones"
                         v-model="selectedEstadosAfiliaciones"
@@ -750,6 +750,42 @@
                         @update:model-value="filterAfiliacion"
                       >
                       </q-toggle>
+                      <q-btn
+                        color="primary"
+                        icon-right="archive"
+                        label="Exportar a Excel"
+                        class="q-px-md"
+                        no-caps
+                        dense
+                        rounded
+                        outline
+                        @click="exportTable"
+                      />
+                    </div> -->
+                    <div class="q-gutter-sm row items-center justify-between">
+                      <div class="col">
+                        <q-toggle
+                          v-for="afiliacion in estadosAfiliaciones"
+                          v-model="selectedEstadosAfiliaciones"
+                          :key="afiliacion"
+                          :label="afiliacion"
+                          color="red-10"
+                          :val="afiliacion"
+                          @update:model-value="filterAfiliacion"
+                        />
+                      </div>
+                      <q-btn
+                        color="red-9"
+                        icon-right="help_center"
+                        label="Ayuda"
+                        class="q-px-md"
+                        no-caps
+                        dense
+                        rounded
+                        flat
+                        href="https://drive.google.com/drive/u/1/folders/1lwZeE9HGsUj6WL1g2WAVWHVspQPFzLh8"
+                        target="_blank"
+                      />
                     </div>
                   </q-card-section>
                   <q-separator />

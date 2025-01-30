@@ -3,7 +3,7 @@
     <q-toolbar class="bg-primary text-white shadow-2">
       <q-btn flat @click="goHome">
         <img
-          src="~assets/LogoCOLMEDAYSEN_letras_blancas.png"
+          src="~assets/CR-Region-de-Aysen_horizontal_white.png"
           alt="Colegio Médico Logo"
           style="width: 190px; height: 78px"
           class="q-mr-sm"
@@ -21,7 +21,7 @@
               {{ userProfile.name_google }}
             </div> -->
 
-          <q-chip>
+          <q-chip v-if="userProfile">
             <q-avatar>
               <img :src="userProfile.picture" />
             </q-avatar>
@@ -198,6 +198,10 @@ const goHome = () => {
 };
 
 onMounted(async () => {
+  if (!userProfile.value) {
+    console.warn("Usuario no autenticado. Redirigiendo a login...");
+    router.push("/login");
+  }
   await informacionStore.fetchTodasNoticias();
 });
 </script>

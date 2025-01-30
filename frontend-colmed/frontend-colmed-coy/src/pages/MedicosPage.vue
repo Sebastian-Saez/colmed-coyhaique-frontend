@@ -3,8 +3,9 @@
     <!-- Header con logo y perfil de usuario -->
     <q-toolbar class="bg-primary text-white shadow-2">
       <q-btn flat @click="goHome">
+        <!-- src="~assets/LogoCOLMEDAYSEN_letras_blancas.png" -->
         <img
-          src="~assets/LogoCOLMEDAYSEN_letras_blancas.png"
+          src="~assets/CR-Region-de-Aysen_horizontal_white.png"
           alt="Colegio Médico Logo"
           style="width: 190px; height: 78px"
           class="q-mr-sm"
@@ -22,7 +23,7 @@
             {{ userProfile.name_google }}
           </div> -->
 
-          <q-chip>
+          <q-chip v-if="userProfile">
             <q-avatar>
               <img :src="userProfile.picture" />
             </q-avatar>
@@ -122,7 +123,7 @@
                     <div class="text-subtitle3">
                       El archivo adjunto se almacenará en directorio Drive de la
                       cuenta "ticsaysen@colegiomedico.cl". Los datos se
-                      procesarán el próximo 20-01-2024.
+                      procesarán el próximo 20-02-2024.
                     </div>
                     <!-- <div class="text-caption">
                       Los certificados que adjunte serán almacenados en
@@ -143,7 +144,7 @@
 
                   <q-separator dark />
 
-                  <q-card-actions align="center">
+                  <q-card-actions vertical align="center">
                     <!-- <q-btn
                       no-caps
                       class="bg-red-8 text-white btn-fixed-width"
@@ -163,6 +164,20 @@
                       :disable="certificados_super"
                     >
                       Procesar registros</q-btn
+                    >
+                    <q-btn
+                      flat
+                      rounded
+                      outline
+                      no-caps
+                      text-color="red-9"
+                      icon-right="help_center"
+                      class="text-white btn-fixed-width"
+                      style="width: 40%"
+                      href="https://drive.google.com/drive/u/1/folders/1T83xmd2F_gTR_9aZ8-JsnXbmxbeUtF1n"
+                      target="_blank"
+                    >
+                      Ayuda</q-btn
                     >
                   </q-card-actions>
                 </q-card>
@@ -187,6 +202,24 @@
             <q-card-section class="items-center">
               <q-spinner color="primary" size="3em" :thickness="10" />
             </q-card-section>
+          </q-card>
+        </q-dialog>
+
+        <q-dialog
+          v-model="resultado_proceso_sr"
+          persistent
+          transition-show="scale"
+          transition-hide="scale"
+          backdrop-filter="blur(4px)"
+        >
+          <q-card class="bg-teal text-white" style="width: 200px">
+            <q-card-section>
+              <div class="text-h6">{{ registros_procesados_sr }}</div>
+            </q-card-section>
+
+            <q-card-actions align="right" class="bg-white text-teal">
+              <q-btn flat label="OK" @click="okRegistrosSuper" />
+            </q-card-actions>
           </q-card>
         </q-dialog>
       </q-page>
@@ -217,9 +250,14 @@ const tab = ref("detalle_medicos");
 const userProfile = computed(() => userStore.user);
 const perfiles = computed(() => userStore.profiles);
 const perfilActual = computed(() => userStore.opcion_profile);
+const registros_procesados_sr = computed(
+  () => medicoStore.registros_procesados_sr
+);
+const resultado_proceso_sr = computed(() => medicoStore.resultado_proceso_sr);
 
 //Sección registroSuperintendencia.
 const certificados_super = ref(false);
+
 const file_sr = ref(null);
 const loading_procesar = ref(false);
 const certificados_procesados = ref(false);
@@ -232,6 +270,11 @@ const procesarRegistrosSuper = async () => {
   await medicoStore.procesar_registros_super(formData);
 
   certificados_super.value = false;
+  file_sr.value = null;
+};
+
+const okRegistrosSuper = async () => {
+  await medicoStore.okRegistrosSuper();
 };
 
 // Función para formatear el perfil a mostrar (sin cambios)
@@ -258,6 +301,10 @@ const validarFecha = (val) => {
 
 onMounted(async () => {
   //await medicoStore.fetchMedicos();
+  if (!userProfile.value) {
+    console.warn("Usuario no autenticado. Redirigiendo a login...");
+    router.push("/login");
+  }
   await medicoStore.filterDataMedicos({ afiliaciones: "colmed" });
 });
 

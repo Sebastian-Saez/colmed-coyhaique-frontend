@@ -1,6 +1,7 @@
 import { boot } from "quasar/wrappers";
 import axios from "axios";
 import { useRouter } from "vue-router";
+// Importar el router globalmente
 
 // Crear una instancia de Axios con la URL base desde las variables de entorno
 const api = axios.create({
@@ -23,37 +24,19 @@ api.interceptors.response.use(
   (response) => response, // Retornar la respuesta si es exitosa
   async (error) => {
     const originalRequest = error.config; // Guardar la solicitud original
-    const router = useRouter(); // Obtener el router para redirigir en caso necesario
+    // const router = useRouter(); // Obtener el router para redirigir en caso necesario
 
     // Si el error es 401 y el token no es válido, intentar refrescar el token
     if (error.response) {
       if (error.response.status === 401) {
-        // const refreshToken = localStorage.getItem("refreshToken"); // Recuperar el refresh token
+        if (
+          error.response.data.detail ==
+          "User not authorized or not registered in the system"
+        ) {
+          console.error("Usuario no registrado en el sistema...");
+          return Promise.reject(error.response.data.detail);
+        }
 
-        // // Si hay un refresh token guardado, intentar refrescar el token de acceso
-        // if (refreshToken) {
-        //   try {
-        //     // Hacer una solicitud para refrescar el token de acceso
-        //     const response = await api.post("/api/colmed/token/refresh/", {
-        //       refresh: refreshToken,
-        //     });
-
-        //     // Guardar el nuevo token de acceso en el localStorage
-        //     const newAccessToken = response.data.access;
-        //     localStorage.setItem("authToken", newAccessToken);
-
-        //     // Actualizar el token en la cabecera de la solicitud original
-        //     originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-
-        //     // Reintentar la solicitud original con el nuevo token
-        //     return api(originalRequest);
-        //   } catch (err) {
-        //     console.error("Error al refrescar el token:", err);
-        //     // Si falla el refresco, eliminar los tokens y redirigir a login
-        //     localStorage.removeItem("authToken");
-        //     localStorage.removeItem("refreshToken");
-        //     router.push("/login");
-        //   }
         originalRequest._retry = true;
         try {
           // Llamada al endpoint de refresh (usa cookies, no parámetros)

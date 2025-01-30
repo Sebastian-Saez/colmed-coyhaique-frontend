@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-card class="q-pa-md bg-grey-1" style="border-radius: 20px">
       <div class="row items-center justify-between q-pb-md">
-        <div class="text-h4 text-bold text-primary">
+        <div class="text-h4 text-bold text-primary col">
           Todos las Publicidades médicas
         </div>
         <q-btn
@@ -10,9 +10,22 @@
           color="primary"
           label="Agregar una nueva Publicidad médica"
           icon="add"
-          class="text-white"
+          class="text-white q-px-sm"
           rounded
+          dense
           @click="agregarPublicidad"
+        />
+        <q-btn
+          color="red-9"
+          icon-right="help_center"
+          label="Ayuda"
+          no-caps
+          class="q-ml-md q-px-md"
+          dense
+          rounded
+          flat
+          href="https://drive.google.com/drive/u/1/folders/1seGksRE-DznOeatM8p7vPz9gRBFSa90u"
+          target="_blank"
         />
       </div>
 
@@ -30,8 +43,37 @@
           <!-- style="linear-gradient(to right, #2B86C5 0%, #2B86C5 100%)" -->
           <q-card class="bg-grey-3" bordered>
             <q-card-section class="bg-cyan-9 text-white">
-              <div class="text-h6">{{ publicidad_medica.titulo }}</div>
-              <div class="text-caption">{{ publicidad_medica.link }}</div>
+              <!-- <div class="text-h6">Título: {{ publicidad_medica.titulo }}</div>
+              <q-separator spaced /> -->
+              <!-- <div class="text-caption">Link: {{ publicidad_medica.link }}</div> -->
+
+              <div class="row no-wrap text-white">
+                <div class="text-subtitle1 text-weight-bold">Título:</div>
+                <div class="text-subtitle1 q-ml-md">
+                  {{ publicidad_medica.titulo }}
+                </div>
+              </div>
+              <q-separator spaced />
+              <div class="row no-wrap text-white">
+                <div class="text-subtitle2 text-weight-bold">Link:</div>
+                <div class="text-caption q-ml-md">
+                  {{ publicidad_medica.link }}
+                </div>
+              </div>
+              <div class="row no-wrap text-white">
+                <div class="text-subtitle2 text-weight-bold">
+                  Estado de la publicidad:
+                </div>
+                <div class="text-subtitle2 q-ml-md">
+                  {{ estadoPublicidad(publicidad_medica.activo) }}
+                </div>
+              </div>
+              <!-- <div class="text-h6">
+                Estado de la publicidad:
+                <div class="text-overli">
+                  {{ estadoPublicidad(publicidad_medica.activo) }}
+                </div>
+              </div> -->
             </q-card-section>
             <q-separator inset />
             <q-card-actions align="around">
@@ -93,6 +135,13 @@ const userProfile = computed(() => userStore.user);
 const perfiles = computed(() => userStore.profiles);
 const perfilActual = computed(() => userStore.opcion_profile);
 
+const estadoPublicidad = (estado) => {
+  if (estado) {
+    return "Publicidad activa";
+  } else {
+    return "Publicidad desactivada";
+  }
+};
 // Logout
 const logout = () => {
   userStore.logout();

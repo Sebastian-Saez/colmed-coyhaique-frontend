@@ -167,8 +167,10 @@ const verEvento = (evento) => {
 };
 
 const irAEventos = async () => {
-  await calendarStore.fetchWeeklyEvents();
+  // await calendarStore.fetchWeeklyEvents();
+  eventosStore.fetchEventosBase();
   informacionStore.setCategoriaInformacion("eventos");
+  localStorage.setItem("pagina_informaciones", "eventos");
   router.push("/informaciones");
 };
 </script>
