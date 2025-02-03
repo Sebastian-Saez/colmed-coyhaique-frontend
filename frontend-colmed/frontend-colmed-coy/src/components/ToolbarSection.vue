@@ -4,11 +4,26 @@
     class="q-mb-md q-pt-xs custom-header text-primary q-mr-xl"
     style="border-radius: 20px"
   >
-    <q-separator
+    <!-- <q-separator
       color="primary"
       class=""
       :class="isLargeScreen ? '' : 'q-mr-xs'"
+    /> -->
+
+    <q-separator
+      color="primary"
+      :class="
+        screenSize == 'xs' || screenSize == 'sm' || screenSize == 'md'
+          ? 'q-ml-xl'
+          : 'q-mr-xs'
+      "
+      :inset="
+        screenSize !== 'xs' && screenSize !== 'sm' && screenSize !== 'md'
+          ? true
+          : false
+      "
     />
+
     <q-toolbar class="custom-header2">
       <q-toolbar-title>
         <q-btn align="left" flat padding="xs" @click="goHome">
@@ -19,7 +34,8 @@
         </q-btn>
       </q-toolbar-title>
       <!-- Menú para pantallas pequeñas -->
-      <template v-if="!isLargeScreen">
+      <!-- <template v-if="!isLargeScreen"> -->
+      <template v-if="screenSize == 'xs' || screenSize == 'sm'">
         <q-btn
           flat
           size="xl"
@@ -133,8 +149,9 @@
                       </div>
                     </q-item-section>
                   </q-item>
+                  <!-- v-if="!isLargeScreen" -->
                   <q-popup-proxy
-                    v-if="!isLargeScreen"
+                    v-if="screenSize == 'xs' || screenSize == 'sm'"
                     v-model="messagePopup.visible"
                     transition-show="scale"
                     transition-hide="scale"
@@ -378,8 +395,7 @@
             > -->
             <q-btn
               rounded
-              color="blue-13
-"
+              color="blue-13"
               text-color="white"
               no-caps
               icon-right="arrow_drop_down"
@@ -444,8 +460,7 @@
             <q-btn
               rounded
               no-caps
-              color="light-green-14
-"
+              color="light-green-14"
               text-color="white"
               icon-right="arrow_drop_down"
               @mouseenter="dropdownVisible.servicios = true"
@@ -509,8 +524,7 @@
             <q-btn
               rounded
               no-caps
-              color="deep-orange-13
-"
+              color="deep-orange-13"
               text-color="white"
               icon-right="arrow_drop_down"
               @mouseenter="dropdownVisible.informaciones = true"
@@ -684,8 +698,9 @@
               </q-list>
             </q-menu>
 
+            <!-- v-if="isLargeScreen" -->
             <q-popup-proxy
-              v-if="isLargeScreen"
+              v-if="screenSize !== 'xs' && screenSize !== 'sm'"
               v-model="messagePopup.visible"
               transition-show="scale"
               transition-hide="scale"
@@ -739,11 +754,32 @@ import { useServicioStore } from "src/stores/servicios";
 import { useInformacionesStore } from "src/stores/informaciones";
 import { copyToClipboard } from "quasar";
 
-defineProps({
-  isLargeScreen: {
-    type: Boolean,
+// defineProps({
+//   isLargeScreen: {
+//     type: Boolean,
+//     required: true,
+//   },
+// });
+const props = defineProps({
+  screenSize: {
+    type: String,
     required: true,
   },
+});
+
+const toolbarClass = computed(() => {
+  switch (props.screenSize) {
+    case "xs":
+      return "bg-primary text-white";
+    case "sm":
+      return "bg-secondary text-white";
+    case "md":
+      return "bg-accent text-dark";
+    case "lg":
+      return "bg-indigo-8 text-white";
+    default:
+      return "bg-deep-purple-7 text-white";
+  }
 });
 
 // Responsive tracking
@@ -867,6 +903,10 @@ const lista_servicios = [
 
 const lista_informaciones = [
   {
+    clave: "convenios",
+    nombre: "Todos los convenios",
+  },
+  {
     clave: "noticias",
     nombre: "Todas las noticias",
   },
@@ -968,6 +1008,7 @@ const onItemClickInformaciones = (val) => {
   switch (val.clave) {
     case "noticias":
     case "eventos":
+    case "convenios":
       informacionStore.setCategoriaInformacion(val.clave);
       router.push("/informaciones");
       break;

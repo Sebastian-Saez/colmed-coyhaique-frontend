@@ -5,7 +5,8 @@
         class="q-mt-xs justify-center"
         :class="isLargeScreen ? 'q-mx-xl q-px-xl' : ''"
       >
-        <ToolbarSection :isLargeScreen="isLargeScreen" />
+        <!-- <ToolbarSection :isLargeScreen="isLargeScreen" /> -->
+        <ToolbarSection :screenSize="screenSize" />
         <q-card
           class="q-pa-md bg-grey-2"
           :class="isLargeScreen ? 'q-ml-lg q-mr-xl' : 'q-mx-lg'"
@@ -250,6 +251,165 @@
             </div>
           </div>
         </q-card>
+        <q-card
+          class="q-pa-md bg-grey-2"
+          v-else-if="tabInformacion == 'convenios'"
+          :class="isLargeScreen ? 'q-ml-lg q-mr-xl' : 'q-mx-lg'"
+          style="border-radius: 20px"
+        >
+          <div class="text-h4 text-bold text-primary">Todos los convenios</div>
+          <q-separator spaced />
+          <q-splitter
+            v-model="splitterModel"
+            style="height: 400px"
+            :limits="computedLimits"
+          >
+            <template v-slot:before>
+              <q-tabs
+                v-model="tab"
+                vertical
+                active-color="white"
+                indicator-color="red-11"
+                active-class="bg-deep-orange-13"
+              >
+                <q-tab
+                  name="regionales"
+                  label="Convenios regionales"
+                  no-caps
+                  :class="
+                    tab === 'regionales'
+                      ? 'text-white'
+                      : 'bg-deep-orange-1 text-primary'
+                  "
+                  class="q-mb-xs q-mr-md tab-button"
+                />
+                <q-tab
+                  name="nacionales"
+                  label="Convenios nacionales"
+                  no-caps
+                  :class="
+                    tab === 'nacionales'
+                      ? 'text-white'
+                      : 'bg-deep-orange-1 text-primary'
+                  "
+                  class="q-mb-xs q-mr-md tab-button"
+                />
+              </q-tabs>
+            </template>
+            <template v-slot:after>
+              <q-tab-panels
+                v-model="tab"
+                animated
+                swipeable
+                vertical
+                transition-prev="slide-up"
+                transition-next="slide-up"
+                class="bg-grey-1"
+              >
+                <q-tab-panel name="nacionales" class="bg-grey-2">
+                  <div class="row q-col-gutter-md">
+                    <div
+                      v-for="(convenio, index) in convenios.nacionales"
+                      :key="index"
+                      class="col-12 col-md-4"
+                    >
+                      <q-card
+                        class="bg-blue-grey-1 q-my-sm"
+                        style="border-radius: 20px; height: 90%"
+                        bordered
+                      >
+                        <q-card-section>
+                          <div
+                            class="text-h5 text-primary text-weight-medium text-center"
+                          >
+                            {{ convenio.titulo }}
+                          </div>
+                        </q-card-section>
+
+                        <q-separator inset />
+
+                        <q-card-actions align="center">
+                          <q-btn
+                            style="width: 90%"
+                            no-caps
+                            outline
+                            rounded
+                            label="Más información"
+                            color="primary"
+                            target="_blank"
+                            :href="convenio.ref"
+                          />
+                          <!-- <div
+                          class="text-body2 text-secondary text-weight-medium text-left"
+                          style="white-space: pre-wrap"
+                        >
+                          {{ convenio.descripcion }}
+                        </div> -->
+                        </q-card-actions>
+                      </q-card>
+                    </div>
+                  </div>
+                  <q-separator class="q-mt-lg" />
+                  <q-card class="q-mt-sm" flat>
+                    <q-card-actions align="center" class="bg-grey-2">
+                      <q-btn
+                        no-caps
+                        rounded
+                        color="deep-orange-9"
+                        outline
+                        target="_blank"
+                        href="https://www.colegiomedico.cl/convenios-colmed/"
+                        icon-right="o"
+                        ><div
+                          class="text-primary text-h6 text-weight-regular q-px-lg"
+                        >
+                          Todos los convenios nacionales
+                          <q-icon
+                            class="q-pl-xs"
+                            size="xs"
+                            name="open_in_new"
+                          /></div
+                      ></q-btn>
+                    </q-card-actions>
+                  </q-card>
+                </q-tab-panel>
+
+                <q-tab-panel name="regionales" class="bg-grey-2">
+                  <div class="row q-col-gutter-md">
+                    <div
+                      v-for="(convenio, index) in convenios.regionales"
+                      :key="index"
+                      class="col-12 col-md-4"
+                    >
+                      <q-card
+                        class="bg-blue-grey-1 q-my-sm"
+                        style="border-radius: 20px; height: 100%"
+                        bordered
+                      >
+                        <q-card-section>
+                          <div class="text-h5 text-primary text-weight-medium">
+                            {{ convenio.titulo }}
+                          </div>
+                        </q-card-section>
+
+                        <q-separator inset />
+
+                        <q-card-section>
+                          <div
+                            class="text-body2 text-secondary text-weight-medium text-left"
+                            style="white-space: pre-wrap"
+                          >
+                            {{ convenio.descripcion }}
+                          </div>
+                        </q-card-section>
+                      </q-card>
+                    </div>
+                  </div>
+                </q-tab-panel>
+              </q-tab-panels>
+            </template>
+          </q-splitter>
+        </q-card>
         <q-card class="q-mx-xl q-pa-md bg-white" v-else>
           <div class="text-h6 text-bold text-primary">Página en desarrollo</div>
         </q-card>
@@ -286,7 +446,8 @@
         </q-card>
       </q-dialog>
     </div>
-    <FooterSection :isLargeScreen="isLargeScreen" />
+    <!-- <FooterSection :isLargeScreen="isLargeScreen" /> -->
+    <FooterSection :screenSize="screenSize" />
   </q-layout>
 </template>
 <script setup>
@@ -308,6 +469,14 @@ const isLargeScreen = computed(() => {
   return $q.screen.gt.md;
 });
 
+const screenSize = computed(() => {
+  if ($q.screen.lt.sm) return "xs"; // Teléfonos pequeños
+  if ($q.screen.sm && !$q.screen.md) return "sm"; // Teléfonos grandes
+  if ($q.screen.md && !$q.screen.lg) return "md"; // Tablets o pantallas de 13"
+  if ($q.screen.lg && !$q.screen.xl) return "lg"; // Pantallas grandes
+  return "xl"; // Pantallas extra grandes
+});
+
 const informacionStore = useInformacionesStore();
 const eventosStore = useEventosStore();
 const calendarStore = useCalendarStore();
@@ -316,6 +485,61 @@ const router = useRouter();
 // Estado local
 const showEventoDialog = ref(false);
 const selectedEvento = ref(null);
+// const splitterModel = ref(50);
+const splitterModel = ref(isLargeScreen.value ? 15 : 28);
+const imagenConvenio = ref(null);
+const tab = ref("regionales");
+
+const ajustarSplitter = async () => {
+  await nextTick(); // Asegura que la imagen está en el DOM antes de acceder a sus propiedades
+
+  if (imagenConvenio.value?.$el) {
+    const img = imagenConvenio.value.$el.querySelector("img"); // Accede a la imagen interna
+    if (img) {
+      const aspectRatio = img.naturalHeight / img.naturalWidth;
+      splitterModel.value = Math.max(30, Math.min(70, aspectRatio * 100)); // Ajusta entre 30% y 70%
+    }
+  }
+};
+
+const slideRegionales = ref(0);
+const convenios = ref({
+  regionales: [
+    {
+      titulo: "Óptica Sottolichio",
+      descripcion:
+        "20% OFF\r\n\r\n- Aplica para todos los lentes y marcas.\r\n- Beneficio para miembros del Colmed y familia.\r\n- Y también para trabajadores de la institución.",
+      imagen: "",
+    },
+    {
+      titulo: "Ecovapor Autospa",
+      descripcion:
+        "Lavado de vehículo\r\n\r\n- Lavado de vehículos, tapices, motor y alfombras.\r\n- Vehículo pequeño: $20.000.\r\n- Vehículo mediano: $25.000.\r\n- Vehículo grande: $30.000.",
+      imagen: "",
+    },
+    {
+      titulo: "Rent a Car R&D",
+      descripcion:
+        "Estacionamiento Aeropuerto Balmaceda\r\n\r\n- Custodia de vehículos.\r\n- Acercamiento ida y vuelta al aeropuerto.\r\n- Custodia: $2.500 diarios.\r\n- Lavado Full y sanitización: $20.000.\r\n- Convenio anual: $45.000",
+      imagen: "",
+    },
+  ],
+
+  nacionales: [
+    {
+      titulo: "Inmobiliarias",
+      ref: "https://www.colegiomedico.cl/convenios-inmobiliarias/",
+    },
+    {
+      titulo: "Corretaje propiedades",
+      ref: "https://www.colegiomedico.cl/corretaje-de-propiedades/",
+    },
+    {
+      titulo: "Automotriz",
+      ref: "https://www.colegiomedico.cl/automotriz/",
+    },
+  ],
+});
 
 const categoriaInformacion = computed(
   () => informacionStore.pagina_informaciones
@@ -325,6 +549,10 @@ const todas_noticias = computed(() => informacionStore.todas_noticias);
 const todos_eventos = computed(() => eventosStore.eventos_base);
 const loading = computed(() => informacionStore.loading);
 const eventos = computed(() => calendarStore.events);
+const computedLimits = computed(() => {
+  return isLargeScreen.value ? [15, 30] : [28, 28];
+});
+
 onMounted(async () => {
   const storedCategoria = localStorage.getItem("pagina_informaciones");
   if (storedCategoria) {
@@ -389,5 +617,9 @@ const lista_eventos = [
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+.tab-button {
+  border-radius: 50px 0px 0px 50px;
 }
 </style>

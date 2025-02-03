@@ -5,7 +5,8 @@
         class="q-mt-xs justify-center"
         :class="isLargeScreen ? 'q-mx-xl q-px-xl' : ''"
       >
-        <ToolbarSection :isLargeScreen="isLargeScreen" />
+        <!-- <ToolbarSection :isLargeScreen="isLargeScreen" /> -->
+        <ToolbarSection :screenSize="screenSize" />
         <q-card
           class="q-pa-md bg-grey-2"
           flat
@@ -58,35 +59,6 @@
               />
             </template>
           </q-splitter>
-          <!-- <q-card-section horizontal>
-            <q-card-section class="q-pt-xs">
-              <div
-                class="text-h5 text-primary text-weight-medium q-mt-sm q-mb-xs"
-              >
-                {{ noticia.titulo }}
-              </div>
-              <q-separator spaced />
-              <div
-                class="text-subtitle1 text-weight-regular text-primary text-justify"
-              >
-                {{ noticia.contenido }}
-              </div>
-            </q-card-section>
-
-            <q-card-section class="col-5">
-              <q-img
-                v-if="noticia.imagen"
-                class="rounded-borders"
-                :src="noticia.imagen"
-              />
-              <q-img
-                v-else
-                src="https://placehold.co/300x200"
-                alt="Noticia"
-                class="rounded-md q-mt-md"
-              />
-            </q-card-section>
-          </q-card-section> -->
 
           <q-separator />
 
@@ -104,7 +76,8 @@
         </div>
       </div>
     </div>
-    <FooterSection :isLargeScreen="isLargeScreen" />
+    <!-- <FooterSection :isLargeScreen="isLargeScreen" /> -->
+    <FooterSection :screenSize="screenSize" />
   </q-layout>
 </template>
 
@@ -123,6 +96,14 @@ defineOptions({
 const $q = useQuasar();
 const isLargeScreen = computed(() => {
   return $q.screen.gt.md;
+});
+
+const screenSize = computed(() => {
+  if ($q.screen.lt.sm) return "xs"; // Teléfonos pequeños
+  if ($q.screen.sm && !$q.screen.md) return "sm"; // Teléfonos grandes
+  if ($q.screen.md && !$q.screen.lg) return "md"; // Tablets o pantallas de 13"
+  if ($q.screen.lg && !$q.screen.xl) return "lg"; // Pantallas grandes
+  return "xl"; // Pantallas extra grandes
 });
 
 const informacionStore = useInformacionesStore();

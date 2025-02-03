@@ -5,7 +5,8 @@
         class="q-mt-xs justify-center"
         :class="isLargeScreen ? 'q-mx-xl q-px-xl' : ''"
       >
-        <ToolbarSection :isLargeScreen="isLargeScreen" />
+        <!-- <ToolbarSection :isLargeScreen="isLargeScreen" /> -->
+        <ToolbarSection :screenSize="screenSize" />
         <q-card
           class="q-pa-md bg-grey-1"
           :class="isLargeScreen ? 'q-ml-lg q-mr-xl' : 'q-mx-lg'"
@@ -22,27 +23,40 @@
               <q-tabs
                 v-model="tab"
                 vertical
-                active-color="grey-2"
-                indicator-color="secondary"
-                active-bg-color="red-14"
+                active-color="white"
+                indicator-color="red-11"
+                active-class="bg-blue-13"
               >
                 <q-tab
                   name="mision"
                   label="Misión y Visión"
                   no-caps
-                  class="text-white bg-red-2 q-mb-xs q-mr-md tab-button"
+                  :class="
+                    tab === 'mision' ? 'text-white' : 'bg-blue-1 text-primary'
+                  "
+                  class="q-mb-xs q-mr-md tab-button"
                 />
                 <q-tab
                   name="normativa"
                   label="Normativa"
                   no-caps
-                  class="text-white bg-red-2 q-mb-xs q-mr-md tab-button"
+                  :class="
+                    tab === 'normativa'
+                      ? 'text-white'
+                      : 'bg-blue-1 text-primary'
+                  "
+                  class="q-mb-xs q-mr-md tab-button"
                 />
                 <q-tab
                   name="directiva"
                   label="Directiva"
                   no-caps
-                  class="text-white bg-red-2 q-mb-xs q-mr-md tab-button"
+                  :class="
+                    tab === 'directiva'
+                      ? 'text-white'
+                      : 'bg-blue-1 text-primary'
+                  "
+                  class="q-mb-xs q-mr-md tab-button"
                 />
                 <!-- <q-tab name="transparencia" label="Transparencia" /> -->
               </q-tabs>
@@ -59,21 +73,29 @@
                 class="bg-grey-1"
               >
                 <q-tab-panel name="mision">
-                  <div class="text-h4 text-primary q-mb-md">Misión</div>
+                  <div class="text-h4 text-primary text-weight-medium q-mb-md">
+                    Misión
+                  </div>
                   <div
                     class="text-subtitle1 text-weight-light text-primary q-pb-md"
                   >
                     {{ mision }}
                   </div>
                   <q-separator />
-                  <div class="text-h4 text-primary q-mb-md q-pt-md">Visión</div>
+                  <div
+                    class="text-h4 text-primary text-weight-medium q-mb-md q-pt-md"
+                  >
+                    Visión
+                  </div>
                   <div class="text-subtitle1 text-weight-light text-primary">
                     {{ vision }}
                   </div>
                 </q-tab-panel>
 
                 <q-tab-panel name="normativa">
-                  <div class="text-h4 text-primary q-mb-md">Normativa</div>
+                  <div class="text-h4 text-primary text-weight-medium q-mb-md">
+                    Normativa
+                  </div>
                   <q-separator spaced />
 
                   <q-list>
@@ -82,13 +104,13 @@
                       :key="index"
                       :label="item.titulo"
                       :default-opened="index === 0"
-                      header-class="bg-blue-10 text-white"
+                      header-class="bg-blue-9 text-white"
                       expand-icon-class="text-white"
                     >
                       <q-card>
                         <q-card-section>
                           <div
-                            class="text-body2 text-weight-light text-primary"
+                            class="text-body2 text-weight-light text-primary text-justify"
                           >
                             {{ item.contenido }}
                           </div>
@@ -109,42 +131,13 @@
                       <q-separator spaced inset />
                     </q-expansion-item>
                   </q-list>
-
-                  <!-- <q-list bordered>
-                    <q-expansion-item
-                      label="Estatutos del colegio Médico"
-                      default-opened
-                    >
-                      <q-card>
-                        <q-card-section>
-                          <div
-                            class="text-subtitle1 text-weight-light text-primary"
-                          >
-                            {{ normativa }}
-                          </div>
-                        </q-card-section>
-                        <q-card-actions>
-                          <q-btn
-                            label="Estatutos"
-                            href="https://www.colegiomedico.cl/wp-content/uploads/2024/02/Estatutos_Colmed_2023.pdf"
-                            target="_blank"
-                            icon-right="arrow_forward"
-                            text-color="red"
-                            no-caps
-                            outline
-                            rounded
-                          />
-                        </q-card-actions>
-                      </q-card>
-                    </q-expansion-item>
-                  </q-list> -->
                 </q-tab-panel>
 
                 <q-tab-panel name="directiva">
                   <q-card flat class="bg-grey-1">
                     <q-item-section>
                       <q-item-label
-                        ><div class="text-h4 text-primary">
+                        ><div class="text-h4 text-primary text-weight-medium">
                           Directiva
                         </div></q-item-label
                       >
@@ -186,46 +179,15 @@
                       </q-list>
                     </q-card-section>
                   </q-card>
-
-                  <!-- <div class="text-h4 text-primary q-mb-md">Directiva</div>
-                  <div class="text-subtitle1 text-weight-light text-primary">
-                    Presidenta: Dra. Alejandra Paz Born Estrada
-                  </div>
-                  <div class="text-subtitle1 text-weight-light text-primary">
-                    Vicepresidente: Dr. Andrés Bujes Marlez
-                  </div>
-                  <div class="text-subtitle1 text-weight-light text-primary">
-                    Secretaria: Dra. María Lía Paccot
-                  </div>
-                  <div class="text-subtitle1 text-weight-light text-primary">
-                    Tesorera: Dra. Daniela Soto Ojeda
-                  </div>
-                  <div class="text-subtitle1 text-weight-light text-primary">
-                    Consejero: Dr. José Francisco Chacano Quijanes
-                  </div> -->
                 </q-tab-panel>
-
-                <!-- <q-tab-panel name="transparencia">
-                  <div class="text-h4 text-primary q-mb-md">Transparencia</div>
-                  <div class="text-subtitle1 text-weight-light text-primary">
-                    Remuneraciones CRS (esto es un ejemplo) Honorarios
-                    percibidos por los dirigentes del Consejo Regional Santiago
-                    El Consejo Regional Santiago del Colegio Médico de Chile
-                    (A.G.) está compuesto por nueve Consejeros Regionales y seis
-                    Consejeros Generales, todos escogidos por sus bases. Los
-                    consejeros regionales tienen voz y voto en la Administración
-                    del Colegio Médico Santiago. De ellos, cuatro componen la
-                    Mesa Directiva. Los honorarios mensuales cancelados a la
-                    Mesa Directiva son los siguientes:
-                  </div>
-                </q-tab-panel> -->
               </q-tab-panels>
             </template>
           </q-splitter>
         </q-card>
       </div>
     </div>
-    <FooterSection :isLargeScreen="isLargeScreen" />
+    <!-- <FooterSection :isLargeScreen="isLargeScreen" /> -->
+    <FooterSection :screenSize="screenSize" />
   </q-layout>
 </template>
 <script setup>
@@ -246,6 +208,14 @@ const $q = useQuasar();
 const isLargeScreen = computed(() => {
   return $q.screen.gt.md;
 });
+const screenSize = computed(() => {
+  if ($q.screen.lt.sm) return "xs"; // Teléfonos pequeños
+  if ($q.screen.sm && !$q.screen.md) return "sm"; // Teléfonos grandes
+  if ($q.screen.md && !$q.screen.lg) return "md"; // Tablets o pantallas de 13"
+  if ($q.screen.lg && !$q.screen.xl) return "lg"; // Pantallas grandes
+  return "xl"; // Pantallas extra grandes
+});
+
 const computedLimits = computed(() => {
   return isLargeScreen.value ? [15, 30] : [28, 28];
 });

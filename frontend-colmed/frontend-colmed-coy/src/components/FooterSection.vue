@@ -1,9 +1,26 @@
 <template>
   <q-card class="bg-primary text-white q-mt-lg q-pt-lg">
-    <div class="justify-center" :class="isLargeScreen ? 'q-pa-md flex' : ''">
-      <div
+    <!-- <div class="justify-center" :class="isLargeScreen ? 'q-pa-md flex' : ''"> -->
+    <div
+      class="justify-center"
+      :class="
+        screenSize !== 'xs' && screenSize !== 'sm' && screenSize !== 'md'
+          ? 'q-pa-md flex'
+          : ''
+      "
+    >
+      <!-- <div
         class=""
         :class="isLargeScreen ? 'q-mx-xl q-px-xl' : ''"
+        style="max-width: 1600px; width: 90%"
+      > -->
+      <div
+        class=""
+        :class="
+          screenSize !== 'xs' && screenSize !== 'sm' && screenSize !== 'md'
+            ? 'q-mx-xl q-px-xl'
+            : ''
+        "
         style="max-width: 1600px; width: 90%"
       >
         <q-card class="bg-primary" flat>
@@ -87,14 +104,26 @@
                   round
                   icon="fab fa-facebook-f"
                   @click="goFacebook"
-                  :size="isLargeScreen ? 'md' : 'sm'"
+                  :size="
+                    screenSize !== 'xs' &&
+                    screenSize !== 'sm' &&
+                    screenSize !== 'md'
+                      ? 'md'
+                      : 'lg'
+                  "
                 />
                 <q-btn
                   flat
                   round
                   icon="fab fa-x-twitter"
                   class="text-white"
-                  :size="isLargeScreen ? 'md' : 'sm'"
+                  :size="
+                    screenSize !== 'xs' &&
+                    screenSize !== 'sm' &&
+                    screenSize !== 'md'
+                      ? 'md'
+                      : 'lg'
+                  "
                   @click="goX"
                 />
                 <q-btn
@@ -102,7 +131,13 @@
                   round
                   icon="fab fa-instagram"
                   class="text-white"
-                  :size="isLargeScreen ? 'md' : 'sm'"
+                  :size="
+                    screenSize !== 'xs' &&
+                    screenSize !== 'sm' &&
+                    screenSize !== 'md'
+                      ? 'md'
+                      : 'lg'
+                  "
                   @click="goInstagram"
                 />
                 <q-btn
@@ -110,7 +145,13 @@
                   round
                   icon="forward_to_inbox"
                   class="text-white"
-                  :size="isLargeScreen ? 'md' : 'sm'"
+                  :size="
+                    screenSize !== 'xs' &&
+                    screenSize !== 'sm' &&
+                    screenSize !== 'md'
+                      ? 'md'
+                      : 'lg'
+                  "
                   @click="goMailTo"
                 />
               </div>
@@ -149,9 +190,15 @@ import { useServicioStore } from "src/stores/servicios";
 import { useInformacionesStore } from "src/stores/informaciones";
 import { useSomosStore } from "src/stores/quienesSomos";
 
-defineProps({
-  isLargeScreen: {
-    type: Boolean,
+// defineProps({
+//   isLargeScreen: {
+//     type: Boolean,
+//     required: true,
+//   },
+// });
+const props = defineProps({
+  screenSize: {
+    type: String,
     required: true,
   },
 });
@@ -206,6 +253,10 @@ const lista_informaciones = [
   {
     clave: "eventos",
     nombre: "Todos los eventos",
+  },
+  {
+    clave: "convenios",
+    nombre: "Todos los convenios",
   },
 ];
 
@@ -284,6 +335,7 @@ const onItemClickInformaciones = (val) => {
   switch (val.clave) {
     case "noticias":
     case "eventos":
+    case "convenios":
       informacionesStore.setCategoriaInformacion(val.clave);
       router.push("/informaciones");
       break;

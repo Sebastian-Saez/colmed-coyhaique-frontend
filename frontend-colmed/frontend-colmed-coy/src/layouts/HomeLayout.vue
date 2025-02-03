@@ -9,7 +9,7 @@
         :class="isLargeScreen ? 'q-mx-xl q-px-xl' : ''"
       >
         <!-- Toolbar Section para pantallas grandes -->
-        <ToolbarSection :isLargeScreen="isLargeScreen" />
+        <ToolbarSection :screenSize="screenSize" />
         <!-- Principales Noticias (Image Carousel) -->
         <FeaturedNews :isLargeScreen="isLargeScreen" />
         <PublishSection :isLargeScreen="isLargeScreen" />
@@ -134,7 +134,8 @@
         </div>
       </div>
     </q-card> -->
-    <FooterSection :isLargeScreen="isLargeScreen" />
+    <!-- <FooterSection :isLargeScreen="isLargeScreen" /> -->
+    <FooterSection :screenSize="screenSize" />
   </q-layout>
 </template>
 
@@ -160,6 +161,14 @@ import { copyToClipboard } from "quasar";
 const $q = useQuasar();
 const isLargeScreen = computed(() => {
   return $q.screen.gt.md;
+});
+
+const screenSize = computed(() => {
+  if ($q.screen.lt.sm) return "xs"; // Teléfonos pequeños
+  if ($q.screen.sm && !$q.screen.md) return "sm"; // Teléfonos grandes
+  if ($q.screen.md && !$q.screen.lg) return "md"; // Tablets o pantallas de 13"
+  if ($q.screen.lg && !$q.screen.xl) return "lg"; // Pantallas grandes
+  return "xl"; // Pantallas extra grandes
 });
 
 const imageSlide = ref(1);
