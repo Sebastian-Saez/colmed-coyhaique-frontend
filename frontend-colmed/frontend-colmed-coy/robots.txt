@@ -1,0 +1,10 @@
+# Permitir el acceso a todos los bots
+User-agent: *
+Allow: /
+
+# Evitar el rastreo de rutas administrativas si existen
+Disallow: /admin/
+Disallow: /login/
+
+# Incluir el Sitemap
+Sitemap: https://colmedaysen.cl/sitemap.xml
