@@ -1,0 +1,11 @@
+{
+    "apps": [
+      {
+        "appId": "934456b0",
+        "root": "frontend-colmed/frontend-colmed-coy",
+        "dependencyInstallCommand": "npm install && cd src-capacitor && npm install",
+        "webBuildCommand": "cd src-capacitor && quasar build -m capacitor -T ios && npx cap add ios && npx cap sync ios",
+        "iosPath": "src-capacitor/ios"
+      }
+    ]
+  }
