@@ -1,6 +1,14 @@
 <template>
   <q-page class="q-pa-md bg-cyan-1">
-    <q-card flat class="bg-cyan-1">
+    <q-card
+            v-if="!noticia"
+            class="bg-blue-2 q-mx-sm q-mt-xs"
+            style="border-radius: 20px;"
+          >
+            <div class="text-center q-pa-sm text-primary text-weight-light
+              ">No hay información disponible.</div>
+          </q-card>
+    <q-card flat class="bg-cyan-1" v-if="noticia">
       <q-card-section
         style="border-radius: 20px 20px 0px 0px"
         class="bg-amber-14"
@@ -26,7 +34,7 @@
           />
         </q-card-section>
         <q-card-section>
-          <div class="text-subtitle2 text-primary q-px-md text-justify">
+          <div class="text-h6 text-primary q-px-md text-justify">
             {{ noticia.contenido }}
           </div>
         </q-card-section>
@@ -54,7 +62,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const informacionStore = useInformacionesStore();
 
-const noticia = ref(computed(() => informacionStore.noticia_app));
+const noticia = computed(() => informacionStore.noticia_app || null);
 </script>
 
 <style scoped>

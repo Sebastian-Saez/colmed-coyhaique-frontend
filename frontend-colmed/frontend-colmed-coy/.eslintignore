@@ -1,8 +1,16 @@
 /dist
-/src-capacitor
+# /src-capacitor/
 /src-cordova
 /.quasar
 /node_modules
 .eslintrc.cjs
 /quasar.config.*.temporary.compiled*
-src/
+/src/stores/
+/src-capacitor/www/assets/*
+# /src-capacitor/android/
+# src-capacitor/ios/
+# src-capacitor/www/
+# /src-capacitor/android/app/src/main/assets/
+# /src-capacitor/android/app/src/main/assets/public/assets/
+# **/android/app/build/
+# generate-capacitor-config.js

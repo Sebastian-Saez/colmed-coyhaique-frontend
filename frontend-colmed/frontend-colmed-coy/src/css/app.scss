@@ -123,7 +123,7 @@
   border-radius: $border-radius-base;
   box-shadow: $box-shadow-base;
   &:hover {
-    background-color: darken($primary, 10%);
+    background-color: $dark($primary, 10%);
   }
 }
 
@@ -133,7 +133,7 @@
   border-radius: $border-radius-base;
   box-shadow: $box-shadow-base;
   &:hover {
-    background-color: darken($secondary, 10%);
+    background-color: $dark($secondary, 10%);
   }
 }
 

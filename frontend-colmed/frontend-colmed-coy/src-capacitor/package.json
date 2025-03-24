@@ -2,12 +2,23 @@
   "name": "frontend-colmed-coy",
   "version": "0.0.1",
   "description": "Digitalización Colegio Medico Coyhaique",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
   "author": "Sebastian Saez M.",
-  "private": true,
+  "license": "ISC",
   "dependencies": {
-    "@capacitor/android": "^6.2.0",
-    "@capacitor/app": "^6.0.0",
-    "@capacitor/cli": "^6.0.0",
-    "@capacitor/core": "^6.0.0"
+    "@capacitor-community/fcm": "^7.1.1",
+    "@capacitor/android": "^7.1.0",
+    "@capacitor/core": "^7.1.0",
+    "@capacitor/ios": "^7.1.0",
+    "@capacitor/network": "^7.0.0",
+    "@capacitor/push-notifications": "^7.0.0",
+    "@capgo/capacitor-social-login": "^7.2.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.1.0"
   }
 }

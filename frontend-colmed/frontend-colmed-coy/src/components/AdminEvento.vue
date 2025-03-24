@@ -175,6 +175,23 @@
       </q-card>
 
       <q-separator spaced />
+      <div class="text-h6 text-weight-medium text-primary text-left">
+        ¿Evento público?
+      </div>
+      <div class="text-caption text-primary text-left">
+        Si el evento es público, se publicará en la página web; si es solo para colegiados, se publicará únicamente en la aplicación móvil.
+      </div>
+      <q-toggle
+        label="Evento Público general o solo para Colegiados"
+        color="red-14"
+        indeterminate-value="sin_definir"
+        
+        v-model="destinoEvento"
+        :disable="!editar_evento && evento ? true : false"
+      />
+      <div class="q-px-sm">
+        Evento es: <strong>{{ getEventoTexto() }}</strong>
+      </div>
 
       <!-- <div class="text-h6 text-weight-medium text-primary text-left">
         ¿Noticia activa?
@@ -255,6 +272,7 @@ import { useQuasar } from "quasar";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 const emit = defineEmits(["cancelarPopup"]);
+const destinoEvento = ref('sin_definir');
 
 const $q = useQuasar();
 dayjs.extend(customParseFormat);
@@ -295,6 +313,15 @@ const modelEvento = ref(
 const imagenPrevia = ref(evento.value ? evento.value.imagen : null);
 const confirm = ref(false);
 
+const getEventoTexto = () => {
+      if (destinoEvento.value === true) {
+        return "Sólo para colegiados";
+      } else if(destinoEvento.value === false) {
+        return "Para público general";
+      } else{
+      return "Sin definir";
+    };
+}
 const formatDate = (dateString) => {
   // Si está vacío o es "No informado", devuélvelo tal cual
   if (!dateString || dateString === "No informado") {

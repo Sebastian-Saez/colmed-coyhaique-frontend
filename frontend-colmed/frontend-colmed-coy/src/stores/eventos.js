@@ -19,6 +19,8 @@ export const useEventosStore = defineStore("evento", {
     crear_evento: false,
     evento: null,
     evento_app: null,
+    eventos_base_app: null,
+    loading_base_app:null,
   }),
   actions: {
     async fetchEventosBase() {
@@ -26,12 +28,27 @@ export const useEventosStore = defineStore("evento", {
       try {
         const response = await api.get("/api/colmed/eventos/eventos_base/");
         this.eventos_base = response.data;
+        this.loading_base = true;
       } catch (error) {
         console.error("Error al cargar las eventos base:");
         this.error_base =
           "No se pudo cargar las eventos. Por favor, intenta de nuevo más tarde.";
       } finally {
         this.loading_base = true;
+      }
+    },
+    async fetchEventosBaseApp() {
+      this.loading_base_app = true;
+      try {
+        const response = await api.get("/api/colmed/eventos/eventos_base_app/");
+        this.eventos_base_app = response.data;
+        this.loading_base_app = true;
+      } catch (error) {
+        console.error("Error al cargar las eventos base:");
+        this.error_base =
+          "No se pudo cargar las eventos. Por favor, intenta de nuevo más tarde.";
+      } finally {
+        this.loading_base_app = false;
       }
     },
     async fetchNoticiasDestacadas() {

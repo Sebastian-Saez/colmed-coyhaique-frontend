@@ -1,5 +1,11 @@
 {
   "appId": "org.colmed.aysen.app",
-  "appName": "ColmedCoy App",
-  "webDir": "www"
+  "appName": "ColmedAysén",
+  "webDir": "www",
+  "ios": {},
+  "server": {
+    "hostname": "app.colmedaysen.cl",
+    "androidScheme": "https",
+    "iosScheme": "https"
+  }
 }

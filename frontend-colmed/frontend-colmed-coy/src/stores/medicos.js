@@ -13,6 +13,10 @@ export const useMedicoStore = defineStore("medico", {
     registros_procesados_sr: null,
     resultado_proceso_sr: false,
     certificado_medico_superintendencia: null,
+
+    //uso en aplicación
+    medico_app: null,
+    loading_medico_app: true,
   }),
   actions: {
     async fetchMedicos() {
@@ -26,6 +30,22 @@ export const useMedicoStore = defineStore("medico", {
         console.error("Error al cargar los médicos:", error);
       } finally {
         this.loading = true;
+      }
+    },
+    async fetchMedicoApp(usuario) {
+      this.medico_app = null;
+      this.loading_medico_app = true;
+      try {
+        const response = await api.get(
+          "/api/medicos/medicos/medico_app/?usuario=" + usuario
+        );
+        this.medico_app = response.data;
+        this.loading_medico_app = false;
+      } catch (error) {
+        console.error("Error al cargar la información del médico:", error);
+      } finally {
+        this.loading_medico_app = false;
+        console.log("Información cargada con éxito");
       }
     },
     async procesar_registros_super(formData) {

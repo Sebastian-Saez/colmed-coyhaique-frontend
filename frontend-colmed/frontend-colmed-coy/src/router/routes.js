@@ -74,6 +74,26 @@ const routes = [
         component: () => import("pages/app/NoticiaAppPage.vue"),
         props: true,
       },
+      // 1) LOGIN CON ICM
+      {
+        path: "login-icm",
+        component: () => import("src/pages/app/LoginMobileICMPage.vue"),
+      },
+      // 2) REGISTRO CON ICM
+      {
+        path: "register-icm",
+        component: () => import("src/pages/app/RegistroUsuarioICMPage.vue"),
+      },
+      // 3) SOLICITAR RESETEO DE CONTRASEÑA
+      {
+        path: "request-pass-reset",
+        component: () => import("src/pages/app/ResetPassPage.vue"),
+      },
+      // 4) CONFIRMAR RESETEO (NUEVA CONTRASEÑA)
+      {
+        path: "confirm-pass-reset",
+        component: () => import("src/pages/app/ConfirmarNewPassPage.vue"),
+      },
     ],
   },
   //Fin sección rutas para la aplicación móvil

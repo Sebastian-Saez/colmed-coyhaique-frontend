@@ -77,6 +77,7 @@ const loading = ref(false);
 
 const handleGoogleLogin = async (response) => {
   const id_token = response.credential;
+  
   loading.value = true;
   try {
     await userStore.loginWithGoogle(id_token);

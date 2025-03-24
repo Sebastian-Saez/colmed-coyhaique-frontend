@@ -1,12 +1,18 @@
 import { boot } from "quasar/wrappers";
 import axios from "axios";
-import { useRouter } from "vue-router";
+
 // Importar el router globalmente
+
 
 // Crear una instancia de Axios con la URL base desde las variables de entorno
 const api = axios.create({
-  baseURL: process.env.VITE_APP_BACKEND_URL, // Usar la variable de entorno para la base URL
+  baseURL: import.meta.env.VITE_APP_BACKEND_URL, // Usar la variable de entorno para la base URL
   //baseURL: "http://localhost:8001/",
+  //baseURL: "https://colmedaysen.cl/",
+  //baseURL: "http://localhost:8001/",
+  //baseURL: "http://192.168.1.23:8001/",
+   //baseURL: "http://172.22.85.193:8001/",
+  //baseURL: "http://192.168.1.23:8001/",
   withCredentials: true, // ¡importante!
 });
 
@@ -29,13 +35,29 @@ api.interceptors.response.use(
     // Si el error es 401 y el token no es válido, intentar refrescar el token
     if (error.response) {
       if (error.response.status === 401) {
-        if (
-          error.response.data.detail ==
-          "User not authorized or not registered in the system"
-        ) {
-          console.error("Usuario no registrado en el sistema...");
-          return Promise.reject(error.response.data.detail);
+
+        const errorDetail = error.response.data.detail;
+        // Lista de mensajes que indican que el usuario no está autorizado o registrado
+        const unAuthorizedMessages = [
+          "User not authorized or not registered in the system",
+          "Credenciales inválidas.",
+          "Contraseña incorrecta.",
+
+          // Agrega aquí otros mensajes que requieran rechazo inmediato
+        ];
+
+        if (unAuthorizedMessages.includes(errorDetail)) {
+          console.error("Error de autorización:", errorDetail);
+          return Promise.reject(errorDetail);
         }
+
+        // if (
+        //   error.response.data.detail ==
+        //   "User not authorized or not registered in the system"
+        // ) {
+        //   console.error("Usuario no registrado en el sistema...");
+        //   return Promise.reject(error.response.data.detail);
+        // }
 
         originalRequest._retry = true;
         try {

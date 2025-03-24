@@ -24,6 +24,10 @@ export const useInformacionesStore = defineStore("informacion", {
     crear_noticia: false,
     noticia: null,
     noticia_app: null,
+
+    //Aplicación móvil
+    todas_noticias_app: null,
+    loading_app: null,
   }),
   actions: {
     async fetchInformaciones() {
@@ -79,6 +83,21 @@ export const useInformacionesStore = defineStore("informacion", {
           "No se pudo cargar las noticias. Por favor, intenta de nuevo más tarde.";
       } finally {
         this.loading = true;
+      }
+    },
+    async fetchTodasNoticiasApp() {
+      this.loading_app = true;
+      try {
+        const response = await api.get(
+          "/api/noticias/noticias/todas_noticias/"
+        );
+        this.todas_noticias_app = response.data;
+      } catch (error) {
+        console.error("Error al cargar todas las noticias activas:");
+        this.error =
+          "No se pudo cargar las noticias. Por favor, intenta de nuevo más tarde.";
+      } finally {
+        this.loading_app = false;
       }
     },
     async setNoticia(noticia) {

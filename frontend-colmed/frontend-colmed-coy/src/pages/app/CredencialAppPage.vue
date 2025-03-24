@@ -6,35 +6,72 @@
           class="text-h3 text-primary text-center text-weight-bolder bg-"
           style="letter-spacing: 10px"
         >
-          Credencial
+          Credencial Mi Colmed
         </div>
         <q-separator inset />
       </q-card-section>
-      <q-card-section
+      <!-- <q-card-section
         class="text-white bg-blue-1 text-center q-pt-xl q-pb-xl"
         style="border-radius: 20px 20px 0px 0px"
       >
-        <!--AQUI DEBE IR UN CODIGO QR-->
+        
         <q-img :src="qrSrc" spinner-color="primary" :ratio="1" />
-      </q-card-section>
+      </q-card-section> -->
       <q-card-section
-        class="bg-blue-14 text-white"
-        style="border-radius: 0px 0px 20px 20px"
+        class="bg-light-blue-10 text-white q-mt-lg"
+        style="border-radius: 20px 20px"
       >
-        <div class="text-h4 text-weight-bold">Condiciones</div>
-        <div class="text-body1 text-weight-semibold">
-          Texto descriptivo con las condiciones de uso
+        <!-- <div class="text-h4 text-weight-bold">Condiciones</div> -->
+        <div class="text-h6 text-weight-semibold text-justify">
+          Descarga la aplicación <div class="text-weight-bold text-justify">Mi Colmed</div> donde además puedes realizar pagos,
+          obtener certificados, solicitar beneficios del FSG, conocer nuestros
+          convenios vigentes y recibir las últimas noticias del Gremio para
+          estar siempre actualizad@.
         </div>
-        <q-separator spaced inset />
-        <q-card-actions align="center">
+        <q-separator spaced inset color="primary" />
+        <q-card-actions align="around" class="q-mt-lg q-mb-lg">
+          <q-btn
+            color="deep-orange"
+            push
+            no-caps
+            href="https://apps.apple.com/us/app/mi-colmed/id1498381926?ls=1"
+            target="_blank"
+          >
+            <div class="row items-center no-wrap">
+              <q-icon left name="fab fa-apple" />
+              <div class="text-center">
+                Disponible en<br />
+                <div class="text-weight-semibold text-h6">App Store</div>
+              </div>
+            </div>
+          </q-btn>
+          <q-btn
+            color="deep-orange"
+            push
+            no-caps
+            href="https://play.google.com/store/apps/details?id=cl.colegiomedico.miColMed"
+            target="_blank"
+          >
+            <div class="row items-center no-wrap">
+              <q-icon left name="fab fa-google-play" />
+              <div class="text-center">
+                Disponible en<br />
+                <div class="text-weight-semibold text-h6">Play Store</div>
+              </div>
+            </div>
+          </q-btn>
+        </q-card-actions>
+        <q-separator />
+        <q-card-actions align="center" class="q-mt-md">
           <q-btn
             no-caps
             rounded
-            style="width: 200px"
-            color="primary"
+            style="width: 100%"
+            color="blue-14"
             @click="$router.back()"
+            size="lg"
           >
-            <div class="text-body1">Volver</div></q-btn
+            <div class="text-h6">Volver</div></q-btn
           >
         </q-card-actions>
       </q-card-section>
