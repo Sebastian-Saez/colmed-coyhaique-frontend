@@ -4,7 +4,7 @@
       "appId": "934456b0",
       "root": "frontend-colmed/frontend-colmed-coy/src-capacitor",
       "dependencyInstallCommand": "cd .. && npm install && cd src-capacitor && npm install",
-      "webBuildCommand": "quasar build -m capacitor -T ios && npx cap add ios && npx cap sync ios",
+      "webBuildCommand": "npx quasar build -m capacitor -T ios && npx cap add ios && npx cap sync ios",
       "iosPath": "src-capacitor/ios"
     }
   ]
