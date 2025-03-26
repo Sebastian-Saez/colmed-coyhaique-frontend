@@ -8,13 +8,20 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
-const { configure } = require("quasar/wrappers");
-const path = require("path");
+
+// quasar.config.js (ESM)
+import { configure } from 'quasar/wrappers';
+import path from 'path';
+// Importa lo que necesites
+import vueI18n from '@intlify/vite-plugin-vue-i18n';
+import checker from 'vite-plugin-checker';
+
 
 // Cargar las variables de entorno desde el archivo .env
 // Accessing terminal variables
 
-module.exports = configure(function (/* ctx */) {
+export default configure(function (/* ctx */) {
+
   return {
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
@@ -22,7 +29,8 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ["i18n", "axios", "googleLogin"],
+    boot: ["i18n", "axios", "googleLogin", "firebase"],
+    //boot: ["i18n", "axios", "googleLogin"],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ["app.scss"],
@@ -72,28 +80,60 @@ module.exports = configure(function (/* ctx */) {
 
       vitePlugins: [
         [
-          "@intlify/vite-plugin-vue-i18n",
+          vueI18n,  // <-- la función importada
           {
-            // if you want to use Vue I18n Legacy API, you need to set `compositionOnly: false`
-            // compositionOnly: false,
-
-            // if you want to use named tokens in your Vue I18n messages, such as 'Hello {name}',
-            // you need to set `runtimeOnly: false`
-            // runtimeOnly: false,
-
-            // you need to set i18n resource including paths !
-            include: path.resolve(__dirname, "./src/i18n/**"),
-          },
+            include: path.resolve(__dirname, './src/i18n/**')
+          }
         ],
-        [
-          "vite-plugin-checker",
-          {
-            eslint: {
-              lintCommand: 'eslint "./**/*.{js,mjs,cjs,vue}"',
-            },
-          },
-          { server: false },
-        ],
+        // [
+        //   checker, // <-- la función importada
+        //   {
+        //     eslint: {
+        //       //Opción original
+        //       // lintCommand: 'eslint "./**/*.{js,mjs,cjs,vue}" '
+        //       //lintCommand: `cd ${projectRoot} && eslint --ignore-path ${path.join(projectRoot, '.eslintignore')} --ext .js,.vue,.ts .`
+        //       lintCommand: `cd ${projectRoot} && eslint --ignore-path ${path.join(projectRoot, '.eslintignore')} --ext .js,.vue,.ts src-capacitor/src/**/*.{js,vue,ts} src/**/*.{js,vue,ts}`
+        //       //lintCommand: `cd ${projectRoot} && eslint src --ext .js,.vue,.ts`
+
+
+        //       //lintCommand: 'eslint --ignore-path .eslintignore --ext .js,.vue,.ts .'
+        //       //lintCommand: 'eslint --cwd ../ --ignore-path .eslintignore --ext .js,.vue,.ts .'
+
+
+        //       //lintCommand: 'eslint --ignore-path ./.eslintignore . --ext .js,.mjs,.cjs,.vue'
+        //       //lintCommand: 'eslint . --ext .js,.mjs,.cjs,.vue --ignore-path .eslintignore'
+        //       //lintCommand: 'eslint ../. --ext .js,.mjs,.cjs,.vue --ignore-path ../.eslintignore'
+
+
+        //       //lintCommand: 'eslint . --ext .js,.mjs,.cjs,.vue'
+        //       //lintCommand: 'eslint "src/**/*.{js,mjs,cjs,vue}"'
+        //     }
+        //     // Quita el "server: false" de antes
+        //   }
+        // ]
+        // // [
+        //   "@intlify/vite-plugin-vue-i18n",
+        //   {
+        //     // if you want to use Vue I18n Legacy API, you need to set `compositionOnly: false`
+        //     // compositionOnly: false,
+
+        //     // if you want to use named tokens in your Vue I18n messages, such as 'Hello {name}',
+        //     // you need to set `runtimeOnly: false`
+        //     // runtimeOnly: false,
+
+        //     // you need to set i18n resource including paths !
+        //     include: path.resolve(__dirname, "./src/i18n/**"),
+        //   },
+        // ],
+        // [
+        //   "vite-plugin-checker",
+        //   {
+        //     eslint: {
+        //       lintCommand: 'eslint "./**/*.{js,mjs,cjs,vue}"',
+        //     },
+        //   }
+        //   // { server: false },
+        // ],
       ],
       extendViteConf(viteConf) {
         // Aquí configuramos Vite para usar polling, lo cual es importante para Docker y WSL2
@@ -105,13 +145,15 @@ module.exports = configure(function (/* ctx */) {
           host: "0.0.0.0",
           strictPort: true,
           port: 8080,
-        };
+        }
       },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
       // https: true
+      host: "0.0.0.0",
+
       open: false, // opens browser window automatically
       port: 8080,
       watchOptions: {
@@ -233,5 +275,5 @@ module.exports = configure(function (/* ctx */) {
       // extendBexScriptsConf (esbuildConf) {}
       // extendBexManifestJson (json) {}
     },
-  };
-});
+  }
+})
