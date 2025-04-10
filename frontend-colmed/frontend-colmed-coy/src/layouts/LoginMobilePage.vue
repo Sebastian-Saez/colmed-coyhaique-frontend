@@ -71,6 +71,13 @@
       </q-card>
     </q-dialog>
 
+    <q-dialog v-model="loading" persistent>
+      <q-card class="q-pa-md flex flex-center">
+        <q-spinner-dots size="50px" color="primary" />
+        <div class="q-ml-md text-primary">Iniciando sesión...</div>
+      </q-card>
+    </q-dialog>
+
   </q-layout>
 </template>
 
@@ -95,9 +102,7 @@ const isOnline = ref(true);
 const respuestaError = ref(false);
 const mensajeErrorRegistro = ref (null);
 
-const loginWithGoogle = async () => {
-  
-  loading.value = true;
+const loginWithGoogle = async () => {  
   // const result = await GoogleAuth.signIn();
   // const result = await SocialLogin.login({ provider: 'google' });
   const result = await SocialLogin.login({
@@ -108,6 +113,7 @@ const loginWithGoogle = async () => {
     });
 
   try {
+    loading.value = true;
     // const result = await GoogleAuth.signIn();
     // // result contiene { email, familyName, givenName, idToken, ...}
     //const idToken = result.authentication.idToken;
