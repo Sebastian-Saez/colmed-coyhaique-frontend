@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 // import dotenv from 'dotenv';
 
 // Cargar las variables de entorno desde el archivo .env
-dotenv.config();
+// dotenv.config();
 
 
 const config: CapacitorConfig = {
