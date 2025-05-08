@@ -9,7 +9,7 @@ const config: CapacitorConfig = {
   appName: 'ColmedAysén',
   webDir: 'www',
   ios: {
-    buildFlag: (process.env.IOS_BUILD_FLAGS || '').split(' ')
+    buildFlags: (process.env.IOS_BUILD_FLAGS || '').split(' ')
   },
   // server: {
   //   hostname: 'app.colmedaysen.cl',    
