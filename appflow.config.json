@@ -4,7 +4,7 @@
       "appId": "934456b0",
       "root": "frontend-colmed/frontend-colmed-coy/src-capacitor",
       "dependencyInstallCommand": "cd .. && npm install && cd src-capacitor && npm install",
-      "webBuildCommand": "npx quasar build -m capacitor -T ios --skip-pkg",
+      "webBuildCommand": "npx quasar build -m capacitor -T ios --skip-pkg && node src-capacitor/scripts/copy-plist.js",
       "iosPath": "ios"
     }
   ]

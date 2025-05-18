@@ -12,12 +12,9 @@
 // quasar.config.js (ESM)
 import { configure } from 'quasar/wrappers';
 import path from 'path';
-const fs = require("fs");
-
 // Importa lo que necesites
 import vueI18n from '@intlify/vite-plugin-vue-i18n';
 import checker from 'vite-plugin-checker';
-const projectRoot = __dirname
 
 
 // Cargar las variables de entorno desde el archivo .env
@@ -54,52 +51,6 @@ export default configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
-
-      
-      //método para la inclusión de achivo firebase para aplicación iOS
-      afterBuild () {
-        // Ruta fuente del archivo plist
-        console.log('📦 Ejecutando hook afterBuild para copiar GoogleService-Info.plist...');
-         // const src = path.resolve(__dirname, 'src-capacitor-config/GoogleService-Info.plist');
-        const srcPath = path.resolve(projectRoot, 'src-capacitor/config/GoogleService-Info.plist');
-         // Ruta de destino dentro del proyecto iOS generado por Capacitor
-        // const dest = path.resolve(__dirname, 'src-capacitor/ios/App/App/GoogleService-Info.plist');
-        const destPath = path.resolve(projectRoot, 'src-capacitor/ios/App/App/GoogleService-Info.plist');
-        if (!fs.existsSync(srcPath)) {
-          console.warn('⚠️ El archivo GoogleService-Info.plist no se encontró en la ruta esperada:', srcPath);
-          console.warn('⚠️ El build de iOS puede fallar si no se incluye este archivo.');
-          // NO retornamos ni lanzamos error aquí, para permitir que el build continue (aunque probablemente fallará más tarde)
-        }
-        
-        try {
-          // Asegurar que el directorio de destino exista (App/App/)
-          const destDir = path.dirname(destPath);
-          // Comprobamos si el directorio de destino existe antes de intentar crearlo
-          if (!fs.existsSync(destDir)) {
-            console.log('📁 Directorio de destino no encontrado, creando:', destDir);
-            // fs.mkdirSync(destDir, { recursive: true });
-          } else {
-            console.log('📁 Directorio de destino ya existe:', destDir);
-          }
-           // Copiar el archivo
-          fs.copyFileSync(srcPath, destPath);
-          console.log('✅ GoogleService-Info.plist copiado correctamente a:', destPath);
-        } catch (err) {
-          // Capturar cualquier error durante la copia
-          console.error('❌ Error al copiar GoogleService-Info.plist:', err.message);
-          // Opcional: lanzar el error para que el build falle explícitamente
-          // throw new Error(`Failed to copy GoogleService-Info.plist: ${err.message}`);
-        }
-         // try {
-        //   fs.mkdirSync(path.dirname(dest), { recursive: true });
-        //   fs.copyFileSync(src, dest);
-        //   console.log('✅ GoogleService-Info.plist copiado correctamente a:', dest);
-        // } catch (err) {
-        //   console.warn('⚠️ No se pudo copiar GoogleService-Info.plist:', err.message);
-        // }
-      },
-      
-
       target: {
         browser: ["es2019", "edge88", "firefox78", "chrome87", "safari13.1"],
         node: "node20",
