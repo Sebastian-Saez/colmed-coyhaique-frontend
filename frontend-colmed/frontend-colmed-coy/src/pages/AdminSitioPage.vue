@@ -14,12 +14,6 @@
 
       <q-card flat class="bg-primary">
         <q-card-section class="bg-primary text-white">
-          <!-- <div class="text-subtitle1 text-weight-medium">
-              {{ userProfile.first_name + " " + userProfile.last_name }}
-            </div> -->
-          <!-- <div class="text-subtitle2 text-weight-medium">
-              {{ userProfile.name_google }}
-            </div> -->
 
           <q-chip v-if="userProfile">
             <q-avatar>
@@ -56,7 +50,7 @@
         </q-list>
       </q-btn-dropdown>
       <q-separator dark vertical />
-      <q-btn stretch flat no-caps @click="logout" icon="logout">
+      <q-btn stretch flat no-caps icon="logout" @click="logout">
         <q-tooltip> Cerrar sesión </q-tooltip>
       </q-btn>
       <!-- <q-separator dark vertical inset />

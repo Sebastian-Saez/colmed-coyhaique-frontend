@@ -6,7 +6,7 @@
         :class="isLargeScreen ? 'q-mx-xl q-px-xl' : ''"
       >
         <!-- <ToolbarSection :isLargeScreen="isLargeScreen" /> -->
-        <ToolbarSection :screenSize="screenSize" />
+        <ToolbarSection :screen-size="screenSize" />
         <q-card
           class="q-pa-md bg-grey-1"
           :class="isLargeScreen ? 'q-ml-lg q-mr-xl' : 'q-mx-lg'"
@@ -19,7 +19,7 @@
             style="height: 400px"
             :limits="computedLimits"
           >
-            <template v-slot:before>
+            <template #before>
               <q-tabs
                 v-model="tab"
                 vertical
@@ -63,7 +63,7 @@
               </q-tabs>
             </template>
 
-            <template v-slot:after>
+            <template #after>
               <q-tab-panels
                 v-model="tab"
                 animated
@@ -73,22 +73,30 @@
                 transition-next="slide-up"
                 class="bg-grey-1"
               >
+                
                 <q-tab-panel name="pagos">
-                  <div class="text-h4 text-primary q-mb-md text-weight-medium">
-                    {{ informacion_de_pagos.titulo }}
+                  <q-inner-loading
+                    v-if="loading_pagos"
+                    :showing="loading_pagos"
+                  >
+                    <q-spinner-gears size="50px" color="light-green-14" />
+                  </q-inner-loading>
+                  <div v-else>
+                    <div class="text-h4 text-primary q-mb-md text-weight-medium">
+                    {{ pagos.titulo }}
                   </div>
                   <div class="text-h5 text-primary">
-                    {{ informacion_de_pagos.subtitulo }}
+                    {{ pagos.subtitulo }}
                   </div>
                   <div
                     class="text-subtitle1 text-weight-light text-primary q-pb-md text-justify"
                   >
-                    {{ informacion_de_pagos.descripcion_general }}
+                    {{ pagos.descripcion_general }}
                   </div>
                   <div
                     class="text-subtitle1 text-weight-light text-primary q-pb-md"
                   >
-                    {{ informacion_de_pagos.detalle_cuotas }}
+                    {{ pagos.detalle_cuotas }}
                   </div>
                   <q-card
                     flat
@@ -98,7 +106,7 @@
                     <div class="text-h5 text-primary">Tipos de cuotas</div>
                     <q-list bordered>
                       <q-item
-                        v-for="(item, index) in lista_cuotas"
+                        v-for="(item, index) in pagos.tipos_cuotas"
                         :key="index"
                       >
                         <q-card flat class="bg-grey-1">
@@ -118,11 +126,11 @@
                           General de Puerto Chacabuco, junio 2018.
                         </div> -->
                         <div
-                          v-for="nota in informacion_de_pagos.notas"
+                          v-for="nota in pagos.notas"
                           :key="nota"
                           class="text-h6 text-caption text-primary"
                         >
-                          (*) {{ nota }}
+                          {{ nota }}
                         </div>
                       </q-item-section>
                     </q-list>
@@ -135,7 +143,7 @@
                     <div class="text-h5 text-primary">Valores de cuotas</div>
                     <q-separator />
                     <q-table
-                      :rows="rows"
+                      :rows="pagos.valores_cuotas ?? []"
                       :columns="columns"
                       row-key="name"
                       hide-bottom
@@ -155,7 +163,7 @@
                     </div>
                     <q-separator />
                     <q-table
-                      :rows="rows_fsg"
+                      :rows="pagos.detalle_fsg ?? []"
                       :columns="columns_fsg"
                       row-key="name"
                       hide-bottom
@@ -171,32 +179,17 @@
                     style="border-radius: 20px"
                   >
                     <div class="text-h5 text-primary">
-                      {{ informacion_reafiliacion.titulo }}
+                      {{ pagos.reafiliacion_titulo }}
                     </div>
                     <q-separator />
                     <div
                       class="text-subtitle1 text-weight-light text-primary text-justify"
                     >
-                      {{ informacion_reafiliacion.descripcion }}
+                      {{ pagos.reafiliacion_descripcion }}
                     </div>
-                    <!-- <div class="text-h5 text-primary">
-                      Detalles para reafiliación
-                    </div>
-                    <q-separator />
-                    <div class="text-subtitle1 text-weight-light text-primary">
-                      Quien hubiera sido desafiliado por renuncia podrá
-                      reincorporarse por una sola vez y ésta deberá aprobarse en
-                      el Consejo Regional correspondiente y en la Mesa Directiva
-                      Nacional por la mayoría de los miembros en ejercicio.
-                      Quien hubiera perdido su calidad de afiliado por no
-                      cancelar las cuotas sociales durante doce meses
-                      consecutivos, sólo podrá reafiliarse por dos veces. Si
-                      quisiera reincorporarse por tercera vez a la Orden, deberá
-                      ser autorizado por la Mesa Directiva Nacional, por la
-                      mayoría absoluta de sus miembros en ejercicio.
-                    </div> -->
+
                     <q-table
-                      :rows="rows_reafiliacion"
+                      :rows="pagos.valores_reafiliacion ?? []"
                       :columns="columns_reafiliacion"
                       row-key="name"
                       hide-bottom
@@ -205,282 +198,342 @@
                       style="border-radius: 20px"
                     />
                   </q-card>
+                  </div>
+
+                  
                 </q-tab-panel>
 
                 <q-tab-panel name="colegiarse">
-                  <div class="text-h4 text-primary q-mb-md text-weight-medium">
-                    Cómo Colegiarse
-                  </div>
-                  <div class="text-h6 text-primary q-mb-md">
-                    ¿Quiénes pueden colegiarse?
-                  </div>
-                  <div
-                    class="text-subtitle1 text-weight-light text-primary text-justify"
+                  <q-inner-loading
+                    v-if="loading_colegiarse"
+                    :showing="loading_colegiarse"
                   >
-                    Quienes cuenten con su correspondiente título de médico o
-                    médica cirujano y estén inscritos en el registro de
-                    prestadores individuales de la Superintendencia de Salud; y
-                    no cuenten con sanciones éticas.
-                  </div>
-                  <div
-                    class="text-subtitle1 text-weight-light text-primary q-pb-md text-justify"
-                  >
-                    Pueden colegiarse médicos titulados en Chile o en el
-                    extranjero. Estos últimos, deben contar también con el
-                    reconocimiento o validación de su título en Chile de acuerdo
-                    a la vía que corresponda.
-                  </div>
-                  <q-separator />
-                  <div class="text-h6 text-primary q-mb-xs q-pt-md">
-                    ¿Cómo colegiarse?
-                  </div>
-                  <div class="text-subtitle1 text-weight-light text-primary">
-                    El trámite de colegiatura se realiza de manera online,
-                    ingresando a
-                    <q-btn
-                      label="Inscripción Colegio Médico"
-                      no-caps
-                      href="https://inscripcioncolmed.colegiomedico.cl"
-                      target="_blank"
-                      outline
-                      rounded
-                      icon-right="arrow_forward"
-                    />
-                  </div>
-                  <div
-                    class="text-h6 text-overline text-primary q-mb-xs q-pt-xl"
-                  >
-                    INFORMACIÓN PREVIA A INGRESO A FORMULARIO DE INSCRIPCIÓN A
-                    COLMED
-                  </div>
-                  <div
-                    class="text-subtitle1 text-weight-light text-primary text-justify"
-                  >
-                    Antes de comenzar su registro en línea en el Colegio Médico,
-                    le invitamos a conocer los documentos que serán solicitados
-                    durante el proceso, de manera que pueda tenerlos todos
-                    previamente y así completar de manera más fácil, rápida y
-                    eficiente la solicitud. Estos deberán ser subidos en formato
-                    JPG , PNG o PDF y no deben exceder los 5MB de peso.
-                  </div>
-                  <div
-                    class="text-h6 text-overline text-primary q-mb-xs q-pt-md"
-                  >
-                    MÉDICOS TITULADOS EN CHILE DEBERÁN ADJUNTAR:
-                  </div>
-                  <div
-                    class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
-                  >
-                    1. Certificado de título de médico cirujano o Certificado de
-                    inscripción en el Registro Nacional de Prestadores
-                    Individuales de la Superintendencia de Salud.
-                  </div>
-                  <div
-                    class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
-                  >
-                    2. Cédula de identidad por ambos lados.
-                  </div>
-                  <div
-                    class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
-                  >
-                    3. Foto Personal tipo foto perfil.
-                  </div>
-                  <div
-                    class="text-h6 text-overline text-primary q-mb-xs q-pt-lg"
-                  >
-                    MÉDICOS TITULADOS EN EL EXTRANJERO DEBERÁN ADJUNTAR:
-                  </div>
-                  <div
-                    class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
-                  >
-                    1. Título de Médico o Médico Cirujano del país de origen
-                    correspondiente a la Universidad o al Estado que lo otorgó.
-                  </div>
-                  <div
-                    class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
-                  >
-                    2. Reconocimiento o validación del título en Chile:
-                  </div>
-                  <div
-                    class="text-body2 text-weight-light text-primary q-ml-md text-justify q-pr-lg"
-                  >
-                    - Certificado de Revalidación de la Universidad de Chile,
-                    Eunacom o Conacem.- Certificado de reconocimiento del
-                    Ministerio de Relaciones Exteriores de Chile, para quienes
-                    provengan de Brasil, Colombia, Uruguay.
-                  </div>
-                  <div
-                    class="text-body2 text-weight-light text-primary q-ml-md text-justify q-pr-md"
-                  >
-                    - Certificado de reconocimiento del Ministerio de Educación
-                    de Chile, si proviene de Argentina, Ecuador o España.
-                  </div>
-                  <div
-                    class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
-                  >
-                    3. Certificado de inscripción en el Registro Nacional de
-                    Prestadores Individuales de la Superintendencia de Salud.
-                  </div>
-                  <div
-                    class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
-                  >
-                    4. Cédula de identidad vigente por ambos lados, con
-                    residencia definitiva o temporaria. Si la cédula de
-                    identidad estuviese vencida, deben además adjuntar Solicitud
-                    de Permanencia Definitiva.
-                  </div>
-                  <div
-                    class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
-                  >
-                    5. Foto Personal tipo foto perfil.
-                  </div>
-
-                  <div
-                    class="text-h6 text-overline text-primary q-mb-xs q-pt-md"
-                  >
-                    IMPORTANTE
-                  </div>
-                  <div
-                    class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
-                  >
-                    La inscripción en el Colegio Médico de Chile y en sus
-                    instituciones asociadas (FALMED y Club Médico de Santiago)
-                    se produce al ser aprobada por la Mesa Directiva Nacional y
-                    otorgado el número de colegiado, le llegará un correo
-                    informativo al final confirmando su inscripción.
-                  </div>
-                  <div
-                    class="text-subtitle1 text-weight-light text-primary q-pb-md"
-                  >
-                    Para cualquier duda respecto a la documentación, le
-                    recomendamos contactarnos a inscripciones@colegiomedico.cl
-                  </div>
-                  <!------------------------------------------------->
-                  <q-separator spaced />
-                  <div class="text-justify q-pr-md">
+                    <q-spinner-gears size="50px" color="light-green-14" />
+                  </q-inner-loading>
+                  <div v-else>
+                    <div class="text-h4 text-primary q-mb-md text-weight-medium">
+                      Cómo Colegiarse
+                    </div>
+                    <div class="text-h6 text-primary q-mb-md">
+                      {{colegiarse.quienesTitulo}}
+                    </div>
+                    <div
+                      class="text-subtitle1 text-weight-light text-primary text-justify"
+                    >
+                      {{ colegiarse.quienes }}
+                    </div>
+                    <q-separator />
                     <div class="text-h6 text-primary q-mb-xs q-pt-md">
-                      ¿Qué hace el Colegio Médico?
+                      {{ colegiarse.comoTitulo }}
                     </div>
                     <div class="text-subtitle1 text-weight-light text-primary">
-                      - Es la organización médica del país, que agrupa a más de
-                      28 mil profesionales, con presencia en todo Chile.
+                      {{ colegiarse.procedimiento }}
+                      <q-btn
+                        label="Inscripción Colegio Médico"
+                        no-caps
+                        :href="colegiarse.linkInscripcion"
+                        target="_blank"
+                        outline
+                        rounded
+                        icon-right="arrow_forward"
+                      />
                     </div>
-                    <div class="text-subtitle1 text-weight-light text-primary">
-                      - Vela por el buen ejercicio profesional, con apego a los
-                      más altos estándares éticos.
+                    <div
+                      class="text-h6 text-overline text-primary q-mb-xs q-pt-xl"
+                    >
+                      {{colegiarse.infoPreviaTitulo}}
                     </div>
-                    <div class="text-subtitle1 text-weight-light text-primary">
-                      - Se preocupa de los derechos y las condiciones laborales
-                      de los médicos y médicas, en un entorno que cada vez es
-                      más complejo y exigente.
+                    <div
+                      class="text-subtitle1 text-weight-light text-primary text-justify"
+                    >
+                      <!-- Antes de comenzar su registro en línea en el Colegio Médico,
+                      le invitamos a conocer los documentos que serán solicitados
+                      durante el proceso, de manera que pueda tenerlos todos
+                      previamente y así completar de manera más fácil, rápida y
+                      eficiente la solicitud. Estos deberán ser subidos en formato
+                      JPG , PNG o PDF y no deben exceder los 5MB de peso. -->
+                      {{ colegiarse.documentos }}
                     </div>
-                    <div class="text-subtitle1 text-weight-light text-primary">
-                      - Es la voz de los médicos y médicas en los debates de las
-                      políticas sanitarias del país y de temas relevantes para
-                      la sociedad.
+                    <div
+                      class="text-h6 text-overline text-primary q-mb-xs q-pt-md"
+                    >
+                      <!-- MÉDICOS TITULADOS EN CHILE DEBERÁN ADJUNTAR: -->
+                        {{ colegiarse.medicosChileTitulo }}
+                    </div>
+                    <div
+                      class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
+                      style="white-space: pre-line;"
+                    >
+                    {{ colegiarse.medicosChileContenido }}
+
+                      <!-- 1. Certificado de título de médico cirujano o Certificado de
+                      inscripción en el Registro Nacional de Prestadores
+                      Individuales de la Superintendencia de Salud. -->
+                    </div>
+                    <!-- <div
+                      class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
+                    >
+                      2. Cédula de identidad por ambos lados.
+                    </div>
+                    <div
+                      class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
+                    >
+                      3. Foto Personal tipo foto perfil.
+                    </div> -->
+                    <div
+                      class="text-h6 text-overline text-primary q-mb-xs q-pt-lg"
+                    >
+                      <!-- MÉDICOS TITULADOS EN EL EXTRANJERO DEBERÁN ADJUNTAR: -->
+                        {{ colegiarse.medicosExtranjeroTitulo }}
+                    </div>
+                    <div
+                      class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
+                      style="white-space: pre-line;"
+                    >
+                      {{ colegiarse.medicosExtranjeroContenido }}
+                      <!-- 1. Título de Médico o Médico Cirujano del país de origen
+                      correspondiente a la Universidad o al Estado que lo otorgó. -->
+                    </div>
+                    <!-- <div
+                      class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
+                    >
+                      2. Reconocimiento o validación del título en Chile:
+                    </div>
+                    <div
+                      class="text-body2 text-weight-light text-primary q-ml-md text-justify q-pr-lg"
+                    >
+                      - Certificado de Revalidación de la Universidad de Chile,
+                      Eunacom o Conacem.- Certificado de reconocimiento del
+                      Ministerio de Relaciones Exteriores de Chile, para quienes
+                      provengan de Brasil, Colombia, Uruguay.
+                    </div>
+                    <div
+                      class="text-body2 text-weight-light text-primary q-ml-md text-justify q-pr-md"
+                    >
+                      - Certificado de reconocimiento del Ministerio de Educación
+                      de Chile, si proviene de Argentina, Ecuador o España.
+                    </div>
+                    <div
+                      class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
+                    >
+                      3. Certificado de inscripción en el Registro Nacional de
+                      Prestadores Individuales de la Superintendencia de Salud.
+                    </div>
+                    <div
+                      class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
+                    >
+                      4. Cédula de identidad vigente por ambos lados, con
+                      residencia definitiva o temporaria. Si la cédula de
+                      identidad estuviese vencida, deben además adjuntar Solicitud
+                      de Permanencia Definitiva.
+                    </div>
+                    <div
+                      class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
+                    >
+                      5. Foto Personal tipo foto perfil.
+                    </div> -->
+
+                    <div
+                      class="text-h6 text-overline text-primary q-mb-xs q-pt-md"
+                    >
+                      IMPORTANTE
+                    </div>
+                    <div
+                      class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
+                    >
+                      La inscripción en el Colegio Médico de Chile y en sus
+                      instituciones asociadas (FALMED y Club Médico de Santiago)
+                      se produce al ser aprobada por la Mesa Directiva Nacional y
+                      otorgado el número de colegiado, le llegará un correo
+                      informativo al final confirmando su inscripción.
                     </div>
                     <div
                       class="text-subtitle1 text-weight-light text-primary q-pb-md"
                     >
-                      - Constituye una red de apoyo para los colegas a lo largo
-                      del país, con servicios y beneficios especializados a
-                      través de nuestro Fondo de Solidaridad Gremial, Fundación
-                      de Asistencia Legal y distintos clubes de campo a lo largo
-                      del país, para el merecido relajo y vida sana.
+                      Para cualquier duda respecto a la documentación, le
+                      recomendamos contactarnos a inscripciones@colegiomedico.cl
                     </div>
-                  </div>
+                    <!------------------------------------------------->
+                    <q-separator spaced />
+                    <div class="text-justify q-pr-md">
+                      <div class="text-h6 text-primary q-mb-xs q-pt-md">
+                        <!-- ¿Qué hace el Colegio Médico? -->
+                        {{ colegiarse.queHaceTitulo }}
+                      </div>
+                      <div 
+                        class="text-subtitle1 text-weight-light text-primary"
+                        style="white-space: pre-line;"
+                      >
+                        {{ colegiarse.queHaceContenido }}
+                      </div>
+                      <!-- <div class="text-subtitle1 text-weight-light text-primary">
+                        - Es la organización médica del país, que agrupa a más de
+                        28 mil profesionales, con presencia en todo Chile.
+                      </div>
+                      <div class="text-subtitle1 text-weight-light text-primary">
+                        - Vela por el buen ejercicio profesional, con apego a los
+                        más altos estándares éticos.
+                      </div>
+                      <div class="text-subtitle1 text-weight-light text-primary">
+                        - Se preocupa de los derechos y las condiciones laborales
+                        de los médicos y médicas, en un entorno que cada vez es
+                        más complejo y exigente.
+                      </div>
+                      <div class="text-subtitle1 text-weight-light text-primary">
+                        - Es la voz de los médicos y médicas en los debates de las
+                        políticas sanitarias del país y de temas relevantes para
+                        la sociedad.
+                      </div>
+                      <div
+                        class="text-subtitle1 text-weight-light text-primary q-pb-md"
+                      >
+                        - Constituye una red de apoyo para los colegas a lo largo
+                        del país, con servicios y beneficios especializados a
+                        través de nuestro Fondo de Solidaridad Gremial, Fundación
+                        de Asistencia Legal y distintos clubes de campo a lo largo
+                        del país, para el merecido relajo y vida sana.
+                      </div> -->
+                    </div>
 
-                  <q-separator spaced />
-                  <div class="text-h6 text-primary q-mb-xs q-pt-md">
-                    ¿Por qué colegiarse?
-                  </div>
-                  <div class="text-justify q-pr-md">
-                    <div class="text-subtitle1 text-weight-light text-primary">
-                      - Para contar con la protección y defensa de nuestros
-                      derechos como trabajadores, tanto en el ámbito público
-                      como privado.
+                    <q-separator spaced />
+                    <div class="text-h6 text-primary q-mb-xs q-pt-md">
+                      <!-- ¿Por qué colegiarse? -->
+                       {{ colegiarse.porqueTitulo }}??
                     </div>
-                    <div class="text-subtitle1 text-weight-light text-primary">
-                      - Para ser parte de la toma de decisiones que nos afectan
-                      como profesionales y contribuyen a mejorar la salud
-                      pública de Chile.
+                    <div class="text-justify q-pr-md">
+                      <div 
+                        class="text-subtitle1 text-weight-light text-primary"
+                        style="white-space: pre-line;"
+                      >
+                        {{ colegiarse.porqueContenido }}
+                      </div>
+                      
+                      <!-- <div class="text-subtitle1 text-weight-light text-primary">
+                        - Para contar con la protección y defensa de nuestros
+                        derechos como trabajadores, tanto en el ámbito público
+                        como privado.
+                      </div>
+                      <div class="text-subtitle1 text-weight-light text-primary">
+                        - Para ser parte de la toma de decisiones que nos afectan
+                        como profesionales y contribuyen a mejorar la salud
+                        pública de Chile.
+                      </div>
+                      <div class="text-subtitle1 text-weight-light text-primary">
+                        - Para fortalecer la diversidad de este Colegio
+                        Profesional que reúne distintas miradas.
+                      </div>
+                      <div class="text-subtitle1 text-weight-light text-primary">
+                        - Para participar en nuestras distintas instancias de
+                        trabajo que abordan relevantes temas para la salud del
+                        país y la sociedad: trabajo médico, formación, ética,
+                        derechos humanos, políticas públicas, género, salud
+                        mental, migración, entre otros.
+                      </div>
+                      <div class="text-subtitle1 text-weight-light text-primary">
+                        - Para relevar el contrato social y los roles tan
+                        relevantes que nos ha otorgado la sociedad.
+                      </div>
+                      <div
+                        class="text-subtitle1 text-weight-light text-primary q-pb-md"
+                      >
+                        - Para ser parte de una red de apoyo y beneficios para los
+                        médicos y sus familias, a través de nuestro Fondo de
+                        Solidaridad Gremial; y de asesoría en temas legales, a
+                        través de nuestra Fundación de Asistencia Legal (FALMED).
+                      </div> -->
                     </div>
-                    <div class="text-subtitle1 text-weight-light text-primary">
-                      - Para fortalecer la diversidad de este Colegio
-                      Profesional que reúne distintas miradas.
-                    </div>
-                    <div class="text-subtitle1 text-weight-light text-primary">
-                      - Para participar en nuestras distintas instancias de
-                      trabajo que abordan relevantes temas para la salud del
-                      país y la sociedad: trabajo médico, formación, ética,
-                      derechos humanos, políticas públicas, género, salud
-                      mental, migración, entre otros.
-                    </div>
-                    <div class="text-subtitle1 text-weight-light text-primary">
-                      - Para relevar el contrato social y los roles tan
-                      relevantes que nos ha otorgado la sociedad.
+
+                    <q-separator />
+                    <div class="text-h6 text-primary q-pt-md">
+                      <!-- Deberes y derechos asociados -->
+                       {{ colegiarse.deberesTitulo }}
                     </div>
                     <div
-                      class="text-subtitle1 text-weight-light text-primary q-pb-md"
+                      class="text-h6 text-overline text-primary q-mb-xs q-pt-md"
                     >
-                      - Para ser parte de una red de apoyo y beneficios para los
-                      médicos y sus familias, a través de nuestro Fondo de
-                      Solidaridad Gremial; y de asesoría en temas legales, a
-                      través de nuestra Fundación de Asistencia Legal (FALMED).
+                      Deberes
                     </div>
+                    <div
+                      class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
+                      style="white-space: pre-line;"
+                    >
+                      <!-- - Respetar los reglamentos internos del Colegio Médico de
+                      Chile (A.G.), con especial énfasis en lo referido a los
+                      Estatutos Sociales y el Código de Ética, así́ como de los
+                      Acuerdos que adopten los Órganos Directivos, tales como los
+                      Consejos Regionales, el Consejo Nacional y la Mesa Directiva
+                      Nacional. -->
+                      {{ colegiarse.deberesContenido }}
+                    </div>
+                    <div class="text-h6 text-overline text-primary">Derechos</div>
+                    <div
+                      class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
+                      style="white-space: pre-line;"
+                    >
+                      {{ colegiarse.derechosContenido }}
+                    </div>
+
+                    <!-- <div
+                      class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
+                    >
+                      - A participar en la definición de los lineamientos
+                      fundamentales de la Institución.
+                    </div>
+                    <div class="text-subtitle1 text-weight-light text-primary">
+                      - A requerir y obtener el apoyo gremial del Colegio Médico
+                      de Chile (A.G.) en situaciones propias de la actividad
+                      profesional.
+                    </div>
+                    <div class="text-subtitle1 text-weight-light text-primary">
+                      - A recibir los beneficios que el Colegio Médico de Chile
+                      (A.G.) contempla para sus asociados y familias, tales como
+                      los previstos por el Fondo de Solidaridad Gremial, previo
+                      cumplimiento de los requisitos específicos fijados para
+                      ello.
+                    </div> -->
                   </div>
 
-                  <q-separator />
-                  <div class="text-h6 text-primary q-pt-md">
-                    Deberes y derechos asociados
-                  </div>
-                  <div
-                    class="text-h6 text-overline text-primary q-mb-xs q-pt-md"
-                  >
-                    Deberes
-                  </div>
-                  <div
-                    class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
-                  >
-                    - Respetar los reglamentos internos del Colegio Médico de
-                    Chile (A.G.), con especial énfasis en lo referido a los
-                    Estatutos Sociales y el Código de Ética, así́ como de los
-                    Acuerdos que adopten los Órganos Directivos, tales como los
-                    Consejos Regionales, el Consejo Nacional y la Mesa Directiva
-                    Nacional.
-                  </div>
-                  <div class="text-h6 text-overline text-primary">Derechos</div>
-                  <div
-                    class="text-subtitle1 text-weight-light text-primary text-justify q-pr-md"
-                  >
-                    - A participar en la definición de los lineamientos
-                    fundamentales de la Institución.
-                  </div>
-                  <div class="text-subtitle1 text-weight-light text-primary">
-                    - A requerir y obtener el apoyo gremial del Colegio Médico
-                    de Chile (A.G.) en situaciones propias de la actividad
-                    profesional.
-                  </div>
-                  <div class="text-subtitle1 text-weight-light text-primary">
-                    - A recibir los beneficios que el Colegio Médico de Chile
-                    (A.G.) contempla para sus asociados y familias, tales como
-                    los previstos por el Fondo de Solidaridad Gremial, previo
-                    cumplimiento de los requisitos específicos fijados para
-                    ello.
-                  </div>
+                  
                 </q-tab-panel>
                 <q-tab-panel name="casa_medico">
-                  <div class="text-h4 text-primary q-mb-md">
+
+                  <q-inner-loading
+                    v-if="loading_casa"
+                    :showing="loading_casa"
+                  >
+                    <q-spinner-gears size="50px" color="light-green-14" />
+                  </q-inner-loading>
+                  <div v-else>
+                    <div class="text-h4 text-primary q-mb-md">
                     Nuestra Casa del Médico
                   </div>
-                  <div class="text-subtitle1 text-weight-light text-primary">
-                    Nuestra sede regional cuenta con habitaciones para
+                  <div 
+                    class="text-subtitle1 text-weight-light text-primary"
+                    style="border-radius: 20px"
+                    >
+                    {{ casa_medico.descripcion }}
+                    <!-- Nuestra sede regional cuenta con habitaciones para
                     colegiados, ubicada en Manuel Montt #69, media cuadra de la
-                    Plaza de Armas, Coyhaique.
+                    Plaza de Armas, Coyhaique. -->
                   </div>
                   <q-separator spaced />
-                  <q-card flat>
-                    <q-card-section>
+                  <q-card flat class="bg-grey-1">
+                    <div
+                      v-for="(hab, idx) in casa_medico.habitaciones"
+                      :key="idx"
+                      class="q-ml-md"
+                    >
+                      <div class="text-h6 text-primary">{{hab.nombre}}</div>
+                      <div
+                        class="text-subtitle1 text-weight-light text-primary q-mb-xs"
+                        style="white-space: pre-line;"
+                      >
+                        {{hab.descripcion}}
+                      </div>
+                    </div>
+
+
+                    <!-- <q-card-section>
                       <div class="text-h6 text-primary">Habitación 1</div>
                       <div
                         class="text-subtitle1 text-weight-light text-primary q-mb-xs"
@@ -500,11 +553,17 @@
                       >
                         Cama de plaza y media. Valor de $25.000.
                       </div>
-                    </q-card-section>
+                    </q-card-section> -->
 
                     <q-separator />
                     <q-card-section>
-                      <div class="text-h6 text-caption text-primary">
+                      <div 
+                        class="text-h6 text-caption text-primary"
+                        style="white-space: pre-line;"
+                      >
+                        {{ casa_medico.detalles }}
+                      </div>
+                      <!-- <div class="text-h6 text-caption text-primary">
                         - Cocina, living-comedor compartido
                       </div>
                       <div class="text-h6 text-caption text-primary">
@@ -512,9 +571,11 @@
                       </div>
                       <div class="text-h6 text-caption text-primary">
                         - No incluye desayuno
-                      </div>
+                      </div> -->
                     </q-card-section>
                   </q-card>
+                  </div>
+                  
                 </q-tab-panel>
               </q-tab-panels>
             </template>
@@ -523,261 +584,291 @@
       </div>
     </div>
     <!-- <FooterSection :isLargeScreen="isLargeScreen" /> -->
-    <FooterSection :screenSize="screenSize" />
+    <FooterSection :screen-size="screenSize" />
   </q-layout>
 </template>
 <script setup>
-import ToolbarSection from "components/ToolbarSection.vue";
-import FooterSection from "src/components/FooterSection.vue";
-import { useQuasar } from "quasar";
-import { useServicioStore } from "src/stores/servicios";
-import { computed, ref } from "vue";
+  import ToolbarSection from "components/ToolbarSection.vue";
+  import FooterSection from "src/components/FooterSection.vue";
+  import { useQuasar } from "quasar";
+  import { useServicioStore } from "src/stores/servicios";
+  import { computed, ref, onMounted } from "vue";
 
-defineOptions({
-  name: "ServiciosPage",
-});
+  defineOptions({
+    name: "ServiciosPage",
+  });
 
-const $q = useQuasar();
-const isLargeScreen = computed(() => {
-  return $q.screen.gt.md;
-});
 
-const screenSize = computed(() => {
-  if ($q.screen.lt.sm) return "xs"; // Teléfonos pequeños
-  if ($q.screen.sm && !$q.screen.md) return "sm"; // Teléfonos grandes
-  if ($q.screen.md && !$q.screen.lg) return "md"; // Tablets o pantallas de 13"
-  if ($q.screen.lg && !$q.screen.xl) return "lg"; // Pantallas grandes
-  return "xl"; // Pantallas extra grandes
-});
+  const $q = useQuasar();
+  const isLargeScreen = computed(() => {
+    return $q.screen.gt.md;
+  });
 
-const servicioStore = useServicioStore();
+  const screenSize = computed(() => {
+    if ($q.screen.lt.sm) return "xs"; // Teléfonos pequeños
+    if ($q.screen.sm && !$q.screen.md) return "sm"; // Teléfonos grandes
+    if ($q.screen.md && !$q.screen.lg) return "md"; // Tablets o pantallas de 13"
+    if ($q.screen.lg && !$q.screen.xl) return "lg"; // Pantallas grandes
+    return "xl"; // Pantallas extra grandes
+  });
 
-const categoriaServicio = computed(() => servicioStore.pagina_servicio);
-// const tab = computed(() => categoriaServicio.value || "pagos");
-const tab = computed({
-  get() {
-    return servicioStore.pagina_servicio || "pagos";
-  },
-  set(value) {
-    servicioStore.pagina_servicio = value;
-  },
-});
-const computedLimits = computed(() => {
-  return isLargeScreen.value ? [15, 30] : [31, 31];
-});
-const splitterModel = ref(isLargeScreen.value ? 15 : 31);
-// const splitterModel = ref(20);
+  const servicioStore = useServicioStore();
 
-const informacion_reafiliacion = ref({
-  titulo: "Detalles para reafiliación",
-  descripcion:
-    "Quien hubiera sido desafiliado por renuncia podrá reincorporarse por una sola vez y ésta deberá aprobarse en el Consejo Regional correspondiente y en la Mesa Directiva Nacional por la mayoría de los miembros en ejercicio. Quien hubiera perdido su calidad de afiliado por no cancelar las cuotas sociales durante doce meses consecutivos, sólo podrá reafiliarse por dos veces. Si quisiera reincorporarse por tercera vez a la Orden, deberá ser autorizado por la Mesa Directiva Nacional, por la mayoría absoluta de sus miembros en ejercicio.",
-});
 
-const informacion_de_pagos = ref({
-  titulo: "Cuota del Colegio Médico de Chile",
-  subtitulo: "Conoce el pago de tus cuotas",
-  descripcion_general:
-    "La cuota social del Colegio Médico de Chile se distribuye para el Consejo Nacional y los Consejos Regionales. El dinero recaudado se ocupa para la ejecución de toda la actividad gremial que desarrolla la Mesa Directiva Nacional, los nueve departamentos, las tres agrupaciones, los médicos mayores, las viudas de médicos y las cuatro comisiones. Además, del trabajo de los 20 Regionales, distribuidos a lo largo del país.",
-  detalle_cuotas:
-    "A continuación entregamos un desglose según el tramo en el que te encuentras.",
-  notas: [
-    "Para nuevos colegiados. Aprobadas en Asamblea General de Puerto Chacabuco, junio 2018.",
-  ],
-});
+  const pagos = computed(() => servicioStore.info_pagos || {});
+  const colegiarse = computed(() => servicioStore.info_colegiarse || {});
+  const casa_medico = computed(() => servicioStore.info_casa_medico || {});
+  const loading = computed(() => servicioStore.loading || false);
+  const loading_pagos = computed(() => servicioStore.loading_pagos || false);
+  const loading_casa = computed(() => servicioStore.loading_casa || false);
+  const loading_colegiarse = computed(() => servicioStore.loading_colegiarse || false);
 
-const lista_cuotas = [
-  {
-    tipo_cuota: "CUOTA ENTERA",
+  const categoriaServicio = computed(() => servicioStore.pagina_servicio);
+  // const tab = computed(() => categoriaServicio.value || "pagos");
+  const tab = computed({
+    get() {
+      return servicioStore.pagina_servicio || "pagos";
+    },
+    set(value) {
+      servicioStore.pagina_servicio = value;
+    },
+  });
+  const computedLimits = computed(() => {
+    return isLargeScreen.value ? [15, 30] : [31, 31];
+  });
+  const splitterModel = ref(isLargeScreen.value ? 15 : 31);
+  // const splitterModel = ref(20);
+
+  const informacion_reafiliacion = ref({
+    titulo: "Detalles para reafiliación",
     descripcion:
-      "Médicos de más de 9 años, paga el 100% de los componentes de la cuota ordinaria, especial y regional.",
-  },
-  {
-    tipo_cuota: "CUOTA JOVEN",
-    descripcion:
-      "Médicos de entre 0 y 8, 11 meses y 29 días, paga el 50% de los componentes de la cuota ordinaria, especial y regional.",
-  },
-  {
-    tipo_cuota: "CUOTA APS",
-    descripcion:
-      "Médicos que cumplidos los 9 años, trabajen un mínimo de 33 horas en APS o equivalente, sin consideración al tipo de contrato, paga el 75% de los componentes de la cuota ordinaria, especial y regional.",
-  },
-];
+      "Quien hubiera sido desafiliado por renuncia podrá reincorporarse por una sola vez y ésta deberá aprobarse en el Consejo Regional correspondiente y en la Mesa Directiva Nacional por la mayoría de los miembros en ejercicio. Quien hubiera perdido su calidad de afiliado por no cancelar las cuotas sociales durante doce meses consecutivos, sólo podrá reafiliarse por dos veces. Si quisiera reincorporarse por tercera vez a la Orden, deberá ser autorizado por la Mesa Directiva Nacional, por la mayoría absoluta de sus miembros en ejercicio.",
+  });
 
-const valores_cuotas = ref({
-  columns: ["Tipo de Cuota", "Cuota", "FSG", "Cuota + FSG", "Falmed"],
-  rows: [
+  const informacion_de_pagos = ref({
+    titulo: "Cuota del Colegio Médico de Chile",
+    subtitulo: "Conoce el pago de tus cuotas",
+    descripcion_general:
+      "La cuota social del Colegio Médico de Chile se distribuye para el Consejo Nacional y los Consejos Regionales. El dinero recaudado se ocupa para la ejecución de toda la actividad gremial que desarrolla la Mesa Directiva Nacional, los nueve departamentos, las tres agrupaciones, los médicos mayores, las viudas de médicos y las cuatro comisiones. Además, del trabajo de los 20 Regionales, distribuidos a lo largo del país.",
+    detalle_cuotas:
+      "A continuación entregamos un desglose según el tramo en el que te encuentras.",
+    notas: [
+      "Para nuevos colegiados. Aprobadas en Asamblea General de Puerto Chacabuco, junio 2018.",
+    ],
+  });
+
+  const lista_cuotas = [
     {
-      tipo: "Cuota entera (+ 9 años)",
+      tipo_cuota: "CUOTA ENTERA",
+      descripcion:
+        "Médicos de más de 9 años, paga el 100% de los componentes de la cuota ordinaria, especial y regional.",
+    },
+    {
+      tipo_cuota: "CUOTA JOVEN",
+      descripcion:
+        "Médicos de entre 0 y 8, 11 meses y 29 días, paga el 50% de los componentes de la cuota ordinaria, especial y regional.",
+    },
+    {
+      tipo_cuota: "CUOTA APS",
+      descripcion:
+        "Médicos que cumplidos los 9 años, trabajen un mínimo de 33 horas en APS o equivalente, sin consideración al tipo de contrato, paga el 75% de los componentes de la cuota ordinaria, especial y regional.",
+    },
+  ];
+
+  const valores_cuotas = ref({
+    columns: ["Tipo de Cuota", "Cuota", "FSG", "Cuota + FSG", "Falmed"],
+    rows: [
+      {
+        tipo: "Cuota entera (+ 9 años)",
+        cuota: "$52.104",
+        fsg: "$24.148",
+        cuota_fsg: "$76.252",
+        falmed: "$30.320",
+      },
+      {
+        tipo: "Cuota entera (3 - 9 años)",
+        cuota: "$48.418",
+        fsg: "$19.711",
+        cuota_fsg: "$68.129",
+        falmed: "$30.320",
+      },
+      {
+        tipo: "Cuota Media Joven",
+        cuota: "$26.052",
+        fsg: "$12.074",
+        cuota_fsg: "$38.126",
+        falmed: "$15.160",
+      },
+      {
+        tipo: "Cuota APS",
+        cuota: "$39.078",
+        fsg: "$18.111",
+        cuota_fsg: "$57.189",
+        falmed: "$15.160",
+      },
+    ],
+  });
+
+  const columns = [
+    {
+      name: "name",
+      required: true,
+      label: "Tipo de Cuota",
+      align: "left",
+      field: (row) => row.name.length === 0 ? 'No informado' : row.name,
+      sortable: true,
+    },
+    {
+      name: "cuota",
+      align: "center",
+      label: "Cuota",
+      // field: "cuota",
+      field: (row) => row.cuota.length === 0 ? 'No informado' : row.cuota,
+      sortable: true,
+    },
+    { name: "fsg", 
+      label: "FSG", 
+      // field: "fsg",
+      field: (row) => row.fsg.length === 0 ? 'No informado' : row.fsg,
+      sortable: true, 
+      align: "center" },
+    {
+      name: "cuota_fsg",
+      label: "Cuota + FSG",
+      field: (row) => row.cuota_fsg.length === 0 ? 'No informado' : row.cuota_fsg,
+      align: "center",
+    },
+    { 
+      name: "falmed", 
+      label: "Falmed", 
+      field: (row) => row.falmed.length === 0 ? 'No informado' : row.falmed,
+      align: "center" 
+    },
+  ];
+
+  const rows = [
+    {
+      name: "Cuota entera (+ 9 años)",
       cuota: "$52.104",
       fsg: "$24.148",
       cuota_fsg: "$76.252",
       falmed: "$30.320",
     },
     {
-      tipo: "Cuota entera (3 - 9 años)",
+      name: "Cuota entera (3 - 9 años)",
       cuota: "$48.418",
       fsg: "$19.711",
       cuota_fsg: "$68.129",
       falmed: "$30.320",
     },
     {
-      tipo: "Cuota Media Joven",
+      name: "Cuota Media Joven",
       cuota: "$26.052",
       fsg: "$12.074",
       cuota_fsg: "$38.126",
       falmed: "$15.160",
     },
     {
-      tipo: "Cuota APS",
+      name: "Cuota APS",
       cuota: "$39.078",
       fsg: "$18.111",
       cuota_fsg: "$57.189",
       falmed: "$15.160",
     },
-  ],
-});
+  ];
 
-const columns = [
-  {
-    name: "name",
-    required: true,
-    label: "Tipo de Cuota",
-    align: "left",
-    field: (row) => row.name,
-    sortable: true,
-  },
-  {
-    name: "cuota",
-    align: "center",
-    label: "Cuota",
-    field: "cuota",
-    sortable: true,
-  },
-  { name: "fsg", label: "FSG", field: "fsg", sortable: true, align: "center" },
-  {
-    name: "cuota_fsg",
-    label: "Cuota + FSG",
-    field: "cuota_fsg",
-    align: "center",
-  },
-  { name: "falmed", label: "Falmed", field: "falmed", align: "center" },
-];
+  const columns_fsg = [
+    {
+      name: "name",
+      required: true,
+      label: "Tipo de Cuota",
+      align: "left",
+      field: (row) => row.name.length === 0 ? "No informado" : row.name,
+      sortable: true,
+    },
+    {
+      name: "cuota",
+      align: "center",
+      label: "Cuota",
+      field: (row) => row.cuota.length === 0 ? "No informado" : row.cuota,
+      sortable: true,
+    },
+  ];
 
-const rows = [
-  {
-    name: "Cuota entera (+ 9 años)",
-    cuota: "$52.104",
-    fsg: "$24.148",
-    cuota_fsg: "$76.252",
-    falmed: "$30.320",
-  },
-  {
-    name: "Cuota entera (3 - 9 años)",
-    cuota: "$48.418",
-    fsg: "$19.711",
-    cuota_fsg: "$68.129",
-    falmed: "$30.320",
-  },
-  {
-    name: "Cuota Media Joven",
-    cuota: "$26.052",
-    fsg: "$12.074",
-    cuota_fsg: "$38.126",
-    falmed: "$15.160",
-  },
-  {
-    name: "Cuota APS",
-    cuota: "$39.078",
-    fsg: "$18.111",
-    cuota_fsg: "$57.189",
-    falmed: "$15.160",
-  },
-];
+  const rows_fsg = [
+    {
+      name: "Cuota Entera (+ 9 años)",
+      cuota: "$24.148",
+    },
+    {
+      name: "Cuota Entera (3 - 9 años)",
+      cuota: "$19.711",
+    },
+    {
+      name: "Cuota Media Joven",
+      cuota: "$12.074",
+    },
+    {
+      name: "Media por edad",
+      cuota: "$12.074",
+    },
+    {
+      name: "APS",
+      cuota: "$15.160",
+    },
+  ];
 
-const columns_fsg = [
-  {
-    name: "name",
-    required: true,
-    label: "Tipo de Cuota",
-    align: "left",
-    field: (row) => row.name,
-    sortable: true,
-  },
-  {
-    name: "cuota",
-    align: "center",
-    label: "Cuota",
-    field: "cuota",
-    sortable: true,
-  },
-];
+  const columns_reafiliacion = [
+    {
+      name: "name",
+      required: true,
+      label: "Años desafiliados",
+      align: "left",
+      field: (row) => row.name.length === 0 ? "No informado" : row.name,
+    },
+    {
+      name: "cuota",
+      align: "center",
+      label: "Valor reafiliación",
+      field: (row) => row.cuota.length === 0 ? "No informado" : row.cuota,
+    },
+  ];
 
-const rows_fsg = [
-  {
-    name: "Cuota Entera (+ 9 años)",
-    cuota: "$24.148",
-  },
-  {
-    name: "Cuota Entera (3 - 9 años)",
-    cuota: "$19.711",
-  },
-  {
-    name: "Cuota Media Joven",
-    cuota: "$12.074",
-  },
-  {
-    name: "Media por edad",
-    cuota: "$12.074",
-  },
-  {
-    name: "APS",
-    cuota: "$15.160",
-  },
-];
+  const rows_reafiliacion = [
+    {
+      name: "1",
+      cuota: "$74.352",
+    },
+    {
+      name: "2",
+      cuota: "$89.222",
+    },
+    {
+      name: "3",
+      cuota: "$104.092",
+    },
+    {
+      name: "4",
+      cuota: "$118.963",
+    },
+    {
+      name: "5",
+      cuota: "$133.833",
+    },
+    {
+      name: "6 o más",
+      cuota: "$148.703",
+    },
+  ];
 
-const columns_reafiliacion = [
-  {
-    name: "name",
-    required: true,
-    label: "Años desafiliados",
-    align: "left",
-    field: (row) => row.name,
-  },
-  {
-    name: "cuota",
-    align: "center",
-    label: "Valor reafiliación",
-    field: "cuota",
-  },
-];
 
-const rows_reafiliacion = [
-  {
-    name: "1",
-    cuota: "$74.352",
-  },
-  {
-    name: "2",
-    cuota: "$89.222",
-  },
-  {
-    name: "3",
-    cuota: "$104.092",
-  },
-  {
-    name: "4",
-    cuota: "$118.963",
-  },
-  {
-    name: "5",
-    cuota: "$133.833",
-  },
-  {
-    name: "6 o más",
-    cuota: "$148.703",
-  },
-];
+  onMounted(async () => {
+    await servicioStore.fetchPagos();
+    await servicioStore.fetchColegiarse();
+    await servicioStore.fetchCasaMedico();
+  });
+
+
 </script>
 
 <style lang="sass">

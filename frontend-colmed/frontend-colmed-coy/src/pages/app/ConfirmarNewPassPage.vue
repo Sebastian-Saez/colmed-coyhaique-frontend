@@ -1,97 +1,115 @@
 <template>
-  <q-page class="bg-light-blue-11 column items-center justify-center">
-    <q-card class="bg-light-blue-11 q-mx-lg" flat>
-      <div class="q-gutter-sm column items-center">
-        <q-img
-          src="~assets/CR-Region-de-Aysen_vertical_white.png"
-          alt="Colegio Médico Logo"
-          style="height: 140px; max-width: 140px"
-        />
-      </div>
-      
-      <q-separator
-        color="red-8"
-        size="2px"
-        inset
-        style="border-radius: 20px"
-        class="q-mx-lg q-mb-md"
-      />
-      
-      <q-card-section>
-        <div class="text-h4 text-primary text-center text-weight-bold">
-          Establece una nueva contraseña
-        </div>
-      </q-card-section>
-      
-      <q-separator inset/>
-      
-      <q-card-section>
-        <q-form @submit.prevent="onSubmit" style="width: 100%">
-          <q-input
-            v-model="newPassword"
-            label="Nueva contraseña"
-            type="password"
-            filled
-            required
-          />
-          <q-input
-            v-model="confirmPassword"
-            label="Confirmar contraseña"
-            type="password"
-            filled
-            required
-            class="q-mt-md"
-          />
-          <q-card-actions vertical align="center" class="q-mt-md">
-            <q-btn
-              no-caps
-              rounded
-              label="Restablecer contraseña"
-              type="submit"
-              color="primary"
-              style="width: 100%"
+  <q-layout view="lHh Lpr lFf">
+    <q-page-container>
+      <q-page class="bg-light-blue-11 column items-center justify-center">
+        <q-card class="bg-light-blue-11 q-mx-lg" flat>
+          <div class="q-gutter-sm column items-center">
+            <q-img
+              src="~assets/CR-Region-de-Aysen_vertical_white.png"
+              alt="Colegio Médico Logo"
+              style="height: 140px; max-width: 140px"
             />
-          </q-card-actions>
-          <div class="q-mt-xl">
-            <q-tooltip v-model="error" class="bg-red-1 text-body2 text-red-14" :offset="[0, 0]">
-              {{ mensajeError }}
-            </q-tooltip>
           </div>
-        </q-form>
-      </q-card-section>
-    </q-card>
-
-    <q-dialog v-model="respuestaOk" persistent>
-      <q-card class="bg-blue-2" style="border-radius:20px">
-        <q-card-section>
-          <div class="text-h5 text-primary text-weight-bold">
-            Contraseña actualizada con éxito
-          </div>
-        </q-card-section>
-        <q-card-actions align="center">
-          <q-btn
-            style="width: 40%;"
-            no-caps
-            rounded
-            color="primary"
-            @click="irALogin"
-          >
-            <div class="text-white text-center text-subtitle2">
-              Ir al inicio de sesión
+      
+          <q-separator
+            color="red-8"
+            size="2px"
+            inset
+            style="border-radius: 20px"
+            class="q-mx-lg q-mb-md"
+          />
+      
+          <q-card-section>
+            <div class="text-h4 text-primary text-center text-weight-bold">
+              Establece una nueva contraseña
             </div>
-          </q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+            
+          </q-card-section>
 
-    <q-dialog v-model="loading" persistent>
-      <q-card class="q-pa-md flex flex-center">
-        <q-spinner-dots size="50px" color="primary" />
-        <div class="q-ml-md text-primary">Actualizando contraseña</div>
-      </q-card>
-    </q-dialog>
+          <q-separator inset/>
 
-  </q-page>
+          <q-card-section>
+            <q-form style="width: 100%" @submit.prevent="onSubmit">
+              <q-input
+                v-model="newPassword"
+                label="Nueva contraseña"
+                type="password"
+                filled
+                required
+              />
+              <q-input
+                v-model="confirmPassword"
+                label="Confirmar contraseña"
+                type="password"
+                filled
+                required
+                class="q-mt-md"
+              />
+              <q-card-actions vertical align="center" class="q-mt-md">
+                <q-btn
+                  no-caps
+                  rounded
+                  label="Restablecer contraseña"
+                  type="submit"
+                  color="primary"
+                  style="width: 100%"
+                />
+              </q-card-actions>
+              <div class="q-mt-xl">
+                <q-tooltip v-model="error"   style="border-radius: 35px" class="bg-red-1 text-body2 text-red-14" :offset="[0, 0]">
+                  {{ mensajeError }}
+                </q-tooltip>
+              </div>
+            </q-form>
+          </q-card-section>
+        </q-card>
+
+        <q-dialog v-model="respuestaOk" persistent>
+          
+          <q-card class="bg-blue-2 q-pt-sm q-pb-sm" style="border-radius:20px">
+            <q-card-section class="row items-center q-pb-none">
+            <div class="text-h6 text-primary text-weight-bold text-left">
+                Contraseña actualizada con éxito
+              </div>
+            <q-space />
+            <q-btn icon="close" flat round dense @click="goHome" />
+          </q-card-section>
+            <q-card-section>
+              <!-- <div class="text-h6 text-primary text-weight-bold text-center">
+                Contraseña actualizada con éxito
+              </div> -->
+              <q-separator spaced/>
+              <div class="text-subtitle1 text-primary text-weight-light text-center">
+                Puedes acceder a la App <b>ColmedAysén</b> con tu nueva contraseña.
+              </div>
+            </q-card-section>
+           <q-card-actions align="center">
+              <q-btn
+                style="width: 40%;"
+                no-caps
+                rounded
+                color="primary"
+                @click="goHome"
+              >
+                <div class="text-white text-center text-subtitle2">
+                  Ir al Home
+                </div>
+              </q-btn>
+            </q-card-actions> 
+          </q-card>
+        </q-dialog>
+
+        <q-dialog v-model="loading" persistent>
+          <q-card class="q-pa-md flex flex-center">
+            <q-spinner-dots size="50px" color="primary" />
+            <div class="q-ml-md text-primary">Actualizando contraseña</div>
+          </q-card>
+        </q-dialog>
+
+      </q-page>
+    </q-page-container>
+  </q-layout>
+  
 </template>
 
 <script setup>
@@ -123,9 +141,9 @@ onMounted(() => {
   }
 });
 
-const irALogin = () => {
+const goHome = () => {
   respuestaOk.value = false;
-  router.push("/colmed/login-icm");
+  router.push("/home");
 }
 
 const onSubmit = async () => {

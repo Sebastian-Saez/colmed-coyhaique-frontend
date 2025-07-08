@@ -7,7 +7,7 @@
         style="height: calc(100vh - 56px)"
         :limits="[280, 280]"
       >
-        <template v-slot:before>
+        <template #before>
           <div
             class="q-pa-md text-white bg-teal q-mt-sm"
             style="width: 280px; border-radius: 20px 0px 0px 20px"
@@ -22,20 +22,20 @@
             </div>
             <div class="q-pr-sm q-pb-sm">
               <q-toggle
+                v-model="selectedEntidad"
                 color="primary"
                 label="Registros Colmed"
-                v-model="selectedEntidad"
                 val="colmed"
-                @update:model-value="filterData"
                 :disable="initFilter"
+                @update:model-value="filterData"
               />
               <q-toggle
+                v-model="selectedEntidad"
                 color="primary"
                 label="Registros Servicio de Salud"
-                v-model="selectedEntidad"
                 val="no_colegiado"
-                @update:model-value="filterData"
                 :disable="initFilter"
+                @update:model-value="filterData"
               />
             </div>
 
@@ -47,9 +47,9 @@
               <q-toggle
                 v-for="estado in estadosVisibles()"
                 :key="estado.value"
+                v-model="selectedEstadosPago"
                 color="primary"
                 :label="estado.label"
-                v-model="selectedEstadosPago"
                 :val="estado.value"
                 :disable="initFilter"
                 @update:model-value="filterData"
@@ -65,9 +65,9 @@
               <q-toggle
                 v-for="estado in estadosOcultos()"
                 :key="estado.value"
+                v-model="selectedEstadosPago"
                 color="primary"
                 :label="estado.label"
-                v-model="selectedEstadosPago"
                 :val="estado.value"
                 :disable="initFilter"
                 @update:model-value="filterData"
@@ -92,25 +92,25 @@
                   :disable="initFilter"
                 >
                   <q-popup-proxy
-                    @before-show="updateProxyStartBirthdate"
                     cover
                     transition-show="scale"
                     transition-hide="scale"
+                    @before-show="updateProxyStartBirthdate"
                   >
                     <q-date v-model="startDateBirthdate">
                       <div class="row items-center justify-end q-gutter-sm">
                         <q-btn
+                          v-close-popup
                           label="Cancel"
-                          @click="cancelStartDateBirthdate"
                           color="primary"
                           flat
-                          v-close-popup
+                          @click="cancelStartDateBirthdate"
                         />
                         <q-btn
+                          v-close-popup
                           label="OK"
                           color="primary"
                           flat
-                          v-close-popup
                           @click="saveBirthdate"
                         />
                         <!-- @click="save"  -->
@@ -130,25 +130,25 @@
                   :disable="initFilter"
                 >
                   <q-popup-proxy
-                    @before-show="updateProxyEndBirthdate"
                     cover
                     transition-show="scale"
                     transition-hide="scale"
+                    @before-show="updateProxyEndBirthdate"
                   >
                     <q-date v-model="endDateBirthdate">
                       <div class="row items-center justify-end q-gutter-sm">
                         <q-btn
+                          v-close-popup
                           label="Cancel"
-                          @click="cancelEndDateBirthdate"
                           color="primary"
                           flat
-                          v-close-popup
+                          @click="cancelEndDateBirthdate"
                         />
                         <q-btn
+                          v-close-popup
                           label="OK"
                           color="primary"
                           flat
-                          v-close-popup
                           @click="saveBirthdate"
                         />
                         <!-- @click="save"  -->
@@ -159,7 +159,7 @@
               </div>
               <div class="q-pa-xs q-gutter-xs">
                 <q-breadcrumbs class="text-grey-14" align="center">
-                  <template v-slot:separator>
+                  <template #separator>
                     <q-icon size="1.2em" name="arrow_forward" color="white" />
                   </template>
                   <q-breadcrumbs-el
@@ -298,25 +298,25 @@
                   :disable="initFilter"
                 >
                   <q-popup-proxy
-                    @before-show="updateProxyStartTitledate"
                     cover
                     transition-show="scale"
                     transition-hide="scale"
+                    @before-show="updateProxyStartTitledate"
                   >
                     <q-date v-model="startDateTitle">
                       <div class="row items-center justify-end q-gutter-sm">
                         <q-btn
+                          v-close-popup
                           label="Cancel"
-                          @click="cancelStartDateTitle"
                           color="primary"
                           flat
-                          v-close-popup
+                          @click="cancelStartDateTitle"
                         />
                         <q-btn
+                          v-close-popup
                           label="OK"
                           color="primary"
                           flat
-                          v-close-popup
                           @click="saveTitledate"
                         />
                         <!-- @click="save"  -->
@@ -336,25 +336,25 @@
                   :disable="initFilter"
                 >
                   <q-popup-proxy
-                    @before-show="updateProxyEndTitledate"
                     cover
                     transition-show="scale"
                     transition-hide="scale"
+                    @before-show="updateProxyEndTitledate"
                   >
                     <q-date v-model="endDateTitle">
                       <div class="row items-center justify-end q-gutter-sm">
                         <q-btn
+                          v-close-popup
                           label="Cancel"
-                          @click="cancelEndDateTitle"
                           color="primary"
                           flat
-                          v-close-popup
+                          @click="cancelEndDateTitle"
                         />
                         <q-btn
+                          v-close-popup
                           label="OK"
                           color="primary"
                           flat
-                          v-close-popup
                           @click="saveTitledate"
                         />
                         <!-- @click="save"  -->
@@ -365,7 +365,7 @@
               </div>
               <div class="q-pa-xs q-gutter-xs">
                 <q-breadcrumbs class="text-grey-14" align="center">
-                  <template v-slot:separator>
+                  <template #separator>
                     <q-icon size="1.2em" name="arrow_forward" color="white" />
                   </template>
                   <q-breadcrumbs-el
@@ -415,25 +415,25 @@
                   :disable="initFilter"
                 >
                   <q-popup-proxy
-                    @before-show="updateProxyStartInscriptiondate"
                     cover
                     transition-show="scale"
                     transition-hide="scale"
+                    @before-show="updateProxyStartInscriptiondate"
                   >
                     <q-date v-model="startDateInscription">
                       <div class="row items-center justify-end q-gutter-sm">
                         <q-btn
+                          v-close-popup
                           label="Cancel"
-                          @click="cancelStartDateInscription"
                           color="primary"
                           flat
-                          v-close-popup
+                          @click="cancelStartDateInscription"
                         />
                         <q-btn
+                          v-close-popup
                           label="OK"
                           color="primary"
                           flat
-                          v-close-popup
                           @click="saveInscriptiondate"
                         />
                         <!-- @click="save"  -->
@@ -453,25 +453,25 @@
                   :disable="initFilter"
                 >
                   <q-popup-proxy
-                    @before-show="updateProxyEndInscriptiondate"
                     cover
                     transition-show="scale"
                     transition-hide="scale"
+                    @before-show="updateProxyEndInscriptiondate"
                   >
                     <q-date v-model="endDateInscription">
                       <div class="row items-center justify-end q-gutter-sm">
                         <q-btn
+                          v-close-popup
                           label="Cancel"
-                          @click="cancelEndDateInscription"
                           color="primary"
                           flat
-                          v-close-popup
+                          @click="cancelEndDateInscription"
                         />
                         <q-btn
+                          v-close-popup
                           label="OK"
                           color="primary"
                           flat
-                          v-close-popup
                           @click="saveInscriptiondate"
                         />
                         <!-- @click="save"  -->
@@ -482,7 +482,7 @@
               </div>
               <div class="q-pa-xs q-gutter-xs">
                 <q-breadcrumbs class="text-white" align="center">
-                  <template v-slot:separator>
+                  <template #separator>
                     <q-icon size="1.2em" name="arrow_forward" color="white" />
                   </template>
                   <q-breadcrumbs-el
@@ -642,7 +642,6 @@
             <q-separator spaced />
             <div class="row justify-end">
               <q-btn
-                rounded
                 v-if="
                   selectedEntidad.length ||
                   selectedEstadosPago.length ||
@@ -653,6 +652,7 @@
                   startDateInscription ||
                   endDateInscription
                 "
+                rounded
                 class="q-ml-sm"
                 color="light-blue-10"
                 label="Limpiar filtros"
@@ -663,18 +663,18 @@
           </div>
         </template>
 
-        <template v-slot:after>
+        <template #after>
           <q-inner-loading :showing="!loading">
             <div class="text-overline">Cargando datos...</div>
             <q-spinner-dots color="primary" size="2em"
           /></q-inner-loading>
-          <div class="q-pa-sm" v-if="loading">
+          <div v-if="loading" class="q-pa-sm">
             <q-table
+              v-model:pagination="pagination"
               :rows="medicosFiltrados ? medicosFiltrados : medicos"
               :columns="columns"
               row-key="rut"
               :filter="filter"
-              v-model:pagination="pagination"
               :rows-per-page-options="[6, 18, 60]"
               :grid="gridMode"
               :card-class="gridMode ? '' : 'bg-lime-1 text-dark'"
@@ -683,7 +683,7 @@
               "
               class="my-sticky-virtscroll-table"
             >
-              <template v-slot:top>
+              <template #top>
                 <q-card flat style="width: 100%" class="bg-lime-1">
                   <div class="text-primary q-ml-md">
                     <div class="text-h5 text-weight-medium">
@@ -704,7 +704,7 @@
                         dense
                         rounded
                       >
-                        <template v-slot:append>
+                        <template #append>
                           <q-icon name="search" />
                         </template>
                       </q-input>
@@ -714,9 +714,9 @@
 
                     <q-card-actions align="right" class="q-ml-xl">
                       <q-toggle
+                        v-model="gridMode"
                         color="red-10"
                         label="Cambiar formato de tabla"
-                        v-model="gridMode"
                         val="yellow"
                         class="q-ml-xl text-primary text-weight-regular"
                       />
@@ -766,8 +766,8 @@
                       <div class="col">
                         <q-toggle
                           v-for="afiliacion in estadosAfiliaciones"
-                          v-model="selectedEstadosAfiliaciones"
                           :key="afiliacion"
+                          v-model="selectedEstadosAfiliaciones"
                           :label="afiliacion"
                           color="red-10"
                           :val="afiliacion"
@@ -822,7 +822,7 @@
                   </template>
                 </q-input>
               </template> -->
-              <template v-if="gridMode" v-slot:item="props">
+              <template v-if="gridMode" #item="props">
                 <div
                   class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-4 grid-style-transition"
                 >
@@ -1129,14 +1129,14 @@
           </q-tab-panel>
 
           <q-tab-panel name="superintendencia">
-            <div class="text-semibold text-secondary" v-if="!certificadoSuper">
+            <div v-if="!certificadoSuper" class="text-semibold text-secondary">
               No hay registros en el sistema.
             </div>
             <q-list
+              v-if="certificadoSuper"
               bordered
               style="border-radius: 20px 0px 20px 20px"
               class="q-pb-md text-primary"
-              v-if="certificadoSuper"
             >
               <q-scroll-area
                 visible
@@ -1469,7 +1469,7 @@ const columns = [
       const afiliacionColmed = row.afiliaciones?.find(
         (afiliacion) => afiliacion.entidad?.sigla === "COLMED"
       );
-
+      
       // Retornar la condición de afiliado o "No aplica"
       return afiliacionColmed
         ? afiliacionColmed.condicion_afiliado || "No informado"
@@ -1571,10 +1571,14 @@ const columns = [
       );
 
       // Retornar la condición de afiliado o "No aplica"
-      return afiliacionColmed
-        ? afiliacionColmed.estamento.nombre_estamento +
-            " Cod: " +
-            afiliacionColmed.estamento.codigo_estamento || "No informado"
+      // return afiliacionColmed
+      //   ? afiliacionColmed.estamento.nombre_estamento +
+      //       " Cod: " +
+      //       afiliacionColmed.estamento.codigo_estamento || "No informado"
+      //   : "No informado";
+
+          return afiliacionColmed?.estamento
+        ? `${afiliacionColmed.estamento.nombre_estamento} Cod: ${afiliacionColmed.estamento.codigo_estamento}`
         : "No informado";
     },
     format: (val) => val,
@@ -1754,11 +1758,15 @@ const columns = [
       );
 
       // Retornar la condición de afiliado o "No aplica"
-      return afiliacionFSG
-        ? afiliacionFSG.estamento.nombre_estamento +
-            " Cod: " +
-            afiliacionFSG.estamento.codigo_estamento || "No informado"
+      return afiliacionFSG?.estamento
+        ? `${afiliacionFSG.estamento.nombre_estamento} Cod: ${afiliacionFSG.estamento.codigo_estamento}`
         : "No informado";
+
+      // return afiliacionFSG
+      //   ? afiliacionFSG.estamento.nombre_estamento +
+      //       " Cod: " +
+      //       afiliacionFSG.estamento.codigo_estamento || "No informado"
+      //   : "No informado";
     },
     format: (val) => val,
     sortable: true,
@@ -1816,9 +1824,10 @@ const columns = [
       );
 
       // Retornar la condición de afiliado o "No aplica"
-      return afiliacionFSG
-        ? afiliacionFSG.lugar_descuento.nombre_lugar || "No informado"
-        : "No informado";
+      // return afiliacionFSG
+      //   ? afiliacionFSG.lugar_descuento.nombre_lugar || "No informado"
+      //   : "No informado";
+      return afiliacionFSG?.lugar_descuento?.nombre_lugar || "No informado";
     },
     format: (val) => val,
     sortable: true,
@@ -1937,10 +1946,13 @@ const columns = [
       );
 
       // Retornar la condición de afiliado o "No aplica"
-      return afiliacionFALMED
-        ? afiliacionFALMED.estamento.nombre_estamento +
-            " Cod: " +
-            afiliacionFALMED.estamento.codigo_estamento || "No informado"
+      // return afiliacionFALMED
+      //   ? afiliacionFALMED.estamento.nombre_estamento +
+      //       " Cod: " +
+      //       afiliacionFALMED.estamento.codigo_estamento || "No informado"
+      //   : "No informado";
+      return afiliacionFALMED?.estamento
+        ? `${afiliacionFALMED.estamento.nombre_estamento} Cod: ${afiliacionFALMED.estamento.codigo_estamento}`
         : "No informado";
     },
     format: (val) => val,
@@ -1999,9 +2011,11 @@ const columns = [
       );
 
       // Retornar la condición de afiliado o "No aplica"
-      return afiliacionFALMED
-        ? afiliacionFALMED.lugar_descuento.nombre_lugar || "No informado"
-        : "No informado";
+      // return afiliacionFALMED
+      //   ? afiliacionFALMED.lugar_descuento.nombre_lugar || "No informado"
+      //   : "No informado";
+
+      return afiliacionFALMED?.lugar_descuento?.nombre_lugar || "No informado";
     },
     format: (val) => val,
     sortable: true,
@@ -2120,10 +2134,14 @@ const columns = [
       );
 
       // Retornar la condición de afiliado o "No aplica"
-      return afiliacionClub
-        ? afiliacionClub.estamento.nombre_estamento +
-            " Cod: " +
-            afiliacionClub.estamento.codigo_estamento || "No informado"
+      // return afiliacionClub
+      //   ? afiliacionClub.estamento.nombre_estamento +
+      //       " Cod: " +
+      //       afiliacionClub.estamento.codigo_estamento || "No informado"
+      //   : "No informado";
+
+      return afiliacionClub?.estamento
+        ? `${afiliacionClub.estamento.nombre_estamento} Cod: ${afiliacionClub.estamento.codigo_estamento}`
         : "No informado";
     },
     format: (val) => val,
@@ -2182,9 +2200,11 @@ const columns = [
       );
 
       // Retornar la condición de afiliado o "No aplica"
-      return afiliacionClub
-        ? afiliacionClub.lugar_descuento.nombre_lugar || "No informado"
-        : "No informado";
+      // return afiliacionClub
+      //   ? afiliacionClub.lugar_descuento.nombre_lugar || "No informado"
+      //   : "No informado";
+
+      return afiliacionClub?.lugar_descuento?.nombre_lugar || "No informado";
     },
     format: (val) => val,
     sortable: true,

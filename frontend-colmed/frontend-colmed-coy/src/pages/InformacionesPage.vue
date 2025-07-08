@@ -6,11 +6,11 @@
         :class="isLargeScreen ? 'q-mx-xl q-px-xl' : ''"
       >
         <!-- <ToolbarSection :isLargeScreen="isLargeScreen" /> -->
-        <ToolbarSection :screenSize="screenSize" />
+        <ToolbarSection :screen-size="screenSize" />
         <q-card
+          v-if="tabInformacion == 'noticias'"
           class="q-pa-md bg-grey-2"
           :class="isLargeScreen ? 'q-ml-lg q-mr-xl' : 'q-mx-lg'"
-          v-if="tabInformacion == 'noticias'"
           style="border-radius: 20px"
         >
           <div class="text-h4 text-bold text-primary">Todas las noticias</div>
@@ -160,13 +160,13 @@
                   />
                 </q-card-actions>
               </q-card> -->
-              <q-separator class="q-mt-lg" v-if="!isLargeScreen" />
+              <q-separator v-if="!isLargeScreen" class="q-mt-lg" />
             </div>
           </div>
         </q-card>
         <q-card
-          class="q-pa-md bg-grey-2"
           v-else-if="tabInformacion == 'eventos'"
+          class="q-pa-md bg-grey-2"
           :class="isLargeScreen ? 'q-ml-lg q-mr-xl' : 'q-mx-lg'"
           style="border-radius: 20px"
         >
@@ -229,31 +229,13 @@
                   </q-btn>
                 </q-card-section>
               </q-card>
-              <!-- <q-img
-                :ratio="4 / 3"
-                :src="evento.img"
-                alt="Evento"
-                class="rounded-md q-mt-md"
-              />
-              <div class="text-h4 text-bold text-primary q-mt-md">
-                {{ evento.title }}
-              </div>
-              <div class="text-subtitle1 q-mt-md">
-                {{ evento.description }}
-              </div>
-              <q-btn
-                flat
-                no-caps
-                label="Leer"
-                icon-right="arrow_forward"
-                class="text-primary q-mt-md"
-              /> -->
+
             </div>
           </div>
         </q-card>
         <q-card
-          class="q-pa-md bg-grey-2"
           v-else-if="tabInformacion == 'convenios'"
+          class="q-pa-md bg-grey-2"
           :class="isLargeScreen ? 'q-ml-lg q-mr-xl' : 'q-mx-lg'"
           style="border-radius: 20px"
         >
@@ -264,7 +246,7 @@
             style="height: 400px"
             :limits="computedLimits"
           >
-            <template v-slot:before>
+            <template #before>
               <q-tabs
                 v-model="tab"
                 vertical
@@ -296,7 +278,7 @@
                 />
               </q-tabs>
             </template>
-            <template v-slot:after>
+            <template #after>
               <q-tab-panels
                 v-model="tab"
                 animated
@@ -309,7 +291,7 @@
                 <q-tab-panel name="nacionales" class="bg-grey-2">
                   <div class="row q-col-gutter-md">
                     <div
-                      v-for="(convenio, index) in convenios.nacionales"
+                      v-for="(convenio, index) in todos_convenios.nacionales"
                       :key="index"
                       class="col-12 col-md-4"
                     >
@@ -358,7 +340,7 @@
                         color="deep-orange-9"
                         outline
                         target="_blank"
-                        href="https://www.colegiomedico.cl/convenios-colmed/"
+                        :href="todos_convenios.todos_convenios_link"
                         icon-right="o"
                         ><div
                           class="text-primary text-h6 text-weight-regular q-px-lg"
@@ -377,7 +359,7 @@
                 <q-tab-panel name="regionales" class="bg-grey-2">
                   <div class="row q-col-gutter-md">
                     <div
-                      v-for="(convenio, index) in convenios.regionales"
+                      v-for="(convenio, index) in todos_convenios.regionales"
                       :key="index"
                       class="col-12 col-md-4"
                     >
@@ -410,7 +392,7 @@
             </template>
           </q-splitter>
         </q-card>
-        <q-card class="q-mx-xl q-pa-md bg-white" v-else>
+        <q-card v-else class="q-mx-xl q-pa-md bg-white">
           <div class="text-h6 text-bold text-primary">Página en desarrollo</div>
         </q-card>
       </div>
@@ -447,7 +429,7 @@
       </q-dialog>
     </div>
     <!-- <FooterSection :isLargeScreen="isLargeScreen" /> -->
-    <FooterSection :screenSize="screenSize" />
+    <FooterSection :screen-size="screenSize" />
   </q-layout>
 </template>
 <script setup>
@@ -456,6 +438,7 @@ import FooterSection from "src/components/FooterSection.vue";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { useInformacionesStore } from "src/stores/informaciones";
+import { useConveniosStore } from "src/stores/convenios";
 import { useCalendarStore } from "src/stores/calendar";
 import { useEventosStore } from "src/stores/eventos";
 import { computed, ref, onMounted } from "vue";
@@ -480,6 +463,7 @@ const screenSize = computed(() => {
 const informacionStore = useInformacionesStore();
 const eventosStore = useEventosStore();
 const calendarStore = useCalendarStore();
+const conveniosStore = useConveniosStore();
 const router = useRouter();
 
 // Estado local
@@ -547,6 +531,9 @@ const categoriaInformacion = computed(
 const tabInformacion = ref(categoriaInformacion);
 const todas_noticias = computed(() => informacionStore.todas_noticias);
 const todos_eventos = computed(() => eventosStore.eventos_base);
+const todos_convenios = computed(() => conveniosStore.convenios || {});
+const loading_convenios = computed(() => conveniosStore.loading || false);
+
 const loading = computed(() => informacionStore.loading);
 const eventos = computed(() => calendarStore.events);
 const computedLimits = computed(() => {
@@ -561,9 +548,8 @@ onMounted(async () => {
 
   await informacionStore.fetchTodasNoticias();
   await eventosStore.fetchEventosBase();
+  await conveniosStore.fetchConvenios();
 
-  await informacionStore.fetchTodasNoticias();
-  await eventosStore.fetchEventosBase();
   // if (categoriaInformacion.value) {
   //   console.log("Categoria ", categoriaInformacion.value);
   //   informacionStore.setCategoriaInformacion(categoriaInformacion.value);

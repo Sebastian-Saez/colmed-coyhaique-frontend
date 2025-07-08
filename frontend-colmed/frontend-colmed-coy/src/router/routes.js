@@ -90,13 +90,20 @@ const routes = [
         component: () => import("src/pages/app/ResetPassPage.vue"),
       },
       // 4) CONFIRMAR RESETEO (NUEVA CONTRASEÑA)
-      {
-        path: "confirm-pass-reset",
-        component: () => import("src/pages/app/ConfirmarNewPassPage.vue"),
-      },
+      // {
+      //   path: "confirm-pass-reset",
+      //   component: () => import("src/pages/app/ConfirmarNewPassPage.vue"),
+      // },
     ],
   },
   //Fin sección rutas para la aplicación móvil
+
+  //Link de reseto de contraseña para aplicación móvil
+  {
+    path: "/colmed-app/confirm-pass-reset",
+    component: () => import("src/pages/app/ConfirmarNewPassPage.vue"),
+  },
+
 
   {
     path: "/home",
@@ -121,6 +128,10 @@ const routes = [
   {
     path: "/admin-eventos",
     component: () => import("src/pages/AdminSitioPage.vue"),
+  },
+  {
+    path: "/admin-toolbar",
+    component: () => import("src/pages/AdminToolbarPage.vue"),
   },
   {
     path: "/servicios",

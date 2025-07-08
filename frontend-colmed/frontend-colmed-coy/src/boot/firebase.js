@@ -53,7 +53,6 @@ async function initCapacitorListeners() {
   // Escuchar cuando la app pasa a primer plano
   App.addListener('appStateChange', (state) => {
     if (state.isActive) {
-      console.log("La app ha vuelto a primer plano, verificando permisos...");
       updateNotificationPermission();
     }
   });

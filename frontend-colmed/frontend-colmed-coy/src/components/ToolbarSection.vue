@@ -40,8 +40,8 @@
           flat
           size="xl"
           :icon="menuVisible ? 'close' : 'menu'"
-          @click="menuVisible = !menuVisible"
           class="q-ml-xl"
+          @click="menuVisible = !menuVisible"
         >
           <!-- Opciones de Menú -->
           <q-menu
@@ -135,33 +135,38 @@
                 expand-icon-class="text-white"
                 class="text-weight-regular text-center"
               >
-                <q-list>
-                  <q-item
-                    v-for="val in lista_contactos"
-                    :key="val.clave"
-                    clickable
-                    @click="onItemClickContactos(val)"
-                  >
+                <q-list dense>
+  <!-- Cuando hay datos -->
+                  <template v-if="lista_contactos.length">
+                    <q-item
+                      v-for="item in lista_contactos"
+                      :key="item.id"
+                      v-close-popup
+                      clickable
+                      @click="onItemClickContactos(item)"
+                    >
+                      <q-item-section avatar>
+                        <q-avatar :icon="item.icono" flat size="md" text-color="primary" />
+                      </q-item-section>
+                    
+                      <q-item-section>
+                        <!-- text-overline quedaba chico; caption = 0.75rem -->
+                        <q-item-label caption>{{ item.label }}</q-item-label>
+                        <q-item-label class="text-primary text-caption">
+                          {{ item.nombre }}
+                          <q-icon class="q-pl-xs" :name="item.icono_accion" />
+                        </q-item-label>
+                      </q-item-section>
+                      <q-separator spaced  size="3m"/>
+                    </q-item>
+                  </template>
+                
+                  <!-- Cuando la API no devuelve contactos -->
+                  <q-item v-else>
                     <q-item-section>
-                      <div class="text-overline">
-                        {{ val.label }}: {{ val.nombre
-                        }}<q-icon class="q-pl-md" :name="val.icono_accion" />
-                      </div>
+                      <q-item-label caption>No hay contactos públicos</q-item-label>
                     </q-item-section>
                   </q-item>
-                  <!-- v-if="!isLargeScreen" -->
-                  <q-popup-proxy
-                    v-if="screenSize == 'xs' || screenSize == 'sm'"
-                    v-model="messagePopup.visible"
-                    transition-show="scale"
-                    transition-hide="scale"
-                    anchor="bottom middle"
-                    self="top middle"
-                  >
-                    <div class="q-pa-sm text-white bg-grey rounded-borders">
-                      {{ messagePopup.message }}
-                    </div>
-                  </q-popup-proxy>
                 </q-list>
               </q-expansion-item>
               <q-card flat>
@@ -413,20 +418,20 @@
             <!-- :anchor="menuQuienesSomos" -->
             <q-menu
               v-model="dropdownVisible.quienesSomos"
-              @mouseenter="clearCloseTimer('quienesSomos')"
-              @mouseleave="startCloseTimer('quienesSomos')"
               transition-show="flip-down"
               transition-hide="flip-up"
               :offset="[-25, 10]"
               style="border-radius: 20px"
               class="bg-blue-1"
+              @mouseenter="clearCloseTimer('quienesSomos')"
+              @mouseleave="startCloseTimer('quienesSomos')"
             >
               <q-list dense>
                 <q-item
-                  clickable
-                  @click="onItemClickQuienesSomos(val)"
                   v-for="val in lista_quienes_somos"
                   :key="val.clave"
+                  clickable
+                  @click="onItemClickQuienesSomos(val)"
                 >
                   <q-item-section>
                     <q-item-label
@@ -475,20 +480,20 @@
             <!-- :anchor="menuServicios" -->
             <q-menu
               v-model="dropdownVisible.servicios"
-              @mouseenter="clearCloseTimer('servicios')"
-              @mouseleave="startCloseTimer('servicios')"
               transition-show="flip-down"
               transition-hide="flip-up"
               :offset="[-25, 10]"
               style="border-radius: 20px"
               class="bg-light-green-1"
+              @mouseenter="clearCloseTimer('servicios')"
+              @mouseleave="startCloseTimer('servicios')"
             >
               <q-list dense>
                 <q-item
-                  clickable
-                  @click="onItemClickServicios(val)"
                   v-for="val in lista_servicios"
                   :key="val.clave"
+                  clickable
+                  @click="onItemClickServicios(val)"
                 >
                   <q-item-section>
                     <q-item-label
@@ -541,20 +546,20 @@
             <!-- :anchor="menuInformaciones" -->
             <q-menu
               v-model="dropdownVisible.informaciones"
-              @mouseenter="clearCloseTimer('informaciones')"
-              @mouseleave="startCloseTimer('informaciones')"
               transition-show="flip-down"
               transition-hide="flip-up"
               :offset="[-25, 10]"
               style="border-radius: 20px"
               class="bg-deep-orange-1"
+              @mouseenter="clearCloseTimer('informaciones')"
+              @mouseleave="startCloseTimer('informaciones')"
             >
               <q-list dense>
                 <q-item
-                  clickable
-                  @click="onItemClickInformaciones(val)"
                   v-for="val in lista_informaciones"
                   :key="val.clave"
+                  clickable
+                  @click="onItemClickInformaciones(val)"
                 >
                   <q-item-section>
                     <q-item-label
@@ -603,25 +608,25 @@
             <!-- :anchor="menuLinks" -->
             <q-menu
               v-model="dropdownVisible.links"
-              @mouseenter="clearCloseTimer('links')"
-              @mouseleave="startCloseTimer('links')"
               transition-show="flip-down"
               transition-hide="flip-up"
               :offset="[-25, 10]"
               style="border-radius: 20px"
               class="bg-orange-1"
+              @mouseenter="clearCloseTimer('links')"
+              @mouseleave="startCloseTimer('links')"
             >
               <q-list dense>
                 <q-item
+                  v-for="val in links_publicos"
+                  :key="val.clave"
                   clickable
                   @click="onItemLinksInteres(val)"
-                  v-for="val in links_interes"
-                  :key="val.clave"
                 >
                   <q-item-section>
                     <q-item-label
                       class="text-weight-medium text-primary text-caption q-mx-xs"
-                      >{{ val.nombre }}</q-item-label
+                      >{{ val.descripcion }}</q-item-label
                     >
                   </q-item-section>
                   <q-item-section avatar>
@@ -745,13 +750,15 @@ defineOptions({
   name: "ToolbarSection",
 });
 
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, onMounted } from "vue";
 import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 
 import { useSomosStore } from "src/stores/quienesSomos";
 import { useServicioStore } from "src/stores/servicios";
 import { useInformacionesStore } from "src/stores/informaciones";
+import { useLinksInteresStore } from "src/stores/interes";
+import { useContactoStore } from "src/stores/contactoInteres";
 import { copyToClipboard } from "quasar";
 
 // defineProps({
@@ -791,6 +798,13 @@ const menuInformaciones = ref(null);
 const menuLinks = ref(null);
 const menuQuienesSomos = ref(null);
 
+const contactoStore = useContactoStore();
+const linksStore = useLinksInteresStore();
+
+
+const links_publicos = computed(() => linksStore.links_publicos || []);
+const contactos_interes = computed (() => contactoStore.todos_contactos || []);
+
 const contacto_colmed_aysen = ref({
   numero_telefono: "67-2232833",
   direccion_colmed_aysen: "Pdte. Montt Nº 69, Coyhaique",
@@ -817,6 +831,18 @@ const servicioStore = useServicioStore();
 const somosStore = useSomosStore();
 const informacionStore = useInformacionesStore();
 
+
+const mision_vision = computed(() => somosStore.mision_vision || {});
+const normativas = computed(() => somosStore.normativas || []);
+const directiva = computed(() => somosStore.directiva || []);
+const departamentos = computed(() => somosStore.departamentos || []);
+const agrupaciones_regionales = computed(() => somosStore.agrupaciones_regionales || []);
+const capitulos = computed(() => somosStore.capitulos || []);
+const tribunal_etica = computed(() => somosStore.tribunal_etica || {});
+
+
+
+
 // Redirigir a home
 const goHome = () => {
   router.push("/home");
@@ -835,6 +861,11 @@ const startCloseTimer = (dropdownName) => {
     dropdownVisible.value[dropdownName] = false;
   }, 150); // Adjust the delay as needed
 };
+
+  const filteredContacts = computed(() => ({
+      publico: contactos_interes.value.filter(c => c.privado === false),
+      privado: contactos_interes.value.filter(c => c.privado === true)
+  }));
 
 const links_interes = ref([
   {
@@ -859,32 +890,60 @@ const links_interes = ref([
   },
 ]);
 
-const lista_quienes_somos = [
-  {
-    clave: "mision",
-    nombre: "Misión y Visión",
-  },
-  {
-    clave: "normativa",
-    nombre: "Normativa",
-  },
-  {
-    clave: "directiva",
-    nombre: "Directiva",
-  },
-  // {
-  //   clave: "transparencia",
-  //   nombre: "Transparencia",
-  // },
-  // {
-  //   clave: "colmed",
-  //   nombre: "Colegio Médico de Chile",
-  // },
-  // {
-  //   clave:"links",
-  //   nombre: "Links de interés"
-  // }
-];
+// const lista_quienes_somos = [
+//   {
+//     clave: "mision",
+//     nombre: "Misión y Visión",
+//   },
+//   {
+//     clave: "normativa",
+//     nombre: "Normativa",
+//   },
+//   {
+//     clave: "directiva",
+//     nombre: "Directiva",
+//   },
+// ];
+
+const lista_quienes_somos = computed(() => {
+  const out = [];
+
+  if (mision_vision.value && Object.keys(mision_vision.value).length) {
+    out.push({ clave: 'mision', nombre: 'Misión y Visión' })
+  }
+
+  if (Array.isArray(normativas.value) && normativas.value.length) {
+    out.push({ clave: 'normativa', nombre: 'Normativa' })
+  }
+
+  if (Array.isArray(directiva.value) && directiva.value.length) {
+    out.push({ clave: 'directiva', nombre: 'Directiva' })
+  }
+
+  if (Array.isArray(departamentos.value) && departamentos.value.length) {
+    out.push({ clave: 'departamentos', nombre: 'Departamentos' })
+  }
+
+  if (Array.isArray(agrupaciones_regionales.value) && agrupaciones_regionales.value.length) {
+    out.push({ clave: 'agrupaciones_regionales', nombre: 'Agrupaciones Regionales' })
+  }
+
+  if (Array.isArray(capitulos.value) && capitulos.value.length) {
+    out.push({ clave: 'capitulos', nombre: 'Capítulos' })
+  }
+
+  const te = tribunal_etica.value
+  const tieneTE =
+    te &&
+    ( (te.descripcion && te.descripcion.trim().length) ||
+      (Array.isArray(te.directiva) && te.directiva.length) )
+
+  if (tieneTE) {
+    out.push({ clave: 'tribunal_etica', nombre: 'Tribunal de Ética' })
+  }
+
+  return out
+})
 
 const lista_servicios = [
   {
@@ -916,32 +975,52 @@ const lista_informaciones = [
   },
 ];
 
-const lista_contactos = reactive([
-  {
-    clave: "telefono",
-    nombre: contacto_colmed_aysen.value.numero_telefono,
-    label: "Teléfono",
-    icono: "call",
-    tooltipText: "¡Teléfono copiado al portapapeles!",
-    icono_accion: "content_copy",
-  },
-  {
-    clave: "direccion",
-    nombre: contacto_colmed_aysen.value.direccion_colmed_aysen,
-    label: "Dirección",
-    icono: "pin_drop",
-    tooltipText: "¡Dirección copiada al portapapeles!",
-    icono_accion: "content_copy",
-  },
-  {
-    clave: "correo",
-    nombre: contacto_colmed_aysen.value.correo_colmed_aysen,
-    label: "Correo",
-    icono: "contact_mail",
-    icono_accion: "email",
-    tooltipText: "",
-  },
-]);
+const lista_contactos = computed(() => {
+  const contactos = filteredContacts.value.publico ?? []
+
+  /* aplanamos cada contacto en 1-3 ítems (teléfono, dirección, email) */
+  return contactos.flatMap((c, idx) => {
+    const items = []
+
+    if (c.telefono) {
+      items.push({
+        id: `tel-${idx}`,
+        clave: 'telefono',
+        nombre: c.telefono,
+        label: `${c.nombre} · Teléfono`,
+        icono: 'call',
+        icono_accion: 'content_copy',
+        tooltipText: '¡Teléfono copiado al portapapeles!',
+      })
+    }
+
+    if (c.direccion) {
+      items.push({
+        id: `dir-${idx}`,
+        clave: 'direccion',
+        nombre: c.direccion,
+        label: `${c.nombre} · Dirección`,
+        icono: 'pin_drop',
+        icono_accion: 'content_copy',
+        tooltipText: '¡Dirección copiada al portapapeles!',
+      })
+    }
+
+    if (c.email) {
+      items.push({
+        id: `mail-${idx}`,
+        clave: 'correo',
+        nombre: c.email,
+        label: `${c.nombre} · Correo`,
+        icono: 'contact_mail',
+        icono_accion: 'email',          // abrir mail
+        tooltipText: '',
+      })
+    }
+    return items
+  })
+})
+
 
 const goMiColmed = () => {
   window.open(
@@ -958,7 +1037,10 @@ const onItemClickQuienesSomos = (val) => {
     case "mision":
     case "normativa":
     case "directiva":
-    case "transparencia":
+    case "departamentos":
+    case "agrupaciones_regionales":
+    case "capitulos":
+    case "tribunal_etica":
       somosStore.setCategoriaSomos(val.clave);
       router.push("/quienes-somos");
       break;
@@ -977,16 +1059,17 @@ const onItemClickQuienesSomos = (val) => {
 const onItemLinksInteres = (val) => {
   menuVisible.value = false;
   dropdownVisible.value.links = false;
-  switch (val.clave) {
-    case "colmed":
-    case "fsg":
-    case "falmed":
-    case "club":
-      window.open(val.valor, "_blank", "noopener,noreferrer");
-      break;
-    default:
-      console.log("Error en valor : ", val);
-  }
+  window.open(val.url, "_blank", "noopener,noreferrer");
+  // switch (val.clave) {
+  //   case "colmed":
+  //   case "fsg":
+  //   case "falmed":
+  //   case "club":
+  //     window.open(val.url, "_blank", "noopener,noreferrer");
+  //     break;
+  //   default:
+  //     console.log("Error en valor : ", val);
+  // }
 };
 
 const onItemClickServicios = (val) => {
@@ -1041,6 +1124,25 @@ const onItemClickContactos = (val) => {
       console.log("Error en valor: ", val);
   }
 };
+
+  onMounted(async () => {
+    await contactoStore.fetchContactos();
+    await linksStore.fetchLinksInteresPublicos();
+
+    await somosStore.fetchMisionVision();
+
+    await somosStore.fetchNormativa();
+
+    await somosStore.fetchDirectiva();
+
+    await somosStore.fetchDepartamentos();
+
+    await somosStore.fetchAgrupacionRegional();
+
+    await somosStore.fetchCapitulos();
+
+    await somosStore.fetchTribunalEtica();
+  });
 
 const irALogin = () => {
   router.push("/login"); // Redirección a la página de login

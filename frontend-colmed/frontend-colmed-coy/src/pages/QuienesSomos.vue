@@ -6,7 +6,7 @@
         :class="isLargeScreen ? 'q-mx-xl q-px-xl' : ''"
       >
         <!-- <ToolbarSection :isLargeScreen="isLargeScreen" /> -->
-        <ToolbarSection :screenSize="screenSize" />
+        <ToolbarSection :screen-size="screenSize" />
         <q-card
           class="q-pa-md bg-grey-1"
           :class="isLargeScreen ? 'q-ml-lg q-mr-xl' : 'q-mx-lg'"
@@ -19,8 +19,25 @@
             style="height: 400px"
             :limits="computedLimits"
           >
-            <template v-slot:before>
+            <template #before>
               <q-tabs
+      v-model="tab"                   
+      vertical
+      active-color="white"
+      indicator-color="red-11"
+      active-class="bg-blue-13"
+    >
+      <q-tab
+        v-for="t in tabsList"
+        :key="t.name"
+        :name="t.name"
+        :label="t.label"
+        no-caps
+        :class="tab === t.name ? 'text-white' : 'bg-blue-1 text-primary'"
+        class="q-mb-xs q-mr-md tab-button"
+      />
+    </q-tabs>
+              <!-- <q-tabs
                 v-model="tab"
                 vertical
                 active-color="white"
@@ -58,11 +75,11 @@
                   "
                   class="q-mb-xs q-mr-md tab-button"
                 />
-                <!-- <q-tab name="transparencia" label="Transparencia" /> -->
-              </q-tabs>
+
+              </q-tabs> -->
             </template>
 
-            <template v-slot:after>
+            <template #after>
               <q-tab-panels
                 v-model="tab"
                 animated
@@ -75,11 +92,12 @@
                 <q-tab-panel name="mision">
                   <div class="text-h4 text-primary text-weight-medium q-mb-md">
                     Misión
-                  </div>
+                  </div>                  
                   <div
                     class="text-subtitle1 text-weight-light text-primary q-pb-md"
+                    style="white-space: pre-wrap"
                   >
-                    {{ mision }}
+                    {{ mision_vision.mision }}
                   </div>
                   <q-separator />
                   <div
@@ -87,8 +105,11 @@
                   >
                     Visión
                   </div>
-                  <div class="text-subtitle1 text-weight-light text-primary">
-                    {{ vision }}
+                  <div 
+                    class="text-subtitle1 text-weight-light text-primary"
+                    style="white-space: pre-wrap"
+                  >
+                    {{ mision_vision.vision }}
                   </div>
                 </q-tab-panel>
 
@@ -100,7 +121,7 @@
 
                   <q-list>
                     <q-expansion-item
-                      v-for="(item, index) in lista_normativas"
+                      v-for="(item, index) in normativas"
                       :key="index"
                       :label="item.titulo"
                       :default-opened="index === 0"
@@ -139,8 +160,8 @@
                       <q-item-label
                         ><div class="text-h4 text-primary text-weight-medium">
                           Directiva
-                        </div></q-item-label
-                      >
+                        </div>
+                      </q-item-label>                      
                     </q-item-section>
                     <q-separator spaced />
                     <q-card-section>
@@ -149,7 +170,7 @@
                           v-for="(actor, index) in directiva"
                           :key="index"
                         >
-                          <q-item-section avatar v-if="isLargeScreen">
+                          <q-item-section v-if="isLargeScreen" avatar>
                             <div
                               class="text-subtitle1 text-weight-regular text-primary"
                             >
@@ -180,6 +201,151 @@
                     </q-card-section>
                   </q-card>
                 </q-tab-panel>
+
+                <q-tab-panel name="departamentos">
+                  <div class="text-h4 text-primary text-weight-medium q-mb-md">
+                    Departamentos
+                  </div>
+                  <q-separator spaced />
+                  <div 
+                    v-for="(item, index) in departamentos"
+                    :key="index"
+                    class="bg-grey-1 q-pt-sm"
+                  >
+                    <div class="text-h5 text-primary text-weight-medium q-mb-md q-pl-md">
+                      {{item.titulo}}
+                    </div>                  
+                    <div
+                      class="text-subtitle1 text-weight-light text-primary q-pb-md q-pl-md"
+                      style="white-space: pre-wrap"
+                    >
+                      {{ item.descripcion_general }}
+                    </div>
+                    <q-separator color="primary"/>
+                  </div>                 
+                </q-tab-panel>
+                <q-tab-panel name="agrupaciones_regionales">
+                  <div class="text-h4 text-primary text-weight-medium q-mb-md">
+                    Agrupaciones Regionales
+                  </div>
+                  <q-separator spaced />
+                  <div 
+                    v-for="(item, index) in agrupaciones_regionales"
+                    :key="index"
+                    class="bg-grey-1 q-pt-sm"
+                  >
+                    <div class="text-h5 text-primary text-weight-medium q-mb-md q-pl-md">
+                      {{item.titulo}}
+                    </div>                  
+                    <div
+                      class="text-subtitle1 text-weight-light text-primary q-pb-md q-pl-md"
+                      style="white-space: pre-wrap"
+                    >
+                      {{ item.descripcion }}
+                    </div>
+                    <q-separator color="primary"/>
+                  </div>                 
+                </q-tab-panel>
+                <q-tab-panel name="capitulos">
+                  <div class="text-h4 text-primary text-weight-medium q-mb-md">
+                    Capítulos
+                  </div>
+                  <q-separator spaced />
+
+                  <q-list>
+                    <q-expansion-item
+                      v-for="(item, index) in capitulos"
+                      :key="index"
+                      :label="item.titulo"
+                      :default-opened="index === 0"
+                      header-class="bg-blue-9 text-white"
+                      expand-icon-class="text-white"
+                    >
+                      <q-card>
+                        <q-card-section>
+                          <div
+                            class="text-body2 text-weight-light text-primary text-justify"
+                            style="white-space: pre-wrap"
+                          >
+                            {{ item.contenido }}
+                          </div>
+                        </q-card-section>
+                        <q-card-actions>
+                          <q-btn
+                            :label="item.titulo"
+                            :href="item.link"
+                            target="_blank"
+                            icon-right="arrow_forward"
+                            text-color="red"
+                            no-caps
+                            outline
+                            rounded
+                          />
+                        </q-card-actions>
+                      </q-card>
+                      <q-separator spaced inset />
+                    </q-expansion-item>
+                  </q-list>
+                </q-tab-panel>
+
+                <q-tab-panel name="tribunal_etica">
+                  
+                  <q-card flat class="bg-grey-1">
+                    <q-item-section>
+                      <q-item-label
+                        ><div class="text-h4 text-primary text-weight-medium">
+                          Tribunal de Ética {{ tribunal_etica.directiva.length }}
+                        </div>
+                      </q-item-label>                      
+                    </q-item-section>
+                     <div
+                      class="text-subtitle1 text-weight-light text-primary q-pb-md q-pt-md"
+                      style="white-space: pre-wrap"
+                    >
+                      {{ tribunal_etica.descripcion }}
+                    </div>
+                    <q-separator spaced />
+                    <q-card-section v-if="tribunal_etica.directiva.length > 0">
+                      <div class="text-h5 text-primary text-weight-medium q-mb-xs">
+                        Directiva
+                      </div>
+                      <q-list padding>
+                        <q-item
+                          v-for="(actor, index) in tribunal_etica.directiva"
+                          :key="index"
+                        >
+                          <q-item-section v-if="isLargeScreen" avatar>
+                            <div
+                              class="text-subtitle1 text-weight-regular text-primary"
+                            >
+                              {{ actor.cargo }}:
+                            </div>
+                          </q-item-section>
+                          <q-item-section v-if="isLargeScreen"
+                            ><div
+                              class="text-subtitle1 text-weight-light text-primary"
+                            >
+                              {{ actor.persona }}
+                            </div></q-item-section
+                          >
+                          <q-item-section v-else>
+                            <q-item-label
+                              class="text-subtitle1 text-weight-regular text-primary"
+                              >{{ actor.cargo }}:</q-item-label
+                            >
+                            <q-item-label
+                              class="text-subtitle1 text-weight-light text-primary"
+                            >
+                              {{ actor.persona }}
+                            </q-item-label>
+                            <q-separator />
+                          </q-item-section>
+                        </q-item>
+                      </q-list>
+                    </q-card-section>
+                  </q-card>
+                </q-tab-panel>
+
               </q-tab-panels>
             </template>
           </q-splitter>
@@ -187,7 +353,7 @@
       </div>
     </div>
     <!-- <FooterSection :isLargeScreen="isLargeScreen" /> -->
-    <FooterSection :screenSize="screenSize" />
+    <FooterSection :screen-size="screenSize" />
   </q-layout>
 </template>
 <script setup>
@@ -196,7 +362,7 @@ import FooterSection from "src/components/FooterSection.vue";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { useSomosStore } from "src/stores/quienesSomos";
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 
 defineOptions({
   name: "QuienesSomos",
@@ -226,36 +392,95 @@ const categoriaSomos = computed(() => somosStore.pagina_quienes_somos);
 // const tab = computed(() => categoriaSomos.value || "mision");
 const tab = computed({
   get() {
-    return somosStore.pagina_quienes_somos || "mision";
+    // return somosStore.pagina_quienes_somos || "mision";
+    const actual     = somosStore.pagina_quienes_somos
+    const disponibles = tabsList.value.map(t => t.name)
+    return disponibles.includes(actual) ? actual : (disponibles[0] || '')
   },
   set(value) {
     somosStore.pagina_quienes_somos = value;
   },
 });
 
+const mision_vision = computed(() => somosStore.mision_vision || {});
+const normativas = computed(() => somosStore.normativas || []);
+const directiva = computed(() => somosStore.directiva || []);
+const departamentos = computed(() => somosStore.departamentos || []);
+const agrupaciones_regionales = computed(() => somosStore.agrupaciones_regionales || []);
+const capitulos = computed(() => somosStore.capitulos || []);
+const tribunal_etica = computed(() => somosStore.tribunal_etica || {});
+
+
+const tabsList = computed(() => {
+  const out = []
+
+  /* Misión y Visión */
+  if (mision_vision.value && Object.keys(mision_vision.value).length) {
+    out.push({ name: 'mision', label: 'Misión y Visión' })
+  }
+
+  /* Normativa (array) */
+  if (normativas.value.length) {
+    out.push({ name: 'normativa', label: 'Normativa' })
+  }
+
+  /* Directiva (array) */
+  if (directiva.value.length) {
+    out.push({ name: 'directiva', label: 'Directiva' })
+  }
+
+  /* Departamentos (array) */
+  if (departamentos.value.length) {
+    out.push({ name: 'departamentos', label: 'Departamentos' })
+  }
+
+  /* Agrupaciones Regionales (array) */
+  if (agrupaciones_regionales.value.length) {
+    out.push({ name: 'agrupaciones_regionales', label: 'Agrupaciones Regionales' })
+  }
+
+  /* Capítulos (array) */
+  if (capitulos.value.length) {
+    out.push({ name: 'capitulos', label: 'Capítulos' })
+  }
+
+  /* Tribunal de Ética: descripción o directiva con elementos */
+  const te = tribunal_etica.value
+  const tieneTE =
+    te &&
+    ( (te.descripcion && te.descripcion.trim().length) ||
+      (Array.isArray(te.directiva) && te.directiva.length) )
+
+  if (tieneTE) {
+    out.push({ name: 'tribunal_etica', label: 'Tribunal de Ética' })
+  }
+
+  return out
+})
+
 // const splitterModel = ref(28);
-const directiva = ref([
-  {
-    cargo: "Presidenta",
-    persona: "Dra. Alejandra Paz Born Estrada",
-  },
-  {
-    cargo: "Vicepresidente",
-    persona: "Dr. Andrés Bujes Marlez",
-  },
-  {
-    cargo: "Secretaria",
-    persona: "Dra. María Lía Paccot",
-  },
-  {
-    cargo: "Tesorera",
-    persona: "Dra. Daniela Soto Ojeda",
-  },
-  {
-    cargo: "Consejero",
-    persona: "Dr. José Francisco Chacano Quijanes",
-  },
-]);
+// const directiva = ref([
+//   {
+//     cargo: "Presidenta",
+//     persona: "Dra. Alejandra Paz Born Estrada",
+//   },
+//   {
+//     cargo: "Vicepresidente",
+//     persona: "Dr. Andrés Bujes Marlez",
+//   },
+//   {
+//     cargo: "Secretaria",
+//     persona: "Dra. María Lía Paccot",
+//   },
+//   {
+//     cargo: "Tesorera",
+//     persona: "Dra. Daniela Soto Ojeda",
+//   },
+//   {
+//     cargo: "Consejero",
+//     persona: "Dr. José Francisco Chacano Quijanes",
+//   },
+// ]);
 
 const normativa =
   "Aprobados por Acuerdos números 1.300, de 1981, y 15, de 1982, del Consejo General; modificados por la Asamblea Extraordinaria de Socios celebrada el día 15 de agosto de 1992, y por Acuerdos Nº 83, de 1993, y Nº 115, de 1994, del Honorable Consejo General; por la Asamblea Extraordinaria celebrada el día 12 de enero de 1996; por la Asamblea General Extraordinaria efectuada el día 8 de agosto de 1998, y Acuerdo Nº 89, adoptado en Sesión Ordinaria Nº 38, del H. Consejo General, de fecha1° de octubre de1998; por la Asamblea General Extraordinaria efectuada el día 26 de julio de 2002; por la Asamblea General Extraordinaria celebrada el día 24 de abril de 2004; por la Asamblea General Extraordinaria celebrada el día 22 de abril de 2006; por la Asamblea General Extraordinaria celebrada el día 23 de abril de 2007; por la Asamblea General Extraordinaria celebrada el día 21 de abril de 2012; por la Asamblea General Extraordinaria celebrada el día 27 de junio de 2014; por la Asamblea General Extraordinaria celebrada el día 23 de abril de 2015; por la Asamblea General Extraordinaria celebrada el día 21 de abril de 2016 y por la Asamblea General Extraordinaria celebrada el día 16 de junio de 2018";
@@ -339,6 +564,24 @@ const lista_normativas = [
   },
   // Agrega más elementos según sea necesario
 ];
+
+onMounted(async () => {
+   // Verificar el estado de la conexión a internet
+
+    await somosStore.fetchMisionVision();
+
+    await somosStore.fetchNormativa();
+
+    await somosStore.fetchDirectiva();
+
+    await somosStore.fetchDepartamentos();
+
+    await somosStore.fetchAgrupacionRegional();
+
+    await somosStore.fetchCapitulos();
+
+    await somosStore.fetchTribunalEtica();
+  });
 </script>
 
 <style lang="scss">

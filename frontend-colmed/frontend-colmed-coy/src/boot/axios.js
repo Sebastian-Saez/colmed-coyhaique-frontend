@@ -7,12 +7,7 @@ import axios from "axios";
 // Crear una instancia de Axios con la URL base desde las variables de entorno
 const api = axios.create({
   baseURL: import.meta.env.VITE_APP_BACKEND_URL, // Usar la variable de entorno para la base URL
-  //baseURL: "http://localhost:8001/",
-  //baseURL: "https://colmedaysen.cl/",
-  //baseURL: "http://localhost:8001/",
-  //baseURL: "http://192.168.1.23:8001/",
-   //baseURL: "http://172.22.85.193:8001/",
-  //baseURL: "http://192.168.1.23:8001/",
+  
   withCredentials: true, // ¡importante!
 });
 

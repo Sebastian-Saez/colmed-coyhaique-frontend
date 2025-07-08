@@ -58,7 +58,7 @@
         </q-list>
       </q-btn-dropdown>
       <q-separator dark vertical />
-      <q-btn stretch flat no-caps @click="logout" icon="logout">
+      <q-btn stretch flat no-caps icon="logout" @click="logout">
         <q-tooltip> Cerrar sesión </q-tooltip>
       </q-btn>
       <!-- <q-separator dark vertical inset />
@@ -123,7 +123,7 @@
                     <div class="text-subtitle3">
                       El archivo adjunto se almacenará en directorio Drive de la
                       cuenta "ticsaysen@colegiomedico.cl". Los datos se
-                      procesarán el próximo 20-02-2024.
+                      procesarán el próximo {{ nextProcesamiento }}.
                     </div>
                     <!-- <div class="text-caption">
                       Los certificados que adjunte serán almacenados en
@@ -160,8 +160,8 @@
                       class="bg-red-8 text-white btn-fixed-width"
                       rounded
                       style="width: 40%"
-                      @click="procesarRegistrosSuper"
                       :disable="certificados_super"
+                      @click="procesarRegistrosSuper"
                     >
                       Procesar registros</q-btn
                     >
@@ -299,6 +299,19 @@ const validarFecha = (val) => {
   return dayjs(val, formato, true).isValid();
 };
 
+const nextProcesamiento = computed(() => {
+  const hoy = dayjs()            // fecha actual
+  let objetivo = hoy.date(20)    // día 20 del mes en curso
+
+  // Si hoy es 21 o más, pasa al día 20 del mes siguiente
+  if (hoy.date() > 20) {
+    objetivo = objetivo.add(1, 'month')
+  }
+
+  return objetivo.format('DD-MM-YYYY')
+})
+
+
 onMounted(async () => {
   //await medicoStore.fetchMedicos();
   if (!userProfile.value) {
@@ -334,6 +347,10 @@ const changeProfile = async (val) => {
     case "admin_eventos":
       await eventoStore.fetchEventosBase();
       router.push("/admin-eventos");
+      break;
+    case "admin_sitio":
+      // await eventoStore.fetchEventosBase();
+      router.push("/admin-toolbar");
       break;
     case "admin_tic":
       router.push("/admin-tic");

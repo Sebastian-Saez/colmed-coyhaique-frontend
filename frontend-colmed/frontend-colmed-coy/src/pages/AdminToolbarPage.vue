@@ -95,26 +95,27 @@
                 <q-tab-panel name="quienes_somos">
                   <QuienesSomosToolbar />
                 </q-tab-panel>
-  
+
                 <q-tab-panel name="servicios" class="flex flex-center">
                   <ServiciosToolbar/>
                 </q-tab-panel>
+
                 <q-tab-panel name="informaciones" class="flex flex-center">
-                  <InformacionesConveniosToolbar/>
+                  <InformacionesConveniosToolbar/> 
                 </q-tab-panel>
+
                 <q-tab-panel name="links_interes" class="flex flex-center">
                   <LinksInteresToolbar/>
                 </q-tab-panel>
+
                 <q-tab-panel name="contactos" class="flex flex-center">
                   <ContactosToolbar/>
                 </q-tab-panel>
+                
               </q-tab-panels>
             </q-card>
           </div>
-          <!-- Tabla de Médicos -->
-          <!-- <div v-if="loading">
-            
-          </div> -->
+
           <q-dialog
             v-model="certificados_super"
             persistent
