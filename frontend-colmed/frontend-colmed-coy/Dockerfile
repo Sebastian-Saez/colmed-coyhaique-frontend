@@ -26,7 +26,10 @@
 ############# VERSION PREVIA #############
 
 # Use an official node runtime as a parent image
-FROM node:16
+FROM node:18-alpine
+
+
+RUN npm i -g npm@9
 
 # Set the working directory
 WORKDIR /app
