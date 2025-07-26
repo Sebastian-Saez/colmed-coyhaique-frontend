@@ -2,8 +2,8 @@
     <div class="q-pa-xs q-gutter-xl">
         <q-card
         class="q-pa-md bg-grey-2"
-        :class="isLargeScreen ? 'q-ml-xl q-mr-xl' : 'q-mx-xs'"
-        style="border-radius: 20px"
+        :class="isLargeScreen ? 'q-ml-lg q-mr-xl' : 'q-mx-lg'"
+        style="border-radius: 20px; width:1200px"
       >
         <div class="text-h4 text-bold text-primary">Todos los links de interés</div>
         <q-separator spaced />

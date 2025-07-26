@@ -129,6 +129,35 @@ export const useUserStore = defineStore("user", {
         throw error;
       }
     },
+    async loginWithAppleMobile(id_token) {
+      this.loading = true;
+      
+      const fcmToken = await this.getFCMToken();
+      if (!fcmToken) {
+        console.log("⚠️ No se encontró FCM Token, el usuario podría no recibir notificaciones.");
+      }
+
+      
+
+      try {
+        const response = await api.post("/api/app/login-apple/", {
+          id_token: id_token,
+          fcm_token: fcmToken || null,
+        });      
+        this.user = response.data.user;
+        localStorage.setItem("user", JSON.stringify(this.user));
+
+        this.profiles = response.data.user.perfiles;
+        localStorage.setItem("userProfiles", JSON.stringify(this.profiles));
+
+        this.opcion_profile = this.profiles[0].tipo_perfil;
+        localStorage.setItem("optionProfile", this.opcion_profile);
+        this.loading = false;
+      } catch (error) {
+        this.loading = false;
+        throw error;
+      }
+    },
     async logout() {
       try {
         const refreshToken = localStorage.getItem("refresh_token");
@@ -332,6 +361,31 @@ export const useUserStore = defineStore("user", {
         
         this.loading = false;
         return response.data; // { detail: "Registro exitoso." }
+      } catch (error) {
+        this.loading = false;
+        throw error;
+      }
+    },
+    async deleteAccount(icm) {
+
+      this.loading = true;
+      try {
+        this.logoutMobile();
+        const headers = {};
+        if (this.token) {
+          headers.Authorization = `Bearer ${this.token}`;
+        }
+
+        const response = await api.post(
+          "/api/app/delete-account/", {
+            icm
+          },
+          {
+            headers
+          }
+        );
+        
+        this.loading = false;        
       } catch (error) {
         this.loading = false;
         throw error;

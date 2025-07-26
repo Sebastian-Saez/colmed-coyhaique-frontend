@@ -104,6 +104,11 @@ const routes = [
     component: () => import("src/pages/app/ConfirmarNewPassPage.vue"),
   },
 
+  {
+    path: "/soporte",
+    component: () => import("src/pages/SoportePage.vue"),
+  },
+
 
   {
     path: "/home",
